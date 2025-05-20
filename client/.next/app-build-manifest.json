@@ -11,30 +11,20 @@
       "static/chunks/main-app.js",
       "static/chunks/app/page.js"
     ],
-    "/servicios/page": [
+    "/api/auth/[...nextauth]/route": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/servicios/page.js"
+      "static/chunks/app/api/auth/[...nextauth]/route.js"
     ],
-    "/testimonios/page": [
+    "/usuarios/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/testimonios/page.js"
+      "static/chunks/app/usuarios/layout.js"
     ],
-    "/contacto/page": [
+    "/usuarios/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/contacto/page.js"
-    ],
-    "/planes/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/planes/page.js"
-    ],
-    "/como-funciona/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/como-funciona/page.js"
+      "static/chunks/app/usuarios/page.js"
     ]
   }
 }

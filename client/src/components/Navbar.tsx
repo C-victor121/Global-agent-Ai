@@ -4,10 +4,13 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import LoginModal from './LoginModal';
+import UserMenu from './UserMenu';
+import { useSession } from 'next-auth/react';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const { data: session } = useSession();
 
   const menuItems = [
     { title: 'Inicio', href: '/' },
@@ -36,12 +39,19 @@ export default function Navbar() {
                 {item.title}
               </Link>
             ))}
-            <button 
-              onClick={() => setIsLoginModalOpen(true)}
-              className="bg-gradient-to-r from-purple-500 to-blue-500 text-white py-2 px-4 rounded-lg hover:opacity-90 transition-opacity"
-            >
-              Comenzar
-            </button>
+            {session ? (
+              <UserMenu 
+                avatar={session.user?.image || '/placeholder-avatar.svg'} 
+                userName={session.user?.name || 'Usuario'} 
+              />
+            ) : (
+              <button 
+                onClick={() => setIsLoginModalOpen(true)}
+                className="bg-gradient-to-r from-purple-500 to-blue-500 text-white py-2 px-4 rounded-lg hover:opacity-90 transition-opacity"
+              >
+                Comenzar
+              </button>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -95,15 +105,24 @@ export default function Navbar() {
                   {item.title}
                 </Link>
               ))}
-              <button 
-                onClick={() => {
-                  setIsLoginModalOpen(true);
-                  setIsOpen(false);
-                }}
-                className="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white py-2 px-4 rounded-lg hover:opacity-90 transition-opacity"
-              >
-                Comenzar
-              </button>
+              {session ? (
+                <div className="py-2 px-4">
+                  <UserMenu 
+                    avatar={session.user?.image || '/placeholder-avatar.svg'} 
+                    userName={session.user?.name || 'Usuario'} 
+                  />
+                </div>
+              ) : (
+                <button 
+                  onClick={() => {
+                    setIsLoginModalOpen(true);
+                    setIsOpen(false);
+                  }}
+                  className="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white py-2 px-4 rounded-lg hover:opacity-90 transition-opacity"
+                >
+                  Comenzar
+                </button>
+              )}
             </div>
           </motion.div>
         )}

@@ -3,6 +3,9 @@
 import { useState } from 'react';
 import { FaGoogle, FaFacebook } from 'react-icons/fa';
 import { IoMdClose } from 'react-icons/io';
+import { loginSchema, registerSchema, forgotPasswordSchema } from '../../../shared/validations/auth.schema';
+import { ZodError } from 'zod';
+import { signIn, useSession } from 'next-auth/react';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -10,26 +13,59 @@ interface LoginModalProps {
 }
 
 const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
+  const { data: session } = useSession();
   const [activeTab, setActiveTab] = useState('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [name, setName] = useState('');
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    switch (activeTab) {
-      case 'login':
-        console.log('Login attempt:', { email, password });
-        break;
-      case 'register':
-        console.log('Register attempt:', { name, email, password, confirmPassword });
-        break;
-      case 'forgot':
-        console.log('Password reset attempt:', { email });
-        break;
+    setErrors({});
+
+    try {
+      switch (activeTab) {
+        case 'login':
+          await loginSchema.parseAsync({ email, password });
+          const result = await signIn('credentials', {
+            redirect: true,
+            email,
+            password,
+            callbackUrl: '/usuarios'
+          });
+          // Si llegamos aquí, significa que redirect: true no funcionó
+          // y necesitamos manejar el error
+          if (result?.error) {
+            setErrors({ auth: 'Credenciales inválidas' });
+          } else {
+            onClose();
+          }
+          break;
+        case 'register':
+          await registerSchema.parseAsync({ name, email, password, confirmPassword });
+          // Aquí implementarías la lógica de registro
+          console.log('Register attempt:', { name, email, password });
+          break;
+        case 'forgot':
+          await forgotPasswordSchema.parseAsync({ email });
+          // Aquí implementarías la lógica de recuperación de contraseña
+          console.log('Password reset attempt:', { email });
+          break;
+      }
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const formattedErrors: Record<string, string> = {};
+        error.errors.forEach((err) => {
+          if (err.path) {
+            formattedErrors[err.path[0]] = err.message;
+          }
+        });
+        setErrors(formattedErrors);
+      }
     }
   };
 
@@ -76,6 +112,12 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
                 className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-white placeholder-gray-400"
                 required
               />
+              {errors.confirmPassword && (
+                <p className="mt-1 text-sm text-red-500">{errors.confirmPassword}</p>
+              )}
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-500">{errors.password}</p>
+              )}
             </div>
           )}
           <div>
@@ -87,6 +129,12 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
               className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-white placeholder-gray-400"
               required
             />
+            {errors.email && (
+              <p className="mt-1 text-sm text-red-500">{errors.email}</p>
+            )}
+            {errors.name && (
+              <p className="mt-1 text-sm text-red-500">{errors.name}</p>
+            )}
           </div>
           {(activeTab === 'login' || activeTab === 'register') && (
             <div>
@@ -98,6 +146,12 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
                 className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-white placeholder-gray-400"
                 required
               />
+              {errors.confirmPassword && (
+                <p className="mt-1 text-sm text-red-500">{errors.confirmPassword}</p>
+              )}
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-500">{errors.password}</p>
+              )}
             </div>
           )}
           {activeTab === 'register' && (
@@ -110,6 +164,12 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
                 className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-white placeholder-gray-400"
                 required
               />
+              {errors.confirmPassword && (
+                <p className="mt-1 text-sm text-red-500">{errors.confirmPassword}</p>
+              )}
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-500">{errors.password}</p>
+              )}
             </div>
           )}
           <button
@@ -134,6 +194,7 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
 
           <div className="mt-6 grid grid-cols-2 gap-3">
             <button
+              onClick={() => signIn('google', { callbackUrl: '/usuarios' })}
               className="flex items-center justify-center px-4 py-2 border border-white/10 rounded-lg text-white hover:bg-white/5 transition-colors"
             >
               <FaGoogle className="mr-2" />
