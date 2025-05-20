@@ -11,7 +11,7 @@ interface TodoListProps {
 export function TodoList({ todos, onToggle, onDelete }: TodoListProps) {
   if (todos.length === 0) {
     return (
-      <div className="text-center text-gray-500 py-8">
+      <div className="text-center text-stone-900 py-8">
         No hay tareas pendientes. ¡Agrega una nueva tarea!
       </div>
     )
@@ -24,7 +24,7 @@ export function TodoList({ todos, onToggle, onDelete }: TodoListProps) {
           key={todo._id}
           className="flex items-center justify-between p-4 bg-white rounded-lg border border-gray-200 hover:shadow-md transition-shadow"
         >
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 text-black">
             <input
               type="checkbox"
               checked={todo.completed}

@@ -9,6 +9,7 @@ export const metadata = {
 }
 
 import Navbar from '../components/Navbar'
+import Footer from '../components/Footer'
 
 export default function RootLayout({
   children,
@@ -17,11 +18,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      <body className={inter.className}>
+      <body className={`${inter.className} bg-black text-white`}>
         <Navbar />
-        <main className="min-h-[80vh] max-w-[90v] mx-auto py-24  ">
+        <main className="min-h-screen pt-16">
           {children}
         </main>
+        <Footer />
       </body>
     </html>
   )
