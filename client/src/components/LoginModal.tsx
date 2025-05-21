@@ -32,14 +32,20 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
         case 'login':
           await loginSchema.parseAsync({ email, password });
           const result = await signIn('credentials', {
-            redirect: true,
+            redirect: false,
             email,
             password,
             callbackUrl: '/usuarios'
           });
-          // Si llegamos aquí, significa que redirect: true no funcionó
-          // y necesitamos manejar el error
+          
+          if (result?.ok) {
+            // Redirección manual después de inicio de sesión exitoso
+            window.location.href = '/usuarios';
+            return;
+          }
+          // Manejar error de autenticación
           if (result?.error) {
+            console.error('Error de autenticación:', result.error);
             setErrors({ auth: 'Credenciales inválidas' });
           } else {
             onClose();
@@ -47,8 +53,51 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
           break;
         case 'register':
           await registerSchema.parseAsync({ name, email, password, confirmPassword });
-          // Aquí implementarías la lógica de registro
-          console.log('Register attempt:', { name, email, password });
+          
+          try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/auth/signup`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ name, email, password })
+            });
+            
+            let data;
+            try {
+              data = await response.json();
+            } catch (jsonError) {
+              console.error('Error al procesar la respuesta JSON:', jsonError);
+              setErrors({ auth: 'Error en la comunicación con el servidor. Verifique la URL de la API.' });
+              return;
+            }
+            
+            if (!data.success) {
+              setErrors({ auth: data.message || 'Error en el registro' });
+              return;
+            }
+            
+            // Registro exitoso, iniciar sesión automáticamente con el proveedor de credenciales
+            const loginResult = await signIn('credentials', {
+              redirect: false,
+              email,
+              password,
+              callbackUrl: '/usuarios'
+            });
+            
+            if (loginResult?.ok) {
+              // Redirección manual después de inicio de sesión exitoso
+              window.location.href = '/usuarios';
+            } else if (loginResult?.error) {
+              console.error('Error al iniciar sesión automáticamente:', loginResult.error);
+              setErrors({ auth: 'Error al iniciar sesión automáticamente' });
+            } else {
+              onClose();
+            }
+          } catch (error) {
+            console.error('Error en el registro:', error);
+            setErrors({ auth: 'Error en el servidor. Intente nuevamente.' });
+          }
           break;
         case 'forgot':
           await forgotPasswordSchema.parseAsync({ email });
@@ -102,6 +151,11 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {errors.auth && (
+            <div className="bg-red-500/20 border border-red-500/50 text-red-100 px-4 py-2 rounded-lg mb-4">
+              {errors.auth}
+            </div>
+          )}
           {activeTab === 'register' && (
             <div>
               <input

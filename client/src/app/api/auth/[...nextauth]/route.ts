@@ -1,6 +1,7 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import FacebookProvider from 'next-auth/providers/facebook';
+import CredentialsProvider from 'next-auth/providers/credentials';
 import { Session } from 'next-auth';
 
 declare module 'next-auth' {
@@ -39,6 +40,48 @@ const handler = NextAuth({
     FacebookProvider({
       clientId: process.env.FACEBOOK_CLIENT_ID || '',
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET || ''
+    }),
+    CredentialsProvider({
+      name: 'Credentials',
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" }
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          return null;
+        }
+
+        try {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/auth/signin`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              email: credentials.email,
+              password: credentials.password
+            })
+          });
+
+          const data = await response.json();
+
+          if (!data.success) {
+            console.error('Error de autenticación:', data.message);
+            return null;
+          }
+
+          return {
+            id: data.user.id,
+            name: data.user.name,
+            email: data.user.email,
+            image: data.user.avatar || null
+          };
+        } catch (error) {
+          console.error('Error al autenticar usuario:', error);
+          return null;
+        }
+      }
     }),
   ],
   pages: {

@@ -59,6 +59,21 @@
       "static/chunks/auth.js",
       "static/chunks/commons.js",
       "static/chunks/app/usuarios/page.js"
+    ],
+    "/auth/signin/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/334.js",
+      "static/chunks/main-app.js",
+      "static/chunks/auth.js",
+      "static/chunks/commons.js",
+      "static/chunks/app/auth/signin/page.js"
+    ],
+    "/_not-found/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/334.js",
+      "static/chunks/main-app.js",
+      "static/chunks/270.js",
+      "static/chunks/app/_not-found/page.js"
     ]
   }
 }
