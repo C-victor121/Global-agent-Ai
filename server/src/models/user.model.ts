@@ -25,6 +25,11 @@ const userSchema = new mongoose.Schema({
     unique: true,
     sparse: true // Permite que sea único pero opcional
   },
+  facebookId: {
+    type: String,
+    unique: true,
+    sparse: true // Permite que sea único pero opcional
+  },
   avatar: {
     type: String,
     default: ''

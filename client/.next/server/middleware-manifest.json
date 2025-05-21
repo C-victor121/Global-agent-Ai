@@ -4,6 +4,7 @@
     "/": {
       "files": [
         "server/edge-runtime-webpack.js",
+        "server/717.js",
         "server/middleware.js"
       ],
       "name": "middleware",

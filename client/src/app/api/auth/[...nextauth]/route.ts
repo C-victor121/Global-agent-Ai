@@ -1,5 +1,6 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
+import FacebookProvider from 'next-auth/providers/facebook';
 import { Session } from 'next-auth';
 
 declare module 'next-auth' {
@@ -10,6 +11,15 @@ declare module 'next-auth' {
       email?: string;
       image?: string;
     }
+  }
+
+  interface Profile {
+    id?: string;
+    sub?: string;
+    name?: string;
+    email?: string;
+    image?: string;
+    picture?: string;
   }
 }
 
@@ -25,6 +35,10 @@ const handler = NextAuth({
           response_type: "code"
         }
       }
+    }),
+    FacebookProvider({
+      clientId: process.env.FACEBOOK_CLIENT_ID || '',
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET || ''
     }),
   ],
   pages: {
@@ -62,6 +76,37 @@ const handler = NextAuth({
           return true;
         } catch (error) {
           console.error('Error inesperado durante la autenticación de Google:', error);
+          return false;
+        }
+      } else if (account?.provider === 'facebook') {
+        try {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/facebook`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              name: user.name,
+              email: user.email,
+              facebookId: profile.id?.toString(),
+              avatar: user.image,
+            }),
+          });
+
+          if (!response.ok) {
+            console.error(`Error del servidor durante la autenticación de Facebook: ${response.status}`);
+            return false;
+          }
+
+          const data = await response.json();
+          if (!data.success) {
+            console.error('Fallo en la autenticación de Facebook:', data);
+            return false;
+          }
+
+          return true;
+        } catch (error) {
+          console.error('Error inesperado durante la autenticación de Facebook:', error);
           return false;
         }
       }

@@ -9,11 +9,22 @@ export default function SignIn() {
   const handleGoogleSignIn = async () => {
     try {
       const result = await signIn('google', {
-        callbackUrl: '/',
+        callbackUrl: '/usuarios',
         redirect: true,
       });
     } catch (error) {
-      console.error('Error al iniciar sesión:', error);
+      console.error('Error al iniciar sesión con Google:', error);
+    }
+  };
+
+  const handleFacebookSignIn = async () => {
+    try {
+      const result = await signIn('facebook', {
+        callbackUrl: '/usuarios',
+        redirect: true,
+      });
+    } catch (error) {
+      console.error('Error al iniciar sesión con Facebook:', error);
     }
   };
 
@@ -28,9 +39,15 @@ export default function SignIn() {
         <div className="mt-8 space-y-6">
           <button
             onClick={handleGoogleSignIn}
-            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mb-4"
           >
             Continuar con Google
+          </button>
+          <button
+            onClick={handleFacebookSignIn}
+            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            Continuar con Facebook
           </button>
         </div>
       </div>

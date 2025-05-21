@@ -47,3 +47,49 @@ export const googleAuth = async (req: Request, res: Response) => {
     throw new CustomError('Error en la autenticación con Google', 500);
   }
 };
+
+export const facebookAuth = async (req: Request, res: Response) => {
+  try {
+    const { name, email, facebookId, avatar } = req.body;
+
+    if (!email || !facebookId) {
+      throw new CustomError('Datos de autenticación incompletos', 400);
+    }
+
+    // Buscar usuario existente por facebookId o email
+    let user = await User.findOne({
+      $or: [{ facebookId }, { email }]
+    });
+
+    if (!user) {
+      // Crear nuevo usuario si no existe
+      user = await User.create({
+        name,
+        email,
+        facebookId,
+        avatar
+      });
+    } else if (!user.facebookId) {
+      // Actualizar usuario existente con facebookId si se registró por email
+      user.facebookId = facebookId;
+      user.avatar = avatar || user.avatar;
+      await user.save();
+    }
+
+    res.status(200).json({
+      success: true,
+      data: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar,
+        role: user.role
+      }
+    });
+  } catch (error) {
+    if (error instanceof CustomError) {
+      throw error;
+    }
+    throw new CustomError('Error en la autenticación con Facebook', 500);
+  }
+};

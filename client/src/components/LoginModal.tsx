@@ -201,6 +201,7 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
               Google
             </button>
             <button
+              onClick={() => signIn('facebook', { callbackUrl: '/usuarios' })}
               className="flex items-center justify-center px-4 py-2 border border-white/10 rounded-lg text-white hover:bg-white/5 transition-colors"
             >
               <FaFacebook className="mr-2" />

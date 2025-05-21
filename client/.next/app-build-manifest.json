@@ -2,28 +2,62 @@
   "pages": {
     "/layout": [
       "static/chunks/webpack.js",
+      "static/chunks/334.js",
       "static/chunks/main-app.js",
+      "static/chunks/auth.js",
+      "static/chunks/commons.js",
+      "static/chunks/801.js",
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
     "/page": [
       "static/chunks/webpack.js",
+      "static/chunks/334.js",
       "static/chunks/main-app.js",
+      "static/chunks/commons.js",
       "static/chunks/app/page.js"
     ],
     "/api/auth/[...nextauth]/route": [
       "static/chunks/webpack.js",
+      "static/chunks/334.js",
       "static/chunks/main-app.js",
+      "static/chunks/commons.js",
       "static/chunks/app/api/auth/[...nextauth]/route.js"
+    ],
+    "/servicios/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/334.js",
+      "static/chunks/main-app.js",
+      "static/chunks/commons.js",
+      "static/chunks/app/servicios/page.js"
+    ],
+    "/como-funciona/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/334.js",
+      "static/chunks/main-app.js",
+      "static/chunks/commons.js",
+      "static/chunks/app/como-funciona/page.js"
+    ],
+    "/contacto/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/334.js",
+      "static/chunks/main-app.js",
+      "static/chunks/commons.js",
+      "static/chunks/app/contacto/page.js"
     ],
     "/usuarios/layout": [
       "static/chunks/webpack.js",
+      "static/chunks/334.js",
       "static/chunks/main-app.js",
+      "static/chunks/commons.js",
       "static/chunks/app/usuarios/layout.js"
     ],
     "/usuarios/page": [
       "static/chunks/webpack.js",
+      "static/chunks/334.js",
       "static/chunks/main-app.js",
+      "static/chunks/auth.js",
+      "static/chunks/commons.js",
       "static/chunks/app/usuarios/page.js"
     ]
   }

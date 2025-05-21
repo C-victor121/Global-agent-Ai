@@ -1,18 +1,28 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { redirect } from 'next/navigation';
 
 export default function UsuariosPage() {
   const { data: session, status } = useSession();
+  const router = useRouter();
 
-  // Verificación adicional del lado del cliente
+  // Verificación del lado del cliente
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      redirect('/');
+    // Eliminar el fragmento #_=_ que Facebook añade a la URL
+    if (window.location.hash && window.location.hash === '#_=_') {
+      window.history.replaceState(
+        null,
+        document.title,
+        window.location.pathname + window.location.search
+      );
     }
-  }, [status]);
+    
+    if (status === 'unauthenticated') {
+      router.push('/');
+    }
+  }, [status, router]);
 
   if (status === 'loading') {
     return (
@@ -41,6 +51,8 @@ export default function UsuariosPage() {
         </div>
       </div>
       
+
+      {/* Acciones simplificadas */}
       <div className="bg-white/5 p-4 rounded-lg">
         <h3 className="text-lg font-medium mb-2">Acciones Rápidas</h3>
         <div className="flex flex-wrap gap-3">
