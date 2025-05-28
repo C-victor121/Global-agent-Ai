@@ -1,16 +1,17 @@
 import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import { getToken } from 'next-auth/jwt';
 
-// IMPORTANTE: Mueve este secreto a tus variables de entorno (.env)
-// y cárgalo usando un paquete como dotenv.
-// Ejemplo: const TOKEN_SECRET = process.env.TOKEN_SECRET || 'tu_secreto_por_defecto';
-const TOKEN_SECRET = 'someSecretKey'; // ¡CAMBIA ESTO POR UN SECRETO SEGURO Y GUÁRDALO EN .env!
+// Asegúrate de que NEXTAUTH_SECRET esté configurada en tus variables de entorno (.env)
+// y que coincida con la usada en la configuración de NextAuth en el cliente.
+const secret = process.env.NEXTAUTH_SECRET;
 
 interface UserPayload {
-  id: string;
+  sub?: string; // 'sub' es comúnmente usado por next-auth para el id del usuario
+  id?: string; // Mantenemos 'id' por si se usa en otras partes o se prefiere
+  email?: string;
+  name?: string;
+  role?: string;
   // Agrega aquí otros campos que esperas en el payload del token
-  // email?: string;
-  // role?: string;
 }
 
 // Extiende la interfaz Request de Express para incluir la propiedad 'user'
@@ -18,22 +19,28 @@ interface AuthenticatedRequest extends Request {
   user?: UserPayload;
 }
 
-export const authRequired = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-  const { token } = req.cookies;
+export const authRequired = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  // Intenta obtener el token de la cookie 'next-auth.session-token' o '__Secure-next-auth.session-token'
+  const token = await getToken({ req, secret, cookieName: process.env.NODE_ENV === 'production' ? '__Secure-next-auth.session-token' : 'next-auth.session-token' });
 
   if (!token) {
     return res.status(401).json({ message: 'No token, authorization denied' });
   }
 
   try {
-    const decoded = jwt.verify(token, TOKEN_SECRET) as UserPayload;
-    req.user = decoded; // Adjunta el payload del usuario al objeto request
+    // El token ya está verificado y decodificado por getToken
+    // El payload del token (que puede incluir id, email, role, etc.) está en 'token'
+    // Puedes ajustar UserPayload según lo que necesites y lo que devuelva tu configuración de NextAuth
+    req.user = {
+      id: token.sub || token.id, // Usa 'sub' o 'id' según esté disponible
+      email: token.email,
+      name: token.name,
+      role: token.role as string | undefined, // Asegúrate de que 'role' esté en tu token si lo necesitas
+      ...token // Incluye cualquier otro campo del token
+    } as UserPayload;
     next();
   } catch (error) {
-    console.error('Token verification error:', error);
-    if (error instanceof jwt.JsonWebTokenError) {
-      return res.status(403).json({ message: 'Invalid token' });
-    }
+    console.error('Token processing error:', error);
     return res.status(500).json({ message: 'Failed to authenticate token' });
   }
 };
