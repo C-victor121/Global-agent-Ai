@@ -6,7 +6,8 @@ import { Session } from 'next-auth';
 
 declare module 'next-auth' {
   interface Session {
-    user: {
+    user?: {
+      role: string;
       id?: string;
       name?: string;
       email?: string;
@@ -21,6 +22,7 @@ declare module 'next-auth' {
     email?: string;
     image?: string;
     picture?: string;
+    role: string;
   }
 }
 
@@ -75,7 +77,8 @@ const handler = NextAuth({
             id: data.user.id,
             name: data.user.name,
             email: data.user.email,
-            image: data.user.avatar || null
+            image: data.user.avatar || null,
+            role: data.user.role
           };
         } catch (error) {
           console.error('Error al autenticar usuario:', error);
@@ -102,6 +105,7 @@ const handler = NextAuth({
               email: user.email,
               googleId: profile.sub,
               avatar: user.image,
+              
             }),
           });
 
@@ -155,10 +159,29 @@ const handler = NextAuth({
       }
       return true;
     },
-    async session({ session, token }) {
-      if (session?.user) {
-        session.user.id = token.sub;
+    async jwt({ token, user, account, profile, trigger }) {
+      console.log('!!! JWT callback - INICIO', { token: {...token}, user, account, trigger });
+      // Cuando el usuario inicia sesión (con credenciales o OAuth), el objeto `user` está presente.
+      if (user) {
+        console.log('!!! JWT callback - Usuario presente (signIn o OAuth)', { user });
+        token.id = user.id;
+        // Aseguramos que el rol se tome del objeto user si existe, sino se mantiene el del token o se pone 'user'
+        token.role = user.role || token.role || 'user'; 
+        token.picture = user.image; // Para consistencia con OAuth
       }
+      console.log('!!! JWT callback - FIN, token a retornar:', {...token});
+      return token;
+    },
+    async session({ session, token }) {
+      console.log('!!! Session callback - INICIO', { session: {...session}, token: {...token} });
+      if (session?.user) {
+        // El `id` del usuario usualmente viene de `token.sub` o `token.id` que asignamos en `jwt`
+        session.user.id = token.id as string || token.sub;
+        // El `role` del usuario viene de `token.role` que asignamos en `jwt`
+        session.user.role = token.role as string || 'user'; // Default a 'user' si no está
+        session.user.image = token.picture as string || session.user.image; // Mantener imagen si existe
+      }
+      console.log('!!! Session callback - FIN, sesión a retornar:', {...session});
       return session;
     },
     async redirect({ url, baseUrl }) {
