@@ -2,7 +2,7 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../api/auth/[...nextauth]/options';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { FaUser, FaCog, FaClipboardList, FaSignOutAlt } from 'react-icons/fa';
+import { FaUser, FaCog, FaClipboardList, FaSignOutAlt, FaUsers } from 'react-icons/fa';
 
 export default async function UsersLayout({
   children,
@@ -36,6 +36,14 @@ export default async function UsersLayout({
             <FaCog className="w-5 h-5" />
             <span>Configuración</span>
           </Link>
+
+          {/* Enlace de Gestión de Usuarios para Admin */}
+          {userRole === 'admin' && (
+            <Link href="/usuarios/gestion" className="flex items-center space-x-3 text-gray-300 hover:text-white transition-colors">
+              <FaUsers className="w-5 h-5" />
+              <span>Gestión de Usuarios</span>
+            </Link>
+          )}
         </nav>
 
         {/* User Role Display */}

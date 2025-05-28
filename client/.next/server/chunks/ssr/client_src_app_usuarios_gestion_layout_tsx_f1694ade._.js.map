@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 7, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/cvict/Desktop/Global%20Agent%20Ai/client/src/app/usuarios/gestion/layout.tsx"],"sourcesContent":["// src/app/usuarios/gestion/layout.tsx\nimport React from 'react';\n\nexport default function GestionUsuariosLayout({\n  children,\n}: {\n  children: React.ReactNode;\n}) {\n  return <>{children}</>;\n}"],"names":[],"mappings":"AAAA,sCAAsC;;;;;;AAGvB,SAAS,sBAAsB,EAC5C,QAAQ,EAGT;IACC,qBAAO;kBAAG;;AACZ","debugId":null}}]
+}

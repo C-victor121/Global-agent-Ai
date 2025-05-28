@@ -3,7 +3,8 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 import todoRoutes from './routes/todo.routes'
-import authRoutes from './routes/auth.routes'
+import authRoutes from './routes/auth.routes';
+import userRoutes from './routes/user.routes';
 import { errorHandler } from './middleware/error.handler'
 
 dotenv.config()
@@ -13,14 +14,15 @@ const PORT = process.env.PORT || 3001
 
 // Middleware
 app.use(cors({
-  origin: process.env.CLIENT_URL,
+  origin: process.env.CLIENT_URL || 'http://localhost:3000',
   credentials: true
 }))
 app.use(express.json())
 
 // Rutas
 app.use('/api/todos', todoRoutes)
-app.use('/api/auth', authRoutes)
+app.use('/api/auth', authRoutes);
+app.use('/api', userRoutes); // Montamos las rutas de usuarios en /api/users
 
 // Middleware de manejo de errores
 app.use(errorHandler)
