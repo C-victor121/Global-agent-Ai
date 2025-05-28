@@ -7,15 +7,26 @@ var { g: global, __dirname, k: __turbopack_refresh__, m: module } = __turbopack_
 {
 __turbopack_context__.s({
     "TodoService": (()=>TodoService),
-    "UserService": (()=>UserService)
+    "UserService": (()=>UserService),
+    "default": (()=>__TURBOPACK__default__export__)
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/build/polyfills/process.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$axios$2f$lib$2f$axios$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/axios/lib/axios.js [app-client] (ecmascript)");
+;
 const API_URL = ("TURBOPACK compile-time value", "http://localhost:3001") || 'http://localhost:3001';
+const apiClient = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$axios$2f$lib$2f$axios$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].create({
+    withCredentials: true,
+    baseURL: `${API_URL}/api`,
+    headers: {
+        'Content-Type': 'application/json'
+    }
+});
+const __TURBOPACK__default__export__ = apiClient;
 const TodoService = {
     // Obtener todas las tareas
     async getTodos () {
         try {
-            const response = await fetch(`${API_URL}/todos`);
+            const response = await fetch(`${API_URL}/todos`); // Asumiendo que esta URL es correcta o ajústala
             const data = await response.json();
             if (!data.success) {
                 throw new Error(data.message || 'Error al obtener las tareas');
@@ -76,7 +87,7 @@ const TodoService = {
             const response = await fetch(`${API_URL}/todos/${id}`, {
                 method: 'DELETE'
             });
-            const data = await response.json();
+            const data = await response.json(); // Asumiendo que no devuelve datos en el delete exitoso
             if (!data.success) {
                 throw new Error(data.message || 'Error al eliminar la tarea');
             }

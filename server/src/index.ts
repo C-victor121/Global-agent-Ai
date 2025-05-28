@@ -5,7 +5,10 @@ import mongoose from 'mongoose'
 import todoRoutes from './routes/todo.routes'
 import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
-import { errorHandler } from './middleware/error.handler'
+import planRoutes from './routes/plan.routes';
+import { errorHandler } from './middleware/error.handler';
+import cookieParser from 'cookie-parser';
+
 
 dotenv.config()
 
@@ -17,12 +20,14 @@ app.use(cors({
   origin: process.env.CLIENT_URL || 'http://localhost:3000',
   credentials: true
 }))
-app.use(express.json())
+app.use(express.json());
+app.use(cookieParser());
 
 // Rutas
 app.use('/api/todos', todoRoutes)
 app.use('/api/auth', authRoutes);
 app.use('/api', userRoutes); // Montamos las rutas de usuarios en /api/users
+app.use('/api', planRoutes); // Montamos las rutas de planes en /api/plans
 
 // Middleware de manejo de errores
 app.use(errorHandler)

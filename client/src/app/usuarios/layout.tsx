@@ -39,10 +39,17 @@ export default async function UsersLayout({
 
           {/* Enlace de Gestión de Usuarios para Admin */}
           {userRole === 'admin' && (
-            <Link href="/usuarios/gestion" className="flex items-center space-x-3 text-gray-300 hover:text-white transition-colors">
-              <FaUsers className="w-5 h-5" />
-              <span>Gestión de Usuarios</span>
-            </Link>
+            <>
+              <Link href="/usuarios/gestion" className="flex items-center space-x-3 text-gray-300 hover:text-white transition-colors">
+                <FaUsers className="w-5 h-5" />
+                <span>Gestión de Usuarios</span>
+              </Link>
+              <Link href="/usuarios/admin/planes" className="flex items-center space-x-3 text-gray-300 hover:text-white transition-colors">
+                {/* Reemplazar FaCog con un ícono más apropiado para planes si está disponible, ej. FaListAlt o FaDollarSign */}
+                <FaCog className="w-5 h-5" /> 
+                <span>Gestión de Planes</span>
+              </Link>
+            </>
           )}
         </nav>
 
