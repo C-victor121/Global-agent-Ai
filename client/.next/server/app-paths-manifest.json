@@ -2,7 +2,9 @@
   "/_not-found/page": "app/_not-found/page.js",
   "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
   "/auth/signin/page": "app/auth/signin/page.js",
+  "/contacto/page": "app/contacto/page.js",
   "/page": "app/page.js",
+  "/planes/page": "app/planes/page.js",
   "/usuarios/admin/planes/page": "app/usuarios/admin/planes/page.js",
   "/usuarios/page": "app/usuarios/page.js"
 }

@@ -14,6 +14,7 @@ export default function Navbar() {
 
   const menuItems = [
     { title: 'Inicio', href: '/' },
+    { title: 'Planes', href: '/planes' }, // Nuevo enlace a Planes
     { title: 'Servicios', href: '/servicios' },
     { title: '¿Cómo Funciona?', href: '/como-funciona' },
     { title: 'Contacto', href: '/contacto' }

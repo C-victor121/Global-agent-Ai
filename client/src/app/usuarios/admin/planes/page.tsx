@@ -3,6 +3,7 @@
 import React, { useState, useEffect, FormEvent } from 'react';
 import { Plan, getPlans, createPlan, updatePlan, deletePlan } from '@/services/plan.service';
 import Link from 'next/link';
+import { PlanCard } from '@/app/planes/page'; // Importar PlanCard
 
 // Interfaz para el formulario, extendiendo Plan pero haciendo algunos campos opcionales para la creación
 interface PlanFormData extends Omit<Plan, '_id' | 'createdAt' | 'updatedAt' | 'features'> {
@@ -223,9 +224,9 @@ export default function AdminPlanesPage() {
   if (isLoading) return <div className="container mx-auto p-4"><p>Cargando planes...</p></div>;
 
   return (
-    <div className="container mx-auto px-4 py-8 bg-slate-800 min-h-screen">
+    <div className="container mx-auto px-4 py-8 bg-slate-800 min-h-screen text-white">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold mb-4">Gestión de Planes de Membresía</h1>
+        <h1 className="text-3xl font-bold text-white">Gestión de Planes de Membresía</h1>
 
         {error && <p className="text-red-500 bg-red-100 p-3 rounded mb-4">{error}</p>}
 
@@ -238,111 +239,111 @@ export default function AdminPlanesPage() {
       </div> {/* <--- Etiqueta de cierre añadida aquí */} 
 
       {showForm && (
-        <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-          <h2 className="text-xl font-semibold mb-3">{editingPlan ? 'Editar Plan' : 'Crear Nuevo Plan'}</h2>
+        <form onSubmit={handleSubmit} className="bg-gray-700 shadow-md rounded px-8 pt-6 pb-8 mb-4 text-white">
+          <h2 className="text-xl font-semibold mb-3 text-white">{editingPlan ? 'Editar Plan' : 'Crear Nuevo Plan'}</h2>
           
           <div className="mb-4">
-            <h3 className="text-lg font-medium mb-2">📝 Datos Generales</h3>
-            <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">Nombre del Plan:</label>
-            <input type="text" name="name" id="name" value={formData.name} onChange={handleInputChange} required className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+            <h3 className="text-lg font-medium mb-2 text-white">📝 Datos Generales</h3>
+            <label htmlFor="name" className="block text-gray-300 text-sm font-bold mb-2">Nombre del Plan:</label>
+            <input type="text" name="name" id="name" value={formData.name} onChange={handleInputChange} required className="shadow appearance-none border rounded w-full py-2 px-3 bg-gray-600 text-white leading-tight focus:outline-none focus:shadow-outline" />
           </div>
 
           <div className="mb-4">
-            <label htmlFor="shortDescription" className="block text-gray-700 text-sm font-bold mb-2">Descripción Corta:</label>
-            <textarea name="shortDescription" id="shortDescription" value={formData.shortDescription} onChange={handleInputChange} required className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
+            <label htmlFor="shortDescription" className="block text-gray-300 text-sm font-bold mb-2">Descripción Corta:</label>
+            <textarea name="shortDescription" id="shortDescription" value={formData.shortDescription} onChange={handleInputChange} required className="shadow appearance-none border rounded w-full py-2 px-3 bg-gray-600 text-white leading-tight focus:outline-none focus:shadow-outline"></textarea>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
-              <label htmlFor="monthlyPrice" className="block text-gray-700 text-sm font-bold mb-2">Precio Mensual (USD):</label>
-              <input type="number" name="monthlyPrice" id="monthlyPrice" value={formData.monthlyPrice} onChange={handleInputChange} required min="0" step="0.01" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+              <label htmlFor="monthlyPrice" className="block text-gray-300 text-sm font-bold mb-2">Precio Mensual (USD):</label>
+              <input type="number" name="monthlyPrice" id="monthlyPrice" value={formData.monthlyPrice} onChange={handleInputChange} required min="0" step="0.01" className="shadow appearance-none border rounded w-full py-2 px-3 bg-gray-600 text-white leading-tight focus:outline-none focus:shadow-outline" />
             </div>
             <div>
-              <label htmlFor="annualPrice" className="block text-gray-700 text-sm font-bold mb-2">Precio Anual (USD) (opcional):</label>
-              <input type="number" name="annualPrice" id="annualPrice" value={formData.annualPrice} onChange={handleInputChange} min="0" step="0.01" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+              <label htmlFor="annualPrice" className="block text-gray-300 text-sm font-bold mb-2">Precio Anual (USD) (opcional):</label>
+              <input type="number" name="annualPrice" id="annualPrice" value={formData.annualPrice} onChange={handleInputChange} min="0" step="0.01" className="shadow appearance-none border rounded w-full py-2 px-3 bg-gray-600 text-white leading-tight focus:outline-none focus:shadow-outline" />
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
-                <label htmlFor="trialPeriodDays" className="block text-gray-700 text-sm font-bold mb-2">Periodo de Prueba (días):</label>
-                <input type="number" name="trialPeriodDays" id="trialPeriodDays" value={formData.trialPeriodDays} onChange={handleInputChange} required min="0" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+                <label htmlFor="trialPeriodDays" className="block text-gray-300 text-sm font-bold mb-2">Periodo de Prueba (días):</label>
+                <input type="number" name="trialPeriodDays" id="trialPeriodDays" value={formData.trialPeriodDays} onChange={handleInputChange} required min="0" className="shadow appearance-none border rounded w-full py-2 px-3 bg-gray-600 text-white leading-tight focus:outline-none focus:shadow-outline" />
             </div>
             <div className="flex items-center mt-6">
                 <input type="checkbox" name="requiresCardForTrial" id="requiresCardForTrial" checked={formData.requiresCardForTrial} onChange={handleInputChange} className="mr-2 leading-tight" />
-                <label htmlFor="requiresCardForTrial" className="text-sm text-gray-700">Requiere tarjeta para prueba</label>
+                <label htmlFor="requiresCardForTrial" className="text-sm text-gray-300">Requiere tarjeta para prueba</label>
             </div>
           </div>
 
           <div className="mb-6">
             <input type="checkbox" name="isActive" id="isActive" checked={formData.isActive} onChange={handleInputChange} className="mr-2 leading-tight" />
-            <label htmlFor="isActive" className="text-sm text-gray-700 font-bold">Activo (mostrar en frontend)</label>
+            <label htmlFor="isActive" className="text-sm text-gray-300 font-bold">Activo (mostrar en frontend)</label>
           </div>
 
-          <div className="mb-4 text-black">
-            <h3 className="text-lg font-medium mb-2">⚙️ Funcionalidades</h3>
+          <div className="mb-4 text-white">
+            <h3 className="text-lg font-medium mb-2 text-white">⚙️ Funcionalidades</h3>
             
-            <div className="mb-3 p-3 border rounded">
-                <h4 className="font-semibold mb-1">🧠 Agentes AI</h4>
-                <label htmlFor="features.aiAgents.numberOfAgents" className="block text-sm mb-1">Número de agentes incluidos:</label>
-                <input type="number" name="features.aiAgents.numberOfAgents" id="features.aiAgents.numberOfAgents" value={formData.features.aiAgents.numberOfAgents} onChange={handleInputChange} required min="0" className="shadow appearance-none border rounded w-full py-1 px-2 text-gray-700 text-sm leading-tight focus:outline-none focus:shadow-outline mb-2" />
+            <div className="mb-3 p-3 border border-gray-600 rounded">
+                <h4 className="font-semibold mb-1 text-white">🧠 Agentes AI</h4>
+                <label htmlFor="features.aiAgents.numberOfAgents" className="block text-sm mb-1 text-gray-300">Número de agentes incluidos:</label>
+                <input type="number" name="features.aiAgents.numberOfAgents" id="features.aiAgents.numberOfAgents" value={formData.features.aiAgents.numberOfAgents} onChange={handleInputChange} required min="0" className="shadow appearance-none border rounded w-full py-1 px-2 bg-gray-600 text-white text-sm leading-tight focus:outline-none focus:shadow-outline mb-2" />
                 <div className="flex items-center mb-1">
                     <input type="checkbox" name="features.aiAgents.allowAudio" id="features.aiAgents.allowAudio" checked={formData.features.aiAgents.allowAudio} onChange={handleInputChange} className="mr-2" />
-                    <label htmlFor="features.aiAgents.allowAudio" className="text-sm">Permitir audio</label>
+                    <label htmlFor="features.aiAgents.allowAudio" className="text-sm text-gray-300">Permitir audio</label>
                 </div>
                 <div className="flex items-center">
                     <input type="checkbox" name="features.aiAgents.allowPhoneVoice" id="features.aiAgents.allowPhoneVoice" checked={formData.features.aiAgents.allowPhoneVoice} onChange={handleInputChange} className="mr-2" />
-                    <label htmlFor="features.aiAgents.allowPhoneVoice" className="text-sm">Permitir voz telefónica</label>
+                    <label htmlFor="features.aiAgents.allowPhoneVoice" className="text-sm text-gray-300">Permitir voz telefónica</label>
                 </div>
             </div>
 
-            <div className="mb-3 p-3 border rounded">
-                <h4 className="font-semibold mb-1">📲 Integraciones</h4>
-                <label htmlFor="features.integrations.numberOfPlatforms" className="block text-sm mb-1">Número de plataformas soportadas:</label>
-                <input type="number" name="features.integrations.numberOfPlatforms" id="features.integrations.numberOfPlatforms" value={formData.features.integrations.numberOfPlatforms} onChange={handleInputChange} required min="0" className="shadow appearance-none border rounded w-full py-1 px-2 text-gray-700 text-sm leading-tight focus:outline-none focus:shadow-outline mb-2" />
+            <div className="mb-3 p-3 border border-gray-600 rounded">
+                <h4 className="font-semibold mb-1 text-white">📲 Integraciones</h4>
+                <label htmlFor="features.integrations.numberOfPlatforms" className="block text-sm mb-1 text-gray-300">Número de plataformas soportadas:</label>
+                <input type="number" name="features.integrations.numberOfPlatforms" id="features.integrations.numberOfPlatforms" value={formData.features.integrations.numberOfPlatforms} onChange={handleInputChange} required min="0" className="shadow appearance-none border rounded w-full py-1 px-2 bg-gray-600 text-white text-sm leading-tight focus:outline-none focus:shadow-outline mb-2" />
                 <div className="flex items-center mb-1">
                     <input type="checkbox" name="features.integrations.dropi" id="features.integrations.dropi" checked={formData.features.integrations.dropi} onChange={handleInputChange} className="mr-2" />
-                    <label htmlFor="features.integrations.dropi" className="text-sm">Dropi</label>
+                    <label htmlFor="features.integrations.dropi" className="text-sm text-gray-300">Dropi</label>
                 </div>
                 <div className="flex items-center mb-1">
                     <input type="checkbox" name="features.integrations.whatsapp" id="features.integrations.whatsapp" checked={formData.features.integrations.whatsapp} onChange={handleInputChange} className="mr-2" />
-                    <label htmlFor="features.integrations.whatsapp" className="text-sm">WhatsApp</label>
+                    <label htmlFor="features.integrations.whatsapp" className="text-sm text-gray-300">WhatsApp</label>
                 </div>
                 <div className="flex items-center">
                     <input type="checkbox" name="features.integrations.apiAccess" id="features.integrations.apiAccess" checked={formData.features.integrations.apiAccess} onChange={handleInputChange} className="mr-2" />
-                    <label htmlFor="features.integrations.apiAccess" className="text-sm">API acceso</label>
+                    <label htmlFor="features.integrations.apiAccess" className="text-sm text-gray-300">API acceso</label>
                 </div>
             </div>
 
-            <div className="mb-3 p-3 border rounded">
-                <h4 className="font-semibold mb-1">📈 Capacidad</h4>
-                <label htmlFor="features.capacity.conversationLimitMonthly" className="block text-sm mb-1">Límite de conversaciones al mes:</label>
-                <input type="number" name="features.capacity.conversationLimitMonthly" id="features.capacity.conversationLimitMonthly" value={formData.features.capacity.conversationLimitMonthly} onChange={handleInputChange} required min="0" className="shadow appearance-none border rounded w-full py-1 px-2 text-gray-700 text-sm leading-tight focus:outline-none focus:shadow-outline mb-2" />
+            <div className="mb-3 p-3 border border-gray-600 rounded">
+                <h4 className="font-semibold mb-1 text-white">📈 Capacidad</h4>
+                <label htmlFor="features.capacity.conversationLimitMonthly" className="block text-sm mb-1 text-gray-300">Límite de conversaciones al mes:</label>
+                <input type="number" name="features.capacity.conversationLimitMonthly" id="features.capacity.conversationLimitMonthly" value={formData.features.capacity.conversationLimitMonthly} onChange={handleInputChange} required min="0" className="shadow appearance-none border rounded w-full py-1 px-2 bg-gray-600 text-white text-sm leading-tight focus:outline-none focus:shadow-outline mb-2" />
                 <div className="flex items-center mb-1">
                     <input type="checkbox" name="features.capacity.accessToMetrics" id="features.capacity.accessToMetrics" checked={formData.features.capacity.accessToMetrics} onChange={handleInputChange} className="mr-2" />
-                    <label htmlFor="features.capacity.accessToMetrics" className="text-sm">Acceso a métricas</label>
+                    <label htmlFor="features.capacity.accessToMetrics" className="text-sm text-gray-300">Acceso a métricas</label>
                 </div>
                 <div className="flex items-center">
                     <input type="checkbox" name="features.capacity.advancedDashboard" id="features.capacity.advancedDashboard" checked={formData.features.capacity.advancedDashboard} onChange={handleInputChange} className="mr-2" />
-                    <label htmlFor="features.capacity.advancedDashboard" className="text-sm">Dashboard avanzado</label>
+                    <label htmlFor="features.capacity.advancedDashboard" className="text-sm text-gray-300">Dashboard avanzado</label>
                 </div>
             </div>
 
-            <div className="mb-3 p-3 border rounded">
-                <h4 className="font-semibold mb-1">🧩 Otros</h4>
-                <label htmlFor="features.others.technicalSupport" className="block text-sm mb-1">Soporte técnico:</label>
-                <select name="features.others.technicalSupport" id="features.others.technicalSupport" value={formData.features.others.technicalSupport} onChange={handleInputChange} className="shadow appearance-none border rounded w-full py-1 px-2 text-gray-700 text-sm leading-tight focus:outline-none focus:shadow-outline mb-2">
+            <div className="mb-3 p-3 border border-gray-600 rounded">
+                <h4 className="font-semibold mb-1 text-white">🧩 Otros</h4>
+                <label htmlFor="features.others.technicalSupport" className="block text-sm mb-1 text-gray-300">Soporte técnico:</label>
+                <select name="features.others.technicalSupport" id="features.others.technicalSupport" value={formData.features.others.technicalSupport} onChange={handleInputChange} className="shadow appearance-none border rounded w-full py-1 px-2 bg-gray-600 text-white text-sm leading-tight focus:outline-none focus:shadow-outline mb-2">
                     <option value="email">Email</option>
                     <option value="chat">Chat</option>
                     <option value="priority">Prioridad</option>
                 </select>
                 <div className="flex items-center mb-1">
                     <input type="checkbox" name="features.others.smartFunnelsAccess" id="features.others.smartFunnelsAccess" checked={formData.features.others.smartFunnelsAccess} onChange={handleInputChange} className="mr-2" />
-                    <label htmlFor="features.others.smartFunnelsAccess" className="text-sm">Acceso a embudos inteligentes</label>
+                    <label htmlFor="features.others.smartFunnelsAccess" className="text-sm text-gray-300">Acceso a embudos inteligentes</label>
                 </div>
                 <div className="flex items-center">
                     <input type="checkbox" name="features.others.aiTemplatesAccess" id="features.others.aiTemplatesAccess" checked={formData.features.others.aiTemplatesAccess} onChange={handleInputChange} className="mr-2" />
-                    <label htmlFor="features.others.aiTemplatesAccess" className="text-sm">Acceso a plantillas IA</label>
+                    <label htmlFor="features.others.aiTemplatesAccess" className="text-sm text-gray-300">Acceso a plantillas IA</label>
                 </div>
             </div>
 
@@ -360,48 +361,25 @@ export default function AdminPlanesPage() {
       )}
 
       {!showForm && (
-        <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Precio Mensual</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prueba (días)</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Activo</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {plans.length > 0 ? (
-                plans.map((plan) => (
-                  <tr key={plan._id}>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">{plan.name}</div>
-                      <div className="text-xs text-gray-500">{plan.shortDescription}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">${plan.monthlyPrice.toFixed(2)}</div>
-                      {plan.annualPrice && <div className="text-xs text-gray-500">Anual: ${plan.annualPrice.toFixed(2)}</div>}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{plan.trialPeriodDays}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${plan.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                        {plan.isActive ? 'Sí' : 'No'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <button onClick={() => handleEdit(plan)} className="text-indigo-600 hover:text-indigo-900 mr-3">Editar</button>
-                      <button onClick={() => handleDelete(plan._id!)} className="text-red-600 hover:text-red-900">Eliminar</button>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={5} className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">No hay planes creados.</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+        <div className="mt-12">
+          {plans.length > 0 ? (
+            <div className=" md:grid-cols-2 lg:grid-cols-3 gap-8 ">
+              {plans.map((plan) => (
+                <PlanCard
+                  key={plan._id}
+                  plan={plan}
+                  isAdmin={true}
+                  onEdit={() => handleEdit(plan)}
+                  onDelete={() => handleDelete(plan._id!)}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-xl text-gray-400">No hay planes disponibles en este momento.</p>
+              <p className="text-gray-500">Intenta crear uno para empezar.</p>
+            </div>
+          )}
         </div>
       )}
     </div>
