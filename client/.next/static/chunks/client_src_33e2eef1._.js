@@ -185,6 +185,7 @@ __turbopack_context__.s({
     "deletePlan": (()=>deletePlan),
     "getPlanById": (()=>getPlanById),
     "getPlans": (()=>getPlans),
+    "togglePlanStatus": (()=>togglePlanStatus),
     "updatePlan": (()=>updatePlan)
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f$client$2f$src$2f$services$2f$api$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/client/src/services/api.ts [app-client] (ecmascript)");
@@ -207,6 +208,10 @@ const updatePlan = async (id, planData)=>{
 };
 const deletePlan = async (id)=>{
     const response = await __TURBOPACK__imported__module__$5b$project$5d2f$client$2f$src$2f$services$2f$api$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].delete(`/plans/${id}`);
+    return response.data;
+};
+const togglePlanStatus = async (id)=>{
+    const response = await __TURBOPACK__imported__module__$5b$project$5d2f$client$2f$src$2f$services$2f$api$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].patch(`/plans/${id}/toggle`);
     return response.data;
 };
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
@@ -233,57 +238,73 @@ var _s = __turbopack_context__.k.signature();
 ;
 ;
 const PlanCard = ({ plan, isAdmin = false, onEdit, onDelete })=>{
+    const cardClasses = !plan.isActive ? 'bg-slate-700 shadow-lg rounded-xl p-6 flex flex-col justify-between m-4 w-full sm:w-[45%] md:w-[30%] lg:w-[22%] max-w-md opacity-50 cursor-not-allowed border border-slate-600' : 'bg-gradient-to-br from-slate-800 to-slate-900 shadow-2xl rounded-xl p-6 flex flex-col justify-between m-4 w-full sm:w-[45%] md:w-[30%] lg:w-[22%] max-w-md transform hover:scale-105 transition-all duration-300 ease-in-out border border-slate-700 hover:border-blue-500';
+    const titleClasses = !plan.isActive ? 'text-2xl font-bold text-gray-500 mb-3' : 'text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-3';
+    const priceClasses = !plan.isActive ? 'text-4xl font-extrabold text-gray-600' : 'text-4xl font-extrabold text-white';
+    const featureTextColor = !plan.isActive ? 'text-gray-500' : 'text-gray-400';
+    const checkColor = !plan.isActive ? 'text-gray-600' : 'text-green-500';
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: "bg-gradient-to-br from-slate-800 to-slate-900 shadow-2xl rounded-xl p-6 flex flex-col justify-between m-4 w-full sm:w-[45%] md:w-[30%] lg:w-[22%] max-w-md transform hover:scale-105 transition-all duration-300 ease-in-out border border-slate-700 hover:border-blue-500",
+        className: cardClasses,
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                        className: "text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-3",
-                        children: plan.name
-                    }, void 0, false, {
+                        className: titleClasses,
+                        children: [
+                            plan.name,
+                            " ",
+                            !plan.isActive && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                className: "text-sm font-normal",
+                                children: "(Próximamente)"
+                            }, void 0, false, {
+                                fileName: "[project]/client/src/app/planes/page.tsx",
+                                lineNumber: 26,
+                                columnNumber: 69
+                            }, this)
+                        ]
+                    }, void 0, true, {
                         fileName: "[project]/client/src/app/planes/page.tsx",
-                        lineNumber: 11,
+                        lineNumber: 26,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                        className: "text-gray-400 mb-4 h-24 overflow-y-auto text-sm leading-relaxed scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-800",
+                        className: `text-gray-400 mb-4 h-24 overflow-y-auto text-sm leading-relaxed scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-800 ${!plan.isActive ? 'text-gray-500' : ''}`,
                         children: plan.shortDescription
                     }, void 0, false, {
                         fileName: "[project]/client/src/app/planes/page.tsx",
-                        lineNumber: 12,
+                        lineNumber: 27,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "my-4",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                className: "text-4xl font-extrabold text-white",
+                                className: priceClasses,
                                 children: [
                                     "$",
                                     plan.monthlyPrice.toFixed(2)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/client/src/app/planes/page.tsx",
-                                lineNumber: 14,
+                                lineNumber: 29,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                className: "text-gray-500 text-sm",
+                                className: `text-sm ${!plan.isActive ? 'text-gray-600' : 'text-gray-500'}`,
                                 children: "/mes"
                             }, void 0, false, {
                                 fileName: "[project]/client/src/app/planes/page.tsx",
-                                lineNumber: 15,
+                                lineNumber: 30,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/client/src/app/planes/page.tsx",
-                        lineNumber: 13,
+                        lineNumber: 28,
                         columnNumber: 9
                     }, this),
                     plan.annualPrice !== null && plan.annualPrice !== undefined && plan.annualPrice > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "mt-1 text-xs text-gray-500",
+                        className: `mt-1 text-xs ${!plan.isActive ? 'text-gray-600' : 'text-gray-500'}`,
                         children: [
                             "o $",
                             plan.annualPrice.toFixed(2),
@@ -293,21 +314,21 @@ const PlanCard = ({ plan, isAdmin = false, onEdit, onDelete })=>{
                         ]
                     }, void 0, true, {
                         fileName: "[project]/client/src/app/planes/page.tsx",
-                        lineNumber: 18,
+                        lineNumber: 33,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
-                        className: "text-gray-400 space-y-2 mb-6 text-sm flex-grow",
+                        className: `${featureTextColor} space-y-2 mb-6 text-sm flex-grow`,
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
                                 className: "flex items-center",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                        className: "text-green-500 mr-2",
+                                        className: `${checkColor} mr-2`,
                                         children: "✓"
                                     }, void 0, false, {
                                         fileName: "[project]/client/src/app/planes/page.tsx",
-                                        lineNumber: 23,
+                                        lineNumber: 38,
                                         columnNumber: 45
                                     }, this),
                                     plan.features.aiAgents.numberOfAgents,
@@ -315,18 +336,18 @@ const PlanCard = ({ plan, isAdmin = false, onEdit, onDelete })=>{
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/client/src/app/planes/page.tsx",
-                                lineNumber: 23,
+                                lineNumber: 38,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
                                 className: "flex items-center",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                        className: "text-green-500 mr-2",
+                                        className: `${checkColor} mr-2`,
                                         children: "✓"
                                     }, void 0, false, {
                                         fileName: "[project]/client/src/app/planes/page.tsx",
-                                        lineNumber: 24,
+                                        lineNumber: 39,
                                         columnNumber: 45
                                     }, this),
                                     plan.features.integrations.numberOfPlatforms,
@@ -334,73 +355,218 @@ const PlanCard = ({ plan, isAdmin = false, onEdit, onDelete })=>{
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/client/src/app/planes/page.tsx",
-                                lineNumber: 24,
+                                lineNumber: 39,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
                                 className: "flex items-center",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                        className: "text-green-500 mr-2",
+                                        className: `${checkColor} mr-2`,
                                         children: "✓"
                                     }, void 0, false, {
                                         fileName: "[project]/client/src/app/planes/page.tsx",
-                                        lineNumber: 25,
+                                        lineNumber: 40,
                                         columnNumber: 45
                                     }, this),
-                                    plan.features.capacity.conversationLimitMonthly,
+                                    plan.features.capacity.conversationLimitMonthly === Infinity ? 'Ilimitadas' : plan.features.capacity.conversationLimitMonthly,
                                     " Conversaciones/mes"
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/client/src/app/planes/page.tsx",
-                                lineNumber: 25,
+                                lineNumber: 40,
                                 columnNumber: 11
                             }, this),
                             plan.features.aiAgents.allowAudio && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
                                 className: "flex items-center",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                        className: "text-green-500 mr-2",
+                                        className: `${checkColor} mr-2`,
                                         children: "✓"
                                     }, void 0, false, {
                                         fileName: "[project]/client/src/app/planes/page.tsx",
-                                        lineNumber: 26,
+                                        lineNumber: 41,
                                         columnNumber: 83
                                     }, this),
                                     " Audio permitido"
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/client/src/app/planes/page.tsx",
-                                lineNumber: 26,
+                                lineNumber: 41,
                                 columnNumber: 49
+                            }, this),
+                            plan.features.aiAgents.allowPhoneVoice && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                className: "flex items-center",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: `${checkColor} mr-2`,
+                                        children: "✓"
+                                    }, void 0, false, {
+                                        fileName: "[project]/client/src/app/planes/page.tsx",
+                                        lineNumber: 42,
+                                        columnNumber: 88
+                                    }, this),
+                                    " Voz telefónica permitida"
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/client/src/app/planes/page.tsx",
+                                lineNumber: 42,
+                                columnNumber: 54
                             }, this),
                             plan.features.integrations.whatsapp && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
                                 className: "flex items-center",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                        className: "text-green-500 mr-2",
+                                        className: `${checkColor} mr-2`,
                                         children: "✓"
                                     }, void 0, false, {
                                         fileName: "[project]/client/src/app/planes/page.tsx",
-                                        lineNumber: 27,
+                                        lineNumber: 43,
                                         columnNumber: 85
                                     }, this),
                                     " Integración WhatsApp"
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/client/src/app/planes/page.tsx",
-                                lineNumber: 27,
+                                lineNumber: 43,
                                 columnNumber: 51
+                            }, this),
+                            plan.features.integrations.dropi && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                className: "flex items-center",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: `${checkColor} mr-2`,
+                                        children: "✓"
+                                    }, void 0, false, {
+                                        fileName: "[project]/client/src/app/planes/page.tsx",
+                                        lineNumber: 44,
+                                        columnNumber: 82
+                                    }, this),
+                                    " Integración Dropi"
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/client/src/app/planes/page.tsx",
+                                lineNumber: 44,
+                                columnNumber: 48
+                            }, this),
+                            plan.features.integrations.apiAccess && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                className: "flex items-center",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: `${checkColor} mr-2`,
+                                        children: "✓"
+                                    }, void 0, false, {
+                                        fileName: "[project]/client/src/app/planes/page.tsx",
+                                        lineNumber: 45,
+                                        columnNumber: 86
+                                    }, this),
+                                    " Acceso API"
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/client/src/app/planes/page.tsx",
+                                lineNumber: 45,
+                                columnNumber: 52
+                            }, this),
+                            plan.features.capacity.accessToMetrics && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                className: "flex items-center",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: `${checkColor} mr-2`,
+                                        children: "✓"
+                                    }, void 0, false, {
+                                        fileName: "[project]/client/src/app/planes/page.tsx",
+                                        lineNumber: 46,
+                                        columnNumber: 88
+                                    }, this),
+                                    " Acceso a Métricas"
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/client/src/app/planes/page.tsx",
+                                lineNumber: 46,
+                                columnNumber: 54
+                            }, this),
+                            plan.features.capacity.advancedDashboard && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                className: "flex items-center",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: `${checkColor} mr-2`,
+                                        children: "✓"
+                                    }, void 0, false, {
+                                        fileName: "[project]/client/src/app/planes/page.tsx",
+                                        lineNumber: 47,
+                                        columnNumber: 90
+                                    }, this),
+                                    " Dashboard Avanzado"
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/client/src/app/planes/page.tsx",
+                                lineNumber: 47,
+                                columnNumber: 56
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                className: "flex items-center",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: `${checkColor} mr-2`,
+                                        children: "✓"
+                                    }, void 0, false, {
+                                        fileName: "[project]/client/src/app/planes/page.tsx",
+                                        lineNumber: 48,
+                                        columnNumber: 45
+                                    }, this),
+                                    " Soporte: ",
+                                    plan.features.others.technicalSupport
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/client/src/app/planes/page.tsx",
+                                lineNumber: 48,
+                                columnNumber: 11
+                            }, this),
+                            plan.features.others.smartFunnelsAccess && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                className: "flex items-center",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: `${checkColor} mr-2`,
+                                        children: "✓"
+                                    }, void 0, false, {
+                                        fileName: "[project]/client/src/app/planes/page.tsx",
+                                        lineNumber: 49,
+                                        columnNumber: 89
+                                    }, this),
+                                    " Acceso a Embudos Inteligentes"
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/client/src/app/planes/page.tsx",
+                                lineNumber: 49,
+                                columnNumber: 55
+                            }, this),
+                            plan.features.others.aiTemplatesAccess && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                className: "flex items-center",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: `${checkColor} mr-2`,
+                                        children: "✓"
+                                    }, void 0, false, {
+                                        fileName: "[project]/client/src/app/planes/page.tsx",
+                                        lineNumber: 50,
+                                        columnNumber: 88
+                                    }, this),
+                                    " Acceso a Plantillas IA"
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/client/src/app/planes/page.tsx",
+                                lineNumber: 50,
+                                columnNumber: 54
                             }, this),
                             plan.trialPeriodDays !== null && plan.trialPeriodDays > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
                                 className: "flex items-center",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                        className: "text-green-500 mr-2",
+                                        className: `${checkColor} mr-2`,
                                         children: "✓"
                                     }, void 0, false, {
                                         fileName: "[project]/client/src/app/planes/page.tsx",
-                                        lineNumber: 29,
+                                        lineNumber: 52,
                                         columnNumber: 47
                                     }, this),
                                     " ",
@@ -409,22 +575,30 @@ const PlanCard = ({ plan, isAdmin = false, onEdit, onDelete })=>{
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/client/src/app/planes/page.tsx",
-                                lineNumber: 29,
+                                lineNumber: 52,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/client/src/app/planes/page.tsx",
-                        lineNumber: 22,
+                        lineNumber: 37,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/client/src/app/planes/page.tsx",
-                lineNumber: 10,
+                lineNumber: 25,
                 columnNumber: 7
             }, this),
-            !isAdmin ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+            !isAdmin ? !plan.isActive ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                disabled: true,
+                className: "block w-full bg-gray-600 text-gray-400 font-semibold py-3 px-4 rounded-lg text-center cursor-not-allowed shadow-md",
+                children: "Próximamente"
+            }, void 0, false, {
+                fileName: "[project]/client/src/app/planes/page.tsx",
+                lineNumber: 58,
+                columnNumber: 11
+            }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                 href: `/subscribe/${plan._id}`,
                 legacyBehavior: true,
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
@@ -432,23 +606,24 @@ const PlanCard = ({ plan, isAdmin = false, onEdit, onDelete })=>{
                     children: "Seleccionar Plan"
                 }, void 0, false, {
                     fileName: "[project]/client/src/app/planes/page.tsx",
-                    lineNumber: 35,
-                    columnNumber: 11
+                    lineNumber: 66,
+                    columnNumber: 13
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/client/src/app/planes/page.tsx",
-                lineNumber: 34,
-                columnNumber: 9
+                lineNumber: 65,
+                columnNumber: 11
             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "mt-auto pt-4 flex space-x-2",
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                         onClick: ()=>onEdit && onEdit(plan),
                         className: "flex-1 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-3 rounded-md text-sm transition-colors duration-300 transform hover:scale-105",
+                        disabled: !plan.isActive,
                         children: "Editar"
                     }, void 0, false, {
                         fileName: "[project]/client/src/app/planes/page.tsx",
-                        lineNumber: 41,
+                        lineNumber: 73,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -457,19 +632,19 @@ const PlanCard = ({ plan, isAdmin = false, onEdit, onDelete })=>{
                         children: "Eliminar"
                     }, void 0, false, {
                         fileName: "[project]/client/src/app/planes/page.tsx",
-                        lineNumber: 47,
+                        lineNumber: 80,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/client/src/app/planes/page.tsx",
-                lineNumber: 40,
+                lineNumber: 72,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/client/src/app/planes/page.tsx",
-        lineNumber: 9,
+        lineNumber: 24,
         columnNumber: 5
     }, this);
 };
@@ -487,9 +662,7 @@ function PlanesPage() {
                     setIsLoading(true);
                     try {
                         const data = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$client$2f$src$2f$services$2f$plan$2e$service$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getPlans"])();
-                        setPlans(data.filter({
-                            "PlanesPage.useEffect.fetchPlans": (plan)=>plan.isActive
-                        }["PlanesPage.useEffect.fetchPlans"])); // Solo mostrar planes activos
+                        setPlans(data); // Mostrar todos los planes, activos e inactivos
                         setError(null);
                     } catch (err) {
                         setError('Error al cargar los planes. Inténtalo de nuevo más tarde.');
@@ -509,12 +682,12 @@ function PlanesPage() {
                 children: "Cargando planes..."
             }, void 0, false, {
                 fileName: "[project]/client/src/app/planes/page.tsx",
-                lineNumber: 87,
+                lineNumber: 121,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/client/src/app/planes/page.tsx",
-            lineNumber: 86,
+            lineNumber: 120,
             columnNumber: 7
         }, this);
     }
@@ -526,15 +699,17 @@ function PlanesPage() {
                 children: error
             }, void 0, false, {
                 fileName: "[project]/client/src/app/planes/page.tsx",
-                lineNumber: 95,
+                lineNumber: 129,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/client/src/app/planes/page.tsx",
-            lineNumber: 94,
+            lineNumber: 128,
             columnNumber: 7
         }, this);
     }
+    const activePlans = plans.filter((plan)=>plan.isActive);
+    const inactivePlans = plans.filter((plan)=>!plan.isActive);
     if (plans.length === 0) {
         return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
             className: "flex flex-col justify-center items-center min-h-screen bg-slate-900 text-white",
@@ -544,7 +719,7 @@ function PlanesPage() {
                     children: "Nuestros Planes"
                 }, void 0, false, {
                     fileName: "[project]/client/src/app/planes/page.tsx",
-                    lineNumber: 103,
+                    lineNumber: 140,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -552,7 +727,7 @@ function PlanesPage() {
                     children: "Actualmente no hay planes disponibles."
                 }, void 0, false, {
                     fileName: "[project]/client/src/app/planes/page.tsx",
-                    lineNumber: 104,
+                    lineNumber: 141,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -560,13 +735,13 @@ function PlanesPage() {
                     children: "Por favor, vuelve a intentarlo más tarde."
                 }, void 0, false, {
                     fileName: "[project]/client/src/app/planes/page.tsx",
-                    lineNumber: 105,
+                    lineNumber: 142,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/client/src/app/planes/page.tsx",
-            lineNumber: 102,
+            lineNumber: 139,
             columnNumber: 7
         }, this);
     }
@@ -580,49 +755,58 @@ function PlanesPage() {
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
                             className: "text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 sm:text-6xl md:text-7xl",
-                            children: "Elige Tu Plan Perfecto"
+                            children: "Nuestras Membresías de Asistente Virtual AI para Ventas"
                         }, void 0, false, {
                             fileName: "[project]/client/src/app/planes/page.tsx",
-                            lineNumber: 114,
+                            lineNumber: 151,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                             className: "mt-4 max-w-xl mx-auto text-lg text-gray-400 sm:text-xl md:mt-6 md:text-2xl md:max-w-3xl",
-                            children: "Impulsa tu negocio con la IA. Comienza con una prueba gratuita y escala según tus necesidades."
+                            children: "Diseñados para cada etapa de tu negocio, desde emprendedores hasta grandes equipos. Todos los planes incluyen la configuración inicial por nuestro equipo y la capacidad de aprender de tus interacciones."
                         }, void 0, false, {
                             fileName: "[project]/client/src/app/planes/page.tsx",
-                            lineNumber: 117,
+                            lineNumber: 154,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/client/src/app/planes/page.tsx",
-                    lineNumber: 113,
+                    lineNumber: 150,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                     className: "flex flex-wrap justify-center items-stretch -m-4",
-                    children: plans.map((plan)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(PlanCard, {
-                            plan: plan
-                        }, plan._id, false, {
-                            fileName: "[project]/client/src/app/planes/page.tsx",
-                            lineNumber: 124,
-                            columnNumber: 13
-                        }, this))
-                }, void 0, false, {
+                    children: [
+                        activePlans.map((plan)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(PlanCard, {
+                                plan: plan
+                            }, plan._id, false, {
+                                fileName: "[project]/client/src/app/planes/page.tsx",
+                                lineNumber: 162,
+                                columnNumber: 13
+                            }, this)),
+                        inactivePlans.map((plan)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(PlanCard, {
+                                plan: plan
+                            }, plan._id, false, {
+                                fileName: "[project]/client/src/app/planes/page.tsx",
+                                lineNumber: 166,
+                                columnNumber: 13
+                            }, this))
+                    ]
+                }, void 0, true, {
                     fileName: "[project]/client/src/app/planes/page.tsx",
-                    lineNumber: 122,
+                    lineNumber: 159,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/client/src/app/planes/page.tsx",
-            lineNumber: 112,
+            lineNumber: 149,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/client/src/app/planes/page.tsx",
-        lineNumber: 111,
+        lineNumber: 148,
         columnNumber: 5
     }, this);
 }
@@ -645,7 +829,7 @@ __turbopack_context__.s({
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$client$2f$src$2f$services$2f$plan$2e$service$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/client/src/services/plan.service.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$client$2f$src$2f$services$2f$plan$2e$service$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/client/src/services/plan.service.ts [app-client] (ecmascript)"); // Importar togglePlanStatus
 var __TURBOPACK__imported__module__$5b$project$5d2f$client$2f$src$2f$app$2f$planes$2f$page$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/client/src/app/planes/page.tsx [app-client] (ecmascript)"); // Importar PlanCard
 ;
 var _s = __turbopack_context__.k.signature();
@@ -669,20 +853,38 @@ const initialFormData = {
         },
         integrations: {
             numberOfPlatforms: 1,
+            facebookMarketplace: false,
+            tiendanube: false,
             dropi: false,
+            multiUserDropi: false,
             whatsapp: false,
             apiAccess: false
         },
         capacity: {
             conversationLimitMonthly: 100,
+            catalogVerification: 'none',
             accessToMetrics: false,
-            advancedDashboard: false
+            advancedDashboard: false,
+            downloadableReports: false
         },
         others: {
             technicalSupport: 'email',
+            responseTemplates: 'default',
             smartFunnelsAccess: false,
-            aiTemplatesAccess: false
+            aiTemplatesAccess: false,
+            competitorAnalysis: false,
+            customerRecovery: false,
+            personalizedTraining: false,
+            dynamicKnowledgeBase: false,
+            monthlyConsulting: false,
+            earlyAccessFeatures: false
         }
+    },
+    limitations: {
+        noDropiIntegration: true,
+        noCompetitorAnalysis: true,
+        noCustomerRecovery: true,
+        noMetricsOrDashboards: true
     }
 };
 function AdminPlanesPage() {
@@ -736,12 +938,20 @@ function AdminPlanesPage() {
                         }
                     }
                 }));
+        } else if (nameParts.length === 2 && nameParts[0] === 'limitations') {
+            const [limitationsKey, property] = nameParts;
+            setFormData((prev)=>({
+                    ...prev,
+                    limitations: {
+                        ...prev.limitations || {},
+                        [property]: parsedValue
+                    }
+                }));
         }
     };
     const handleSubmit = async (e)=>{
         e.preventDefault();
         setError(null);
-        // Convertir campos numéricos de string a number antes de enviar
         const planDataToSend = {
             ...formData,
             monthlyPrice: Number(formData.monthlyPrice),
@@ -759,7 +969,7 @@ function AdminPlanesPage() {
                 },
                 capacity: {
                     ...formData.features.capacity,
-                    conversationLimitMonthly: Number(formData.features.capacity.conversationLimitMonthly)
+                    conversationLimitMonthly: formData.features.capacity.conversationLimitMonthly === 'unlimited' ? Infinity : Number(formData.features.capacity.conversationLimitMonthly)
                 }
             }
         };
@@ -780,10 +990,8 @@ function AdminPlanesPage() {
     };
     const handleEdit = (plan)=>{
         setEditingPlan(plan);
-        // Asegurarse de que todos los campos numéricos se cargan como string si es necesario para el input type=number
-        // o mantenerlos como number y asegurar que el input los maneje bien.
-        // Aquí asumimos que la conversión a string para el input se maneja o no es necesaria
-        // y que los booleanos se manejan correctamente por los checkboxes.
+        const planFeatures = plan.features;
+        const planLimitations = plan.limitations || {};
         setFormData({
             name: plan.name,
             shortDescription: plan.shortDescription,
@@ -794,26 +1002,44 @@ function AdminPlanesPage() {
             isActive: plan.isActive,
             features: {
                 aiAgents: {
-                    numberOfAgents: String(plan.features.aiAgents.numberOfAgents),
-                    allowAudio: plan.features.aiAgents.allowAudio,
-                    allowPhoneVoice: plan.features.aiAgents.allowPhoneVoice
+                    numberOfAgents: String(planFeatures.aiAgents?.numberOfAgents || initialFormData.features.aiAgents.numberOfAgents),
+                    allowAudio: planFeatures.aiAgents?.allowAudio || initialFormData.features.aiAgents.allowAudio,
+                    allowPhoneVoice: planFeatures.aiAgents?.allowPhoneVoice || initialFormData.features.aiAgents.allowPhoneVoice
                 },
                 integrations: {
-                    numberOfPlatforms: String(plan.features.integrations.numberOfPlatforms),
-                    dropi: plan.features.integrations.dropi,
-                    whatsapp: plan.features.integrations.whatsapp,
-                    apiAccess: plan.features.integrations.apiAccess
+                    numberOfPlatforms: String(planFeatures.integrations?.numberOfPlatforms || initialFormData.features.integrations.numberOfPlatforms),
+                    facebookMarketplace: planFeatures.integrations?.facebookMarketplace || initialFormData.features.integrations.facebookMarketplace,
+                    tiendanube: planFeatures.integrations?.tiendanube || initialFormData.features.integrations.tiendanube,
+                    dropi: planFeatures.integrations?.dropi || initialFormData.features.integrations.dropi,
+                    multiUserDropi: planFeatures.integrations?.multiUserDropi || initialFormData.features.integrations.multiUserDropi,
+                    whatsapp: planFeatures.integrations?.whatsapp || initialFormData.features.integrations.whatsapp,
+                    apiAccess: planFeatures.integrations?.apiAccess || initialFormData.features.integrations.apiAccess
                 },
                 capacity: {
-                    conversationLimitMonthly: String(plan.features.capacity.conversationLimitMonthly),
-                    accessToMetrics: plan.features.capacity.accessToMetrics,
-                    advancedDashboard: plan.features.capacity.advancedDashboard
+                    conversationLimitMonthly: planFeatures.capacity?.conversationLimitMonthly === Infinity ? 'unlimited' : String(planFeatures.capacity?.conversationLimitMonthly || initialFormData.features.capacity.conversationLimitMonthly),
+                    catalogVerification: planFeatures.capacity?.catalogVerification || initialFormData.features.capacity.catalogVerification,
+                    accessToMetrics: planFeatures.capacity?.accessToMetrics || initialFormData.features.capacity.accessToMetrics,
+                    advancedDashboard: planFeatures.capacity?.advancedDashboard || initialFormData.features.capacity.advancedDashboard,
+                    downloadableReports: planFeatures.capacity?.downloadableReports || initialFormData.features.capacity.downloadableReports
                 },
                 others: {
-                    technicalSupport: plan.features.others.technicalSupport,
-                    smartFunnelsAccess: plan.features.others.smartFunnelsAccess,
-                    aiTemplatesAccess: plan.features.others.aiTemplatesAccess
+                    technicalSupport: planFeatures.others?.technicalSupport || initialFormData.features.others.technicalSupport,
+                    responseTemplates: planFeatures.others?.responseTemplates || initialFormData.features.others.responseTemplates,
+                    smartFunnelsAccess: planFeatures.others?.smartFunnelsAccess || initialFormData.features.others.smartFunnelsAccess,
+                    aiTemplatesAccess: planFeatures.others?.aiTemplatesAccess || initialFormData.features.others.aiTemplatesAccess,
+                    competitorAnalysis: planFeatures.others?.competitorAnalysis || initialFormData.features.others.competitorAnalysis,
+                    customerRecovery: planFeatures.others?.customerRecovery || initialFormData.features.others.customerRecovery,
+                    personalizedTraining: planFeatures.others?.personalizedTraining || initialFormData.features.others.personalizedTraining,
+                    dynamicKnowledgeBase: planFeatures.others?.dynamicKnowledgeBase || initialFormData.features.others.dynamicKnowledgeBase,
+                    monthlyConsulting: planFeatures.others?.monthlyConsulting || initialFormData.features.others.monthlyConsulting,
+                    earlyAccessFeatures: planFeatures.others?.earlyAccessFeatures || initialFormData.features.others.earlyAccessFeatures
                 }
+            },
+            limitations: {
+                noDropiIntegration: planLimitations.noDropiIntegration === undefined ? initialFormData.limitations?.noDropiIntegration : planLimitations.noDropiIntegration,
+                noCompetitorAnalysis: planLimitations.noCompetitorAnalysis === undefined ? initialFormData.limitations?.noCompetitorAnalysis : planLimitations.noCompetitorAnalysis,
+                noCustomerRecovery: planLimitations.noCustomerRecovery === undefined ? initialFormData.limitations?.noCustomerRecovery : planLimitations.noCustomerRecovery,
+                noMetricsOrDashboards: planLimitations.noMetricsOrDashboards === undefined ? initialFormData.limitations?.noMetricsOrDashboards : planLimitations.noMetricsOrDashboards
             }
         });
         setShowForm(true);
@@ -829,6 +1055,15 @@ function AdminPlanesPage() {
             }
         }
     };
+    const handleToggleStatus = async (id)=>{
+        try {
+            await (0, __TURBOPACK__imported__module__$5b$project$5d2f$client$2f$src$2f$services$2f$plan$2e$service$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["togglePlanStatus"])(id);
+            fetchPlans();
+        } catch (err) {
+            setError('Error al cambiar el estado del plan.');
+            console.error(err);
+        }
+    };
     const openCreateForm = ()=>{
         setEditingPlan(null);
         setFormData(initialFormData);
@@ -840,12 +1075,12 @@ function AdminPlanesPage() {
             children: "Cargando planes..."
         }, void 0, false, {
             fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-            lineNumber: 224,
+            lineNumber: 294,
             columnNumber: 64
         }, this)
     }, void 0, false, {
         fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-        lineNumber: 224,
+        lineNumber: 294,
         columnNumber: 25
     }, this);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -859,16 +1094,8 @@ function AdminPlanesPage() {
                         children: "Gestión de Planes de Membresía"
                     }, void 0, false, {
                         fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                        lineNumber: 229,
+                        lineNumber: 299,
                         columnNumber: 9
-                    }, this),
-                    error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                        className: "text-red-500 bg-red-100 p-3 rounded mb-4",
-                        children: error
-                    }, void 0, false, {
-                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                        lineNumber: 231,
-                        columnNumber: 19
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                         onClick: openCreateForm,
@@ -876,16 +1103,23 @@ function AdminPlanesPage() {
                         children: "Crear Nuevo Plan"
                     }, void 0, false, {
                         fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                        lineNumber: 233,
+                        lineNumber: 300,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                lineNumber: 228,
+                lineNumber: 298,
                 columnNumber: 7
             }, this),
-            " ",
+            error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                className: "text-red-500 bg-red-100 p-3 rounded mb-4",
+                children: error
+            }, void 0, false, {
+                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                lineNumber: 308,
+                columnNumber: 17
+            }, this),
             showForm && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
                 onSubmit: handleSubmit,
                 className: "bg-gray-700 shadow-md rounded px-8 pt-6 pb-8 mb-4 text-white",
@@ -895,27 +1129,57 @@ function AdminPlanesPage() {
                         children: editingPlan ? 'Editar Plan' : 'Crear Nuevo Plan'
                     }, void 0, false, {
                         fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                        lineNumber: 243,
+                        lineNumber: 312,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "mb-4",
                         children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                className: "text-lg font-medium mb-2 text-white",
-                                children: "📝 Datos Generales"
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                htmlFor: "isActive",
+                                className: "block text-sm font-bold mb-2",
+                                children: "Activo"
                             }, void 0, false, {
                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                lineNumber: 246,
+                                lineNumber: 315,
                                 columnNumber: 13
                             }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                htmlFor: "name",
-                                className: "block text-gray-300 text-sm font-bold mb-2",
-                                children: "Nombre del Plan:"
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                type: "checkbox",
+                                name: "isActive",
+                                id: "isActive",
+                                checked: formData.isActive,
+                                onChange: handleInputChange,
+                                className: "mr-2 leading-tight"
                             }, void 0, false, {
                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                lineNumber: 247,
+                                lineNumber: 316,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                className: "text-sm",
+                                children: "Marcar si el plan está activo y disponible para los usuarios."
+                            }, void 0, false, {
+                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                lineNumber: 324,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                        lineNumber: 314,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "mb-4",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                htmlFor: "name",
+                                className: "block text-sm font-bold mb-2",
+                                children: "Nombre del Plan"
+                            }, void 0, false, {
+                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                lineNumber: 328,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -925,16 +1189,16 @@ function AdminPlanesPage() {
                                 value: formData.name,
                                 onChange: handleInputChange,
                                 required: true,
-                                className: "shadow appearance-none border rounded w-full py-2 px-3 bg-gray-600 text-white leading-tight focus:outline-none focus:shadow-outline"
+                                className: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             }, void 0, false, {
                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                lineNumber: 248,
+                                lineNumber: 329,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                        lineNumber: 245,
+                        lineNumber: 327,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -942,11 +1206,11 @@ function AdminPlanesPage() {
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                 htmlFor: "shortDescription",
-                                className: "block text-gray-300 text-sm font-bold mb-2",
-                                children: "Descripción Corta:"
+                                className: "block text-sm font-bold mb-2",
+                                children: "Descripción Corta"
                             }, void 0, false, {
                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                lineNumber: 252,
+                                lineNumber: 333,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
@@ -955,16 +1219,17 @@ function AdminPlanesPage() {
                                 value: formData.shortDescription,
                                 onChange: handleInputChange,
                                 required: true,
-                                className: "shadow appearance-none border rounded w-full py-2 px-3 bg-gray-600 text-white leading-tight focus:outline-none focus:shadow-outline"
+                                rows: 3,
+                                className: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                             }, void 0, false, {
                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                lineNumber: 253,
+                                lineNumber: 334,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                        lineNumber: 251,
+                        lineNumber: 332,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -974,11 +1239,11 @@ function AdminPlanesPage() {
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                         htmlFor: "monthlyPrice",
-                                        className: "block text-gray-300 text-sm font-bold mb-2",
-                                        children: "Precio Mensual (USD):"
+                                        className: "block text-sm font-bold mb-2",
+                                        children: "Precio Mensual (USD)"
                                     }, void 0, false, {
                                         fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                        lineNumber: 258,
+                                        lineNumber: 339,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -990,53 +1255,53 @@ function AdminPlanesPage() {
                                         required: true,
                                         min: "0",
                                         step: "0.01",
-                                        className: "shadow appearance-none border rounded w-full py-2 px-3 bg-gray-600 text-white leading-tight focus:outline-none focus:shadow-outline"
+                                        className: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     }, void 0, false, {
                                         fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                        lineNumber: 259,
+                                        lineNumber: 340,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                lineNumber: 257,
+                                lineNumber: 338,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                         htmlFor: "annualPrice",
-                                        className: "block text-gray-300 text-sm font-bold mb-2",
-                                        children: "Precio Anual (USD) (opcional):"
+                                        className: "block text-sm font-bold mb-2",
+                                        children: "Precio Anual (USD - opcional)"
                                     }, void 0, false, {
                                         fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                        lineNumber: 262,
+                                        lineNumber: 343,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                         type: "number",
                                         name: "annualPrice",
                                         id: "annualPrice",
-                                        value: formData.annualPrice,
+                                        value: formData.annualPrice || '',
                                         onChange: handleInputChange,
                                         min: "0",
                                         step: "0.01",
-                                        className: "shadow appearance-none border rounded w-full py-2 px-3 bg-gray-600 text-white leading-tight focus:outline-none focus:shadow-outline"
+                                        className: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     }, void 0, false, {
                                         fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                        lineNumber: 263,
+                                        lineNumber: 344,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                lineNumber: 261,
+                                lineNumber: 342,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                        lineNumber: 256,
+                        lineNumber: 337,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1046,12 +1311,12 @@ function AdminPlanesPage() {
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                         htmlFor: "trialPeriodDays",
-                                        className: "block text-gray-300 text-sm font-bold mb-2",
-                                        children: "Periodo de Prueba (días):"
+                                        className: "block text-sm font-bold mb-2",
+                                        children: "Días de Prueba Gratuita"
                                     }, void 0, false, {
                                         fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                        lineNumber: 269,
-                                        columnNumber: 17
+                                        lineNumber: 350,
+                                        columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                         type: "number",
@@ -1061,20 +1326,20 @@ function AdminPlanesPage() {
                                         onChange: handleInputChange,
                                         required: true,
                                         min: "0",
-                                        className: "shadow appearance-none border rounded w-full py-2 px-3 bg-gray-600 text-white leading-tight focus:outline-none focus:shadow-outline"
+                                        className: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     }, void 0, false, {
                                         fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                        lineNumber: 270,
-                                        columnNumber: 17
+                                        lineNumber: 351,
+                                        columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                lineNumber: 268,
+                                lineNumber: 349,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "flex items-center mt-6",
+                                className: "flex items-center",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                         type: "checkbox",
@@ -1085,107 +1350,77 @@ function AdminPlanesPage() {
                                         className: "mr-2 leading-tight"
                                     }, void 0, false, {
                                         fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                        lineNumber: 273,
-                                        columnNumber: 17
+                                        lineNumber: 354,
+                                        columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                         htmlFor: "requiresCardForTrial",
-                                        className: "text-sm text-gray-300",
-                                        children: "Requiere tarjeta para prueba"
+                                        className: "text-sm",
+                                        children: "¿Requiere tarjeta para la prueba?"
                                     }, void 0, false, {
                                         fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                        lineNumber: 274,
-                                        columnNumber: 17
+                                        lineNumber: 355,
+                                        columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                lineNumber: 272,
+                                lineNumber: 353,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                        lineNumber: 267,
+                        lineNumber: 348,
                         columnNumber: 11
                     }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "mb-6",
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("fieldset", {
+                        className: "border border-gray-600 p-4 rounded mb-6",
                         children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                                type: "checkbox",
-                                name: "isActive",
-                                id: "isActive",
-                                checked: formData.isActive,
-                                onChange: handleInputChange,
-                                className: "mr-2 leading-tight"
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("legend", {
+                                className: "text-lg font-semibold px-2",
+                                children: "Agentes IA"
                             }, void 0, false, {
                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                lineNumber: 279,
-                                columnNumber: 13
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                htmlFor: "isActive",
-                                className: "text-sm text-gray-300 font-bold",
-                                children: "Activo (mostrar en frontend)"
-                            }, void 0, false, {
-                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                lineNumber: 280,
-                                columnNumber: 13
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                        lineNumber: 278,
-                        columnNumber: 11
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "mb-4 text-white",
-                        children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                className: "text-lg font-medium mb-2 text-white",
-                                children: "⚙️ Funcionalidades"
-                            }, void 0, false, {
-                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                lineNumber: 284,
+                                lineNumber: 360,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "mb-3 p-3 border border-gray-600 rounded",
+                                className: "grid grid-cols-1 md:grid-cols-3 gap-4",
                                 children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
-                                        className: "font-semibold mb-1 text-white",
-                                        children: "🧠 Agentes AI"
-                                    }, void 0, false, {
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                htmlFor: "features.aiAgents.numberOfAgents",
+                                                className: "block text-sm font-bold mb-1",
+                                                children: "Número de Agentes"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 363,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                type: "number",
+                                                name: "features.aiAgents.numberOfAgents",
+                                                id: "features.aiAgents.numberOfAgents",
+                                                value: formData.features.aiAgents.numberOfAgents,
+                                                onChange: handleInputChange,
+                                                required: true,
+                                                min: "0",
+                                                className: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 364,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
                                         fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                        lineNumber: 287,
-                                        columnNumber: 17
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                        htmlFor: "features.aiAgents.numberOfAgents",
-                                        className: "block text-sm mb-1 text-gray-300",
-                                        children: "Número de agentes incluidos:"
-                                    }, void 0, false, {
-                                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                        lineNumber: 288,
-                                        columnNumber: 17
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                                        type: "number",
-                                        name: "features.aiAgents.numberOfAgents",
-                                        id: "features.aiAgents.numberOfAgents",
-                                        value: formData.features.aiAgents.numberOfAgents,
-                                        onChange: handleInputChange,
-                                        required: true,
-                                        min: "0",
-                                        className: "shadow appearance-none border rounded w-full py-1 px-2 bg-gray-600 text-white text-sm leading-tight focus:outline-none focus:shadow-outline mb-2"
-                                    }, void 0, false, {
-                                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                        lineNumber: 289,
-                                        columnNumber: 17
+                                        lineNumber: 362,
+                                        columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "flex items-center mb-1",
+                                        className: "flex items-center pt-5",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                 type: "checkbox",
@@ -1193,29 +1428,29 @@ function AdminPlanesPage() {
                                                 id: "features.aiAgents.allowAudio",
                                                 checked: formData.features.aiAgents.allowAudio,
                                                 onChange: handleInputChange,
-                                                className: "mr-2"
+                                                className: "mr-2 leading-tight"
                                             }, void 0, false, {
                                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                                lineNumber: 291,
-                                                columnNumber: 21
+                                                lineNumber: 367,
+                                                columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                 htmlFor: "features.aiAgents.allowAudio",
-                                                className: "text-sm text-gray-300",
-                                                children: "Permitir audio"
+                                                className: "text-sm",
+                                                children: "Permitir Audio"
                                             }, void 0, false, {
                                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                                lineNumber: 292,
-                                                columnNumber: 21
+                                                lineNumber: 368,
+                                                columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                        lineNumber: 290,
-                                        columnNumber: 17
+                                        lineNumber: 366,
+                                        columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "flex items-center",
+                                        className: "flex items-center pt-5",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                 type: "checkbox",
@@ -1223,69 +1458,146 @@ function AdminPlanesPage() {
                                                 id: "features.aiAgents.allowPhoneVoice",
                                                 checked: formData.features.aiAgents.allowPhoneVoice,
                                                 onChange: handleInputChange,
-                                                className: "mr-2"
+                                                className: "mr-2 leading-tight"
                                             }, void 0, false, {
                                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                                lineNumber: 295,
-                                                columnNumber: 21
+                                                lineNumber: 371,
+                                                columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                 htmlFor: "features.aiAgents.allowPhoneVoice",
-                                                className: "text-sm text-gray-300",
-                                                children: "Permitir voz telefónica"
+                                                className: "text-sm",
+                                                children: "Permitir Voz Telefónica"
                                             }, void 0, false, {
                                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                                lineNumber: 296,
-                                                columnNumber: 21
+                                                lineNumber: 372,
+                                                columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                        lineNumber: 294,
-                                        columnNumber: 17
+                                        lineNumber: 370,
+                                        columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                lineNumber: 286,
+                                lineNumber: 361,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                        lineNumber: 359,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("fieldset", {
+                        className: "border border-gray-600 p-4 rounded mb-6",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("legend", {
+                                className: "text-lg font-semibold px-2",
+                                children: "Integraciones"
+                            }, void 0, false, {
+                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                lineNumber: 378,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "mb-3 p-3 border border-gray-600 rounded",
+                                className: "grid grid-cols-1 md:grid-cols-3 gap-4",
                                 children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
-                                        className: "font-semibold mb-1 text-white",
-                                        children: "📲 Integraciones"
-                                    }, void 0, false, {
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                htmlFor: "features.integrations.numberOfPlatforms",
+                                                className: "block text-sm font-bold mb-1",
+                                                children: "Número de Plataformas"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 381,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                type: "number",
+                                                name: "features.integrations.numberOfPlatforms",
+                                                id: "features.integrations.numberOfPlatforms",
+                                                value: formData.features.integrations.numberOfPlatforms,
+                                                onChange: handleInputChange,
+                                                required: true,
+                                                min: "0",
+                                                className: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 382,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
                                         fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                        lineNumber: 301,
-                                        columnNumber: 17
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                        htmlFor: "features.integrations.numberOfPlatforms",
-                                        className: "block text-sm mb-1 text-gray-300",
-                                        children: "Número de plataformas soportadas:"
-                                    }, void 0, false, {
-                                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                        lineNumber: 302,
-                                        columnNumber: 17
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                                        type: "number",
-                                        name: "features.integrations.numberOfPlatforms",
-                                        id: "features.integrations.numberOfPlatforms",
-                                        value: formData.features.integrations.numberOfPlatforms,
-                                        onChange: handleInputChange,
-                                        required: true,
-                                        min: "0",
-                                        className: "shadow appearance-none border rounded w-full py-1 px-2 bg-gray-600 text-white text-sm leading-tight focus:outline-none focus:shadow-outline mb-2"
-                                    }, void 0, false, {
-                                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                        lineNumber: 303,
-                                        columnNumber: 17
+                                        lineNumber: 380,
+                                        columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "flex items-center mb-1",
+                                        className: "flex items-center pt-5",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                type: "checkbox",
+                                                name: "features.integrations.facebookMarketplace",
+                                                id: "features.integrations.facebookMarketplace",
+                                                checked: formData.features.integrations.facebookMarketplace,
+                                                onChange: handleInputChange,
+                                                className: "mr-2 leading-tight"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 385,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                htmlFor: "features.integrations.facebookMarketplace",
+                                                className: "text-sm",
+                                                children: "Facebook Marketplace"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 386,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                        lineNumber: 384,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex items-center pt-5",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                type: "checkbox",
+                                                name: "features.integrations.tiendanube",
+                                                id: "features.integrations.tiendanube",
+                                                checked: formData.features.integrations.tiendanube,
+                                                onChange: handleInputChange,
+                                                className: "mr-2 leading-tight"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 389,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                htmlFor: "features.integrations.tiendanube",
+                                                className: "text-sm",
+                                                children: "Tiendanube"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 390,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                        lineNumber: 388,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex items-center pt-5",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                 type: "checkbox",
@@ -1293,29 +1605,59 @@ function AdminPlanesPage() {
                                                 id: "features.integrations.dropi",
                                                 checked: formData.features.integrations.dropi,
                                                 onChange: handleInputChange,
-                                                className: "mr-2"
+                                                className: "mr-2 leading-tight"
                                             }, void 0, false, {
                                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                                lineNumber: 305,
-                                                columnNumber: 21
+                                                lineNumber: 393,
+                                                columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                 htmlFor: "features.integrations.dropi",
-                                                className: "text-sm text-gray-300",
+                                                className: "text-sm",
                                                 children: "Dropi"
                                             }, void 0, false, {
                                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                                lineNumber: 306,
-                                                columnNumber: 21
+                                                lineNumber: 394,
+                                                columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                        lineNumber: 304,
-                                        columnNumber: 17
+                                        lineNumber: 392,
+                                        columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "flex items-center mb-1",
+                                        className: "flex items-center pt-5",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                type: "checkbox",
+                                                name: "features.integrations.multiUserDropi",
+                                                id: "features.integrations.multiUserDropi",
+                                                checked: formData.features.integrations.multiUserDropi,
+                                                onChange: handleInputChange,
+                                                className: "mr-2 leading-tight"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 397,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                htmlFor: "features.integrations.multiUserDropi",
+                                                className: "text-sm",
+                                                children: "Dropi Multi-usuario"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 398,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                        lineNumber: 396,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex items-center pt-5",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                 type: "checkbox",
@@ -1323,29 +1665,29 @@ function AdminPlanesPage() {
                                                 id: "features.integrations.whatsapp",
                                                 checked: formData.features.integrations.whatsapp,
                                                 onChange: handleInputChange,
-                                                className: "mr-2"
+                                                className: "mr-2 leading-tight"
                                             }, void 0, false, {
                                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                                lineNumber: 309,
-                                                columnNumber: 21
+                                                lineNumber: 401,
+                                                columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                 htmlFor: "features.integrations.whatsapp",
-                                                className: "text-sm text-gray-300",
+                                                className: "text-sm",
                                                 children: "WhatsApp"
                                             }, void 0, false, {
                                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                                lineNumber: 310,
-                                                columnNumber: 21
+                                                lineNumber: 402,
+                                                columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                        lineNumber: 308,
-                                        columnNumber: 17
+                                        lineNumber: 400,
+                                        columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "flex items-center",
+                                        className: "flex items-center pt-5",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                 type: "checkbox",
@@ -1353,69 +1695,140 @@ function AdminPlanesPage() {
                                                 id: "features.integrations.apiAccess",
                                                 checked: formData.features.integrations.apiAccess,
                                                 onChange: handleInputChange,
-                                                className: "mr-2"
+                                                className: "mr-2 leading-tight"
                                             }, void 0, false, {
                                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                                lineNumber: 313,
-                                                columnNumber: 21
+                                                lineNumber: 405,
+                                                columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                 htmlFor: "features.integrations.apiAccess",
-                                                className: "text-sm text-gray-300",
-                                                children: "API acceso"
+                                                className: "text-sm",
+                                                children: "Acceso API"
                                             }, void 0, false, {
                                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                                lineNumber: 314,
-                                                columnNumber: 21
+                                                lineNumber: 406,
+                                                columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                        lineNumber: 312,
-                                        columnNumber: 17
+                                        lineNumber: 404,
+                                        columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                lineNumber: 300,
+                                lineNumber: 379,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                        lineNumber: 377,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("fieldset", {
+                        className: "border border-gray-600 p-4 rounded mb-6",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("legend", {
+                                className: "text-lg font-semibold px-2",
+                                children: "Capacidad"
+                            }, void 0, false, {
+                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                lineNumber: 412,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "mb-3 p-3 border border-gray-600 rounded",
+                                className: "grid grid-cols-1 md:grid-cols-2 gap-4",
                                 children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
-                                        className: "font-semibold mb-1 text-white",
-                                        children: "📈 Capacidad"
-                                    }, void 0, false, {
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                htmlFor: "features.capacity.conversationLimitMonthly",
+                                                className: "block text-sm font-bold mb-1",
+                                                children: "Límite de Conversaciones Mensuales"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 415,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                type: "text",
+                                                name: "features.capacity.conversationLimitMonthly",
+                                                id: "features.capacity.conversationLimitMonthly",
+                                                value: formData.features.capacity.conversationLimitMonthly,
+                                                onChange: handleInputChange,
+                                                required: true,
+                                                placeholder: "Ej: 1000 o 'unlimited'",
+                                                className: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 416,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
                                         fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                        lineNumber: 319,
-                                        columnNumber: 17
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                        htmlFor: "features.capacity.conversationLimitMonthly",
-                                        className: "block text-sm mb-1 text-gray-300",
-                                        children: "Límite de conversaciones al mes:"
-                                    }, void 0, false, {
-                                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                        lineNumber: 320,
-                                        columnNumber: 17
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                                        type: "number",
-                                        name: "features.capacity.conversationLimitMonthly",
-                                        id: "features.capacity.conversationLimitMonthly",
-                                        value: formData.features.capacity.conversationLimitMonthly,
-                                        onChange: handleInputChange,
-                                        required: true,
-                                        min: "0",
-                                        className: "shadow appearance-none border rounded w-full py-1 px-2 bg-gray-600 text-white text-sm leading-tight focus:outline-none focus:shadow-outline mb-2"
-                                    }, void 0, false, {
-                                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                        lineNumber: 321,
-                                        columnNumber: 17
+                                        lineNumber: 414,
+                                        columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "flex items-center mb-1",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                htmlFor: "features.capacity.catalogVerification",
+                                                className: "block text-sm font-bold mb-1",
+                                                children: "Verificación de Catálogo"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 419,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
+                                                name: "features.capacity.catalogVerification",
+                                                id: "features.capacity.catalogVerification",
+                                                value: formData.features.capacity.catalogVerification,
+                                                onChange: handleInputChange,
+                                                className: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                        value: "none",
+                                                        children: "Ninguna"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                        lineNumber: 421,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                        value: "manual",
+                                                        children: "Manual"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                        lineNumber: 422,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                        value: "automatic",
+                                                        children: "Automática"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                        lineNumber: 423,
+                                                        columnNumber: 19
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 420,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                        lineNumber: 418,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex items-center pt-2",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                 type: "checkbox",
@@ -1423,29 +1836,29 @@ function AdminPlanesPage() {
                                                 id: "features.capacity.accessToMetrics",
                                                 checked: formData.features.capacity.accessToMetrics,
                                                 onChange: handleInputChange,
-                                                className: "mr-2"
+                                                className: "mr-2 leading-tight"
                                             }, void 0, false, {
                                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                                lineNumber: 323,
-                                                columnNumber: 21
+                                                lineNumber: 427,
+                                                columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                 htmlFor: "features.capacity.accessToMetrics",
-                                                className: "text-sm text-gray-300",
-                                                children: "Acceso a métricas"
+                                                className: "text-sm",
+                                                children: "Acceso a Métricas"
                                             }, void 0, false, {
                                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                                lineNumber: 324,
-                                                columnNumber: 21
+                                                lineNumber: 428,
+                                                columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                        lineNumber: 322,
-                                        columnNumber: 17
+                                        lineNumber: 426,
+                                        columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "flex items-center",
+                                        className: "flex items-center pt-2",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                 type: "checkbox",
@@ -1453,92 +1866,193 @@ function AdminPlanesPage() {
                                                 id: "features.capacity.advancedDashboard",
                                                 checked: formData.features.capacity.advancedDashboard,
                                                 onChange: handleInputChange,
-                                                className: "mr-2"
+                                                className: "mr-2 leading-tight"
                                             }, void 0, false, {
                                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                                lineNumber: 327,
-                                                columnNumber: 21
+                                                lineNumber: 431,
+                                                columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                 htmlFor: "features.capacity.advancedDashboard",
-                                                className: "text-sm text-gray-300",
-                                                children: "Dashboard avanzado"
+                                                className: "text-sm",
+                                                children: "Dashboard Avanzado"
                                             }, void 0, false, {
                                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                                lineNumber: 328,
-                                                columnNumber: 21
+                                                lineNumber: 432,
+                                                columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                        lineNumber: 326,
-                                        columnNumber: 17
+                                        lineNumber: 430,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex items-center",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                type: "checkbox",
+                                                name: "features.capacity.downloadableReports",
+                                                id: "features.capacity.downloadableReports",
+                                                checked: formData.features.capacity.downloadableReports,
+                                                onChange: handleInputChange,
+                                                className: "mr-2 leading-tight"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 435,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                htmlFor: "features.capacity.downloadableReports",
+                                                className: "text-sm",
+                                                children: "Reportes Descargables"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 436,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                        lineNumber: 434,
+                                        columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                lineNumber: 318,
+                                lineNumber: 413,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                        lineNumber: 411,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("fieldset", {
+                        className: "border border-gray-600 p-4 rounded mb-6",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("legend", {
+                                className: "text-lg font-semibold px-2",
+                                children: "Otros Beneficios"
+                            }, void 0, false, {
+                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                lineNumber: 442,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "mb-3 p-3 border border-gray-600 rounded",
+                                className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4",
                                 children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
-                                        className: "font-semibold mb-1 text-white",
-                                        children: "🧩 Otros"
-                                    }, void 0, false, {
-                                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                        lineNumber: 333,
-                                        columnNumber: 17
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                        htmlFor: "features.others.technicalSupport",
-                                        className: "block text-sm mb-1 text-gray-300",
-                                        children: "Soporte técnico:"
-                                    }, void 0, false, {
-                                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                        lineNumber: 334,
-                                        columnNumber: 17
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
-                                        name: "features.others.technicalSupport",
-                                        id: "features.others.technicalSupport",
-                                        value: formData.features.others.technicalSupport,
-                                        onChange: handleInputChange,
-                                        className: "shadow appearance-none border rounded w-full py-1 px-2 bg-gray-600 text-white text-sm leading-tight focus:outline-none focus:shadow-outline mb-2",
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                                value: "email",
-                                                children: "Email"
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                htmlFor: "features.others.technicalSupport",
+                                                className: "block text-sm font-bold mb-1",
+                                                children: "Soporte Técnico"
                                             }, void 0, false, {
                                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                                lineNumber: 336,
-                                                columnNumber: 21
+                                                lineNumber: 445,
+                                                columnNumber: 17
                                             }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                                value: "chat",
-                                                children: "Chat"
-                                            }, void 0, false, {
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
+                                                name: "features.others.technicalSupport",
+                                                id: "features.others.technicalSupport",
+                                                value: formData.features.others.technicalSupport,
+                                                onChange: handleInputChange,
+                                                className: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                        value: "email",
+                                                        children: "Email"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                        lineNumber: 447,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                        value: "chat",
+                                                        children: "Chat"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                        lineNumber: 448,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                        value: "priority",
+                                                        children: "Prioritario"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                        lineNumber: 449,
+                                                        columnNumber: 19
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
                                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                                lineNumber: 337,
-                                                columnNumber: 21
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                                value: "priority",
-                                                children: "Prioridad"
-                                            }, void 0, false, {
-                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                                lineNumber: 338,
-                                                columnNumber: 21
+                                                lineNumber: 446,
+                                                columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                        lineNumber: 335,
-                                        columnNumber: 17
+                                        lineNumber: 444,
+                                        columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "flex items-center mb-1",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                htmlFor: "features.others.responseTemplates",
+                                                className: "block text-sm font-bold mb-1",
+                                                children: "Plantillas de Respuesta"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 453,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
+                                                name: "features.others.responseTemplates",
+                                                id: "features.others.responseTemplates",
+                                                value: formData.features.others.responseTemplates,
+                                                onChange: handleInputChange,
+                                                className: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                        value: "default",
+                                                        children: "Por Defecto"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                        lineNumber: 455,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                        value: "customizable",
+                                                        children: "Personalizables"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                        lineNumber: 456,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                        value: "library",
+                                                        children: "Biblioteca de Plantillas Personalizadas"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                        lineNumber: 457,
+                                                        columnNumber: 19
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 454,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                        lineNumber: 452,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex items-center pt-5",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                 type: "checkbox",
@@ -1546,29 +2060,29 @@ function AdminPlanesPage() {
                                                 id: "features.others.smartFunnelsAccess",
                                                 checked: formData.features.others.smartFunnelsAccess,
                                                 onChange: handleInputChange,
-                                                className: "mr-2"
+                                                className: "mr-2 leading-tight"
                                             }, void 0, false, {
                                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                                lineNumber: 341,
-                                                columnNumber: 21
+                                                lineNumber: 461,
+                                                columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                 htmlFor: "features.others.smartFunnelsAccess",
-                                                className: "text-sm text-gray-300",
-                                                children: "Acceso a embudos inteligentes"
+                                                className: "text-sm",
+                                                children: "Acceso a Embudos Inteligentes"
                                             }, void 0, false, {
                                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                                lineNumber: 342,
-                                                columnNumber: 21
+                                                lineNumber: 462,
+                                                columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                        lineNumber: 340,
-                                        columnNumber: 17
+                                        lineNumber: 460,
+                                        columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "flex items-center",
+                                        className: "flex items-center pt-5",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                 type: "checkbox",
@@ -1576,37 +2090,363 @@ function AdminPlanesPage() {
                                                 id: "features.others.aiTemplatesAccess",
                                                 checked: formData.features.others.aiTemplatesAccess,
                                                 onChange: handleInputChange,
-                                                className: "mr-2"
+                                                className: "mr-2 leading-tight"
                                             }, void 0, false, {
                                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                                lineNumber: 345,
-                                                columnNumber: 21
+                                                lineNumber: 465,
+                                                columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                 htmlFor: "features.others.aiTemplatesAccess",
-                                                className: "text-sm text-gray-300",
-                                                children: "Acceso a plantillas IA"
+                                                className: "text-sm",
+                                                children: "Acceso a Plantillas IA"
                                             }, void 0, false, {
                                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                                lineNumber: 346,
-                                                columnNumber: 21
+                                                lineNumber: 466,
+                                                columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                        lineNumber: 344,
-                                        columnNumber: 17
+                                        lineNumber: 464,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex items-center pt-5",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                type: "checkbox",
+                                                name: "features.others.competitorAnalysis",
+                                                id: "features.others.competitorAnalysis",
+                                                checked: formData.features.others.competitorAnalysis,
+                                                onChange: handleInputChange,
+                                                className: "mr-2 leading-tight"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 469,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                htmlFor: "features.others.competitorAnalysis",
+                                                className: "text-sm",
+                                                children: "Análisis de Competencia"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 470,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                        lineNumber: 468,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex items-center pt-5",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                type: "checkbox",
+                                                name: "features.others.customerRecovery",
+                                                id: "features.others.customerRecovery",
+                                                checked: formData.features.others.customerRecovery,
+                                                onChange: handleInputChange,
+                                                className: "mr-2 leading-tight"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 473,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                htmlFor: "features.others.customerRecovery",
+                                                className: "text-sm",
+                                                children: "Recuperación de Clientes"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 474,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                        lineNumber: 472,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex items-center pt-5",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                type: "checkbox",
+                                                name: "features.others.personalizedTraining",
+                                                id: "features.others.personalizedTraining",
+                                                checked: formData.features.others.personalizedTraining,
+                                                onChange: handleInputChange,
+                                                className: "mr-2 leading-tight"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 477,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                htmlFor: "features.others.personalizedTraining",
+                                                className: "text-sm",
+                                                children: "Entrenamiento Personalizado"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 478,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                        lineNumber: 476,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex items-center pt-5",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                type: "checkbox",
+                                                name: "features.others.dynamicKnowledgeBase",
+                                                id: "features.others.dynamicKnowledgeBase",
+                                                checked: formData.features.others.dynamicKnowledgeBase,
+                                                onChange: handleInputChange,
+                                                className: "mr-2 leading-tight"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 481,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                htmlFor: "features.others.dynamicKnowledgeBase",
+                                                className: "text-sm",
+                                                children: "Base de Conocimiento Dinámica"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 482,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                        lineNumber: 480,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex items-center pt-5",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                type: "checkbox",
+                                                name: "features.others.monthlyConsulting",
+                                                id: "features.others.monthlyConsulting",
+                                                checked: formData.features.others.monthlyConsulting,
+                                                onChange: handleInputChange,
+                                                className: "mr-2 leading-tight"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 485,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                htmlFor: "features.others.monthlyConsulting",
+                                                className: "text-sm",
+                                                children: "Consultoría Mensual"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 486,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                        lineNumber: 484,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex items-center pt-5",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                type: "checkbox",
+                                                name: "features.others.earlyAccessFeatures",
+                                                id: "features.others.earlyAccessFeatures",
+                                                checked: formData.features.others.earlyAccessFeatures,
+                                                onChange: handleInputChange,
+                                                className: "mr-2 leading-tight"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 489,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                htmlFor: "features.others.earlyAccessFeatures",
+                                                className: "text-sm",
+                                                children: "Acceso Anticipado a Funciones"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 490,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                        lineNumber: 488,
+                                        columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                lineNumber: 332,
+                                lineNumber: 443,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                        lineNumber: 283,
+                        lineNumber: 441,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("fieldset", {
+                        className: "border border-gray-600 p-4 rounded mb-6",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("legend", {
+                                className: "text-lg font-semibold px-2",
+                                children: "Limitaciones (para planes básicos)"
+                            }, void 0, false, {
+                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                lineNumber: 496,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "grid grid-cols-1 md:grid-cols-2 gap-4",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex items-center",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                type: "checkbox",
+                                                name: "limitations.noDropiIntegration",
+                                                id: "limitations.noDropiIntegration",
+                                                checked: formData.limitations?.noDropiIntegration || false,
+                                                onChange: handleInputChange,
+                                                className: "mr-2 leading-tight"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 499,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                htmlFor: "limitations.noDropiIntegration",
+                                                className: "text-sm",
+                                                children: "Sin Integración Dropi"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 500,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                        lineNumber: 498,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex items-center",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                type: "checkbox",
+                                                name: "limitations.noCompetitorAnalysis",
+                                                id: "limitations.noCompetitorAnalysis",
+                                                checked: formData.limitations?.noCompetitorAnalysis || false,
+                                                onChange: handleInputChange,
+                                                className: "mr-2 leading-tight"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 503,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                htmlFor: "limitations.noCompetitorAnalysis",
+                                                className: "text-sm",
+                                                children: "Sin Análisis de Competencia"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 504,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                        lineNumber: 502,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex items-center",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                type: "checkbox",
+                                                name: "limitations.noCustomerRecovery",
+                                                id: "limitations.noCustomerRecovery",
+                                                checked: formData.limitations?.noCustomerRecovery || false,
+                                                onChange: handleInputChange,
+                                                className: "mr-2 leading-tight"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 507,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                htmlFor: "limitations.noCustomerRecovery",
+                                                className: "text-sm",
+                                                children: "Sin Recuperación de Clientes"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 508,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                        lineNumber: 506,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex items-center",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                type: "checkbox",
+                                                name: "limitations.noMetricsOrDashboards",
+                                                id: "limitations.noMetricsOrDashboards",
+                                                checked: formData.limitations?.noMetricsOrDashboards || false,
+                                                onChange: handleInputChange,
+                                                className: "mr-2 leading-tight"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 511,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                htmlFor: "limitations.noMetricsOrDashboards",
+                                                className: "text-sm",
+                                                children: "Sin Métricas ni Dashboards"
+                                            }, void 0, false, {
+                                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                                lineNumber: 512,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                        lineNumber: 510,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                lineNumber: 497,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                        lineNumber: 495,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1618,7 +2458,7 @@ function AdminPlanesPage() {
                                 children: editingPlan ? 'Actualizar Plan' : 'Guardar Plan'
                             }, void 0, false, {
                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                lineNumber: 353,
+                                lineNumber: 519,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1628,42 +2468,85 @@ function AdminPlanesPage() {
                                     setEditingPlan(null);
                                     setFormData(initialFormData);
                                 },
-                                className: "bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline",
+                                className: "bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline",
                                 children: "Cancelar"
                             }, void 0, false, {
                                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                                lineNumber: 356,
+                                lineNumber: 522,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                        lineNumber: 352,
+                        lineNumber: 518,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                lineNumber: 242,
+                lineNumber: 311,
                 columnNumber: 9
             }, this),
             !showForm && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "mt-12",
                 children: plans.length > 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: " md:grid-cols-2 lg:grid-cols-3 gap-8 ",
-                    children: plans.map((plan)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$client$2f$src$2f$app$2f$planes$2f$page$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PlanCard"], {
-                            plan: plan,
-                            isAdmin: true,
-                            onEdit: ()=>handleEdit(plan),
-                            onDelete: ()=>handleDelete(plan._id)
-                        }, plan._id, false, {
+                    className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8",
+                    children: plans.map((plan)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: `bg-slate-700 shadow-xl rounded-lg p-6 flex flex-col justify-between transition-all duration-300 ease-in-out hover:shadow-2xl ${!plan.isActive ? 'opacity-60 border-dashed border-gray-500' : 'border-transparent'} border-2`,
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$client$2f$src$2f$app$2f$planes$2f$page$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PlanCard"], {
+                                    plan: plan,
+                                    isAdmin: true
+                                }, void 0, false, {
+                                    fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                    lineNumber: 535,
+                                    columnNumber: 19
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "mt-4 pt-4 border-t border-slate-600 flex flex-col space-y-2",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            onClick: ()=>handleEdit(plan),
+                                            className: "w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-3 rounded-md text-sm transition-colors duration-300 transform hover:scale-105",
+                                            children: "Editar"
+                                        }, void 0, false, {
+                                            fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                            lineNumber: 540,
+                                            columnNumber: 21
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            onClick: ()=>handleToggleStatus(plan._id),
+                                            className: `w-full font-semibold py-2 px-3 rounded-md text-sm transition-colors duration-300 transform hover:scale-105 ${plan.isActive ? 'bg-orange-500 hover:bg-orange-600 text-white' : 'bg-green-500 hover:bg-green-600 text-white'}`,
+                                            children: plan.isActive ? 'Desactivar' : 'Activar'
+                                        }, void 0, false, {
+                                            fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                            lineNumber: 546,
+                                            columnNumber: 21
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            onClick: ()=>handleDelete(plan._id),
+                                            className: "w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-3 rounded-md text-sm transition-colors duration-300 transform hover:scale-105",
+                                            children: "Eliminar"
+                                        }, void 0, false, {
+                                            fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                            lineNumber: 552,
+                                            columnNumber: 21
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
+                                    lineNumber: 539,
+                                    columnNumber: 19
+                                }, this)
+                            ]
+                        }, plan._id, true, {
                             fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                            lineNumber: 368,
+                            lineNumber: 534,
                             columnNumber: 17
                         }, this))
                 }, void 0, false, {
                     fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                    lineNumber: 366,
+                    lineNumber: 532,
                     columnNumber: 13
                 }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                     className: "text-center py-12",
@@ -1673,7 +2556,7 @@ function AdminPlanesPage() {
                             children: "No hay planes disponibles en este momento."
                         }, void 0, false, {
                             fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                            lineNumber: 379,
+                            lineNumber: 564,
                             columnNumber: 15
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1681,24 +2564,24 @@ function AdminPlanesPage() {
                             children: "Intenta crear uno para empezar."
                         }, void 0, false, {
                             fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                            lineNumber: 380,
+                            lineNumber: 565,
                             columnNumber: 15
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                    lineNumber: 378,
+                    lineNumber: 563,
                     columnNumber: 13
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-                lineNumber: 364,
+                lineNumber: 530,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/client/src/app/usuarios/admin/planes/page.tsx",
-        lineNumber: 227,
+        lineNumber: 297,
         columnNumber: 5
     }, this);
 }

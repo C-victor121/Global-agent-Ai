@@ -1,6 +1,19 @@
-import mongoose from 'mongoose';
+import mongoose, { Document, Schema } from 'mongoose';
 
-const userSchema = new mongoose.Schema({
+export interface IUser extends Document {
+  name: string;
+  email: string;
+  password?: string;
+  googleId?: string;
+  facebookId?: string;
+  avatar?: string;
+  role: 'user' | 'admin';
+  twilioPhoneNumber?: string; // Añadido para la lógica de Twilio
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const userSchema = new Schema<IUser>({
   name: {
     type: String,
     required: [true, 'El nombre es requerido'],

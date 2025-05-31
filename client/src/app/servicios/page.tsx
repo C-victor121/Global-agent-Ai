@@ -5,10 +5,13 @@ export default function Servicios() {
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl font-bold text-center mb-12 bg-gradient-to-r from-purple-400 via-blue-400 to-green-400 bg-clip-text text-transparent animate-gradient">
-          Servicios de Automatización AI
+          Nuestros Servicios con Inteligencia Artificial
         </h1>
+        <p className="text-center text-xl text-gray-300 max-w-3xl mx-auto mb-16">
+          Potenciamos tu negocio con agentes de IA que responden preguntas frecuentes, envían información de productos, confirman disponibilidad, guían en compras, recuperan clientes y se adaptan a tu estilo de comunicación.
+        </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {/* Chatbots Multicanal */}
           <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-8 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-all duration-300 border border-white/20">
             <div className="h-16 w-16 bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl flex items-center justify-center mb-6 shadow-lg transform hover:scale-110 transition-transform duration-200">
@@ -16,8 +19,8 @@ export default function Servicios() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
               </svg>
             </div>
-            <h3 className="text-2xl font-bold mb-4 text-white">Chatbots Multicanal</h3>
-            <p className="text-gray-300 leading-relaxed">Automatiza la comunicación con tus clientes a través de WhatsApp, Facebook, Instagram y más. Respuestas inteligentes 24/7 con integración de IA avanzada.</p>
+            <h3 className="text-2xl font-bold mb-4 text-white">Agentes AI Multicanal</h3>
+            <p className="text-gray-300 leading-relaxed">Implementamos agentes IA en Facebook Marketplace, Instagram, TikTok, WhatsApp (próximamente), tu sitio web, Mercado Libre, Tiendanube y más. Atienden 24/7, incluso mientras duermes.</p>
           </div>
 
           {/* Análisis de Competencia */}
@@ -27,8 +30,8 @@ export default function Servicios() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
             </div>
-            <h3 className="text-2xl font-bold mb-4 text-white">Análisis de Competencia</h3>
-            <p className="text-gray-300 leading-relaxed">Monitoreo automático de precios, productos y estrategias de la competencia. Informes detallados y alertas en tiempo real para mantener tu ventaja competitiva.</p>
+            <h3 className="text-2xl font-bold mb-4 text-white">Entrenamiento y Personalización Avanzada</h3>
+            <p className="text-gray-300 leading-relaxed">Configuramos el tono de tu asistente (amable, directo, etc.) y lo entrenamos con tus respuestas reales para que hable como tú y conozca tus productos. Aprende y mejora continuamente.</p>
           </div>
 
           {/* Automatización de Respuestas */}
@@ -38,8 +41,8 @@ export default function Servicios() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
               </svg>
             </div>
-            <h3 className="text-2xl font-bold mb-4 text-white">Automatización de Respuestas</h3>
-            <p className="text-gray-300 leading-relaxed">Sistema inteligente que aprende de las interacciones previas para proporcionar respuestas precisas y personalizadas a consultas frecuentes de clientes.</p>
+            <h3 className="text-2xl font-bold mb-4 text-white">Integración con Ecosistema de Ventas</h3>
+            <p className="text-gray-300 leading-relaxed">Conectamos tu agente IA con Dropi para búsqueda de productos, subida a marketplaces y gestión de pedidos. También ofrecemos acceso API para CRMs o ERPs.</p>
           </div>
 
           {/* Gestión de Ventas */}
@@ -49,9 +52,32 @@ export default function Servicios() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <h3 className="text-2xl font-bold mb-4 text-white">Gestión de Ventas</h3>
-            <p className="text-gray-300 leading-relaxed">Optimización del proceso de ventas con seguimiento automático de leads, predicción de conversiones y recomendaciones personalizadas para cerrar ventas.</p>
+            <h3 className="text-2xl font-bold mb-4 text-white">Funcionalidades Avanzadas de Venta</h3>
+            <p className="text-gray-300 leading-relaxed">Incluye embudos inteligentes para detectar interés del cliente, recuperación de carritos abandonados, y acceso a plantillas de mensajes personalizadas para situaciones especiales.</p>
           </div>
+          
+          {/* Asesoría y Soporte Dedicado */}
+          <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-8 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-all duration-300 border border-white/20">
+            <div className="h-16 w-16 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center mb-6 shadow-lg transform hover:scale-110 transition-transform duration-200">
+              <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
+              </svg>
+            </div>
+            <h3 className="text-2xl font-bold mb-4 text-white">Asesoría y Soporte Dedicado</h3>
+            <p className="text-gray-300 leading-relaxed">Te ayudamos a configurar tu agente paso a paso. Ofrecemos soporte prioritario 24/7 y asesoría mensual personalizada para optimizar tu flujo de ventas con IA.</p>
+          </div>
+
+          {/* Capacidades de Voz y Métricas Avanzadas */}
+          <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-8 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-all duration-300 border border-white/20">
+            <div className="h-16 w-16 bg-gradient-to-br from-cyan-500 to-sky-500 rounded-xl flex items-center justify-center mb-6 shadow-lg transform hover:scale-110 transition-transform duration-200">
+              <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.636 5.636a9 9 0 0112.728 0M12 18.75a.75.75 0 100-1.5.75.75 0 000 1.5zM12 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+            <h3 className="text-2xl font-bold mb-4 text-white">Capacidades de Voz y Métricas Avanzadas</h3>
+            <p className="text-gray-300 leading-relaxed">Tu agente puede responder por audio e incluso atender llamadas telefónicas (beta). Accede a un dashboard avanzado con estadísticas, informes y métricas de rendimiento.</p>
+          </div>
+
         </div>
       </div>
     </div>

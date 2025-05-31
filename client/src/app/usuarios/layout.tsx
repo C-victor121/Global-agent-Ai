@@ -2,7 +2,7 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../api/auth/[...nextauth]/options';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { FaUser, FaCog, FaClipboardList, FaSignOutAlt, FaUsers } from 'react-icons/fa';
+import { FaUser, FaCog, FaClipboardList, FaSignOutAlt, FaUsers, FaCommentDots, FaBrain } from 'react-icons/fa';
 
 export default async function UsersLayout({
   children,
@@ -36,6 +36,10 @@ export default async function UsersLayout({
             <FaCog className="w-5 h-5" />
             <span>Configuración</span>
           </Link>
+          <Link href="/usuarios/generacion-contenidos" className="flex items-center space-x-3 text-gray-300 hover:text-white transition-colors">
+            <FaBrain className="w-5 h-5" />
+            <span>Generación de Contenidos</span>
+          </Link>
 
           {/* Enlace de Gestión de Usuarios para Admin */}
           {userRole === 'admin' && (
@@ -48,6 +52,11 @@ export default async function UsersLayout({
                 {/* Reemplazar FaCog con un ícono más apropiado para planes si está disponible, ej. FaListAlt o FaDollarSign */}
                 <FaCog className="w-5 h-5" /> 
                 <span>Gestión de Planes</span>
+              </Link>
+              <Link href="/usuarios/mensajes" className="flex items-center space-x-3 text-gray-300 hover:text-white transition-colors">
+                {/* Ícono para Mensajes, puedes cambiarlo si tienes uno más específico */}
+                <FaCommentDots className="w-5 h-5" /> 
+                <span>Mensajes</span>
               </Link>
             </>
           )}

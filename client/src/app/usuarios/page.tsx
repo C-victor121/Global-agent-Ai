@@ -3,6 +3,7 @@
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import ConnectWhatsAppButton from '@/components/ConnectWhatsApp'; // Importar el componente
 
 export default function UsuariosPage() {
   const { data: session, status } = useSession();
@@ -62,9 +63,8 @@ export default function UsuariosPage() {
           <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors">
             Ver Estadísticas
           </button>
-          <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition-colors">
-            Configurar Perfil
-          </button>
+          {/* El componente ConnectWhatsAppButton ya maneja la lógica de conexión y prueba gratuita */}
+          <ConnectWhatsAppButton />
         </div>
       </div>
     </div>

@@ -5,8 +5,8 @@ import { motion } from 'framer-motion';
 export default function ComoFunciona() {
   const steps = [
     {
-      title: 'Análisis Inicial',
-      description: 'Evaluamos tu proceso de ventas actual y identificamos las áreas de oportunidad para la automatización.',
+      title: '1. Entendemos tu Negocio',
+      description: 'No necesitas ser programador. Analizamos tu empresa, productos/servicios, tono de marca y objetivos. Identificamos cómo un agente IA puede optimizar tus interacciones y ventas.',
       icon: (
         <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
@@ -14,8 +14,8 @@ export default function ComoFunciona() {
       )
     },
     {
-      title: 'Configuración del Agente IA',
-      description: 'Implementamos y entrenamos tu agente de IA personalizado según tus necesidades específicas.',
+      title: '2. Configuración Personalizada del Agente IA',
+      description: 'Nuestro equipo configura tu agente IA paso a paso. Lo entrenamos con tu información y ajustamos su estilo de comunicación (formal, informal, técnico) para que responda exactamente como lo necesitas.',
       icon: (
         <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -24,8 +24,8 @@ export default function ComoFunciona() {
       )
     },
     {
-      title: 'Integración de Canales',
-      description: 'Conectamos tu agente con múltiples plataformas de comunicación para una gestión unificada.',
+      title: '3. Despliegue Multicanal Inteligente',
+      description: 'Integramos tu agente en las plataformas clave para tu negocio: Facebook, Instagram, WhatsApp (próximamente), tu web, Mercado Libre, Tiendanube y más. Responde por texto, audio e incluso voz (beta).',
       icon: (
         <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
@@ -33,8 +33,8 @@ export default function ComoFunciona() {
       )
     },
     {
-      title: 'Optimización Continua',
-      description: 'Monitoreamos y mejoramos constantemente el rendimiento de tu agente con análisis de datos.',
+      title: '4. Aprendizaje y Mejora Constante',
+      description: 'El agente IA aprende de cada conversación y se entrena en tiempo real. Analizamos su rendimiento y lo optimizamos para que sea cada vez más eficiente y se adapte a las nuevas necesidades de tus clientes.',
       icon: (
         <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
@@ -54,10 +54,10 @@ export default function ComoFunciona() {
           className="space-y-8"
         >
           <h1 className="text-4xl lg:text-6xl font-bold bg-gradient-to-r from-purple-400 via-blue-400 to-green-400 bg-clip-text text-transparent">
-            ¿Cómo Funciona?
+            Así Transformamos tus Ventas con IA
           </h1>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Descubre cómo nuestros agentes de IA transforman tu proceso de ventas en cuatro simples pasos
+            Nuestros agentes de IA son como empleados digitales que nunca duermen. Entienden, procesan y responden mensajes automáticamente, adaptándose a tu estilo y aprendiendo continuamente para ofrecer un servicio excepcional 24/7.
           </p>
         </motion.div>
       </section>
@@ -101,13 +101,13 @@ export default function ComoFunciona() {
           className="bg-gradient-to-r from-purple-500/20 to-blue-500/20 backdrop-blur-xl rounded-2xl p-12 border border-white/10"
         >
           <h2 className="text-3xl font-bold mb-6 text-white">
-            ¿Listo para empezar?
+            ¿Preparado para la Revolución IA en tus Ventas?
           </h2>
           <p className="text-xl text-gray-300 mb-8">
-            Comienza a transformar tu proceso de ventas con la potencia de la IA
+            Cualquier empresa que reciba muchos mensajes diarios puede beneficiarse. Desde agencias hasta inmobiliarias, clínicas o consultores. ¡Deja que la IA trabaje por ti!
           </p>
           <button className="bg-gradient-to-r from-purple-500 to-blue-500 text-white py-3 px-8 rounded-lg hover:opacity-90 transition-opacity text-lg font-medium">
-            Solicitar Demo
+            Explora Nuestros Planes
           </button>
         </motion.div>
       </section>

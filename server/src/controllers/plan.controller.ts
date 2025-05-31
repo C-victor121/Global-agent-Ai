@@ -48,6 +48,21 @@ export const updatePlan = async (req: Request, res: Response): Promise<Response>
   }
 };
 
+export const togglePlanStatus = async (req: Request, res: Response): Promise<Response> => {
+  try {
+    const plan = await Plan.findById(req.params.id);
+    if (!plan) {
+      return res.status(404).json({ message: 'Plan not found' });
+    }
+    plan.isActive = !plan.isActive;
+    await plan.save();
+    return res.status(200).json(plan);
+  } catch (error) {
+    console.error('Error toggling plan status:', error);
+    return res.status(500).json({ message: 'Error toggling plan status', error });
+  }
+};
+
 export const deletePlan = async (req: Request, res: Response): Promise<Response> => {
   try {
     const deletedPlan = await Plan.findByIdAndDelete(req.params.id);

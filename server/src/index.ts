@@ -6,6 +6,9 @@ import todoRoutes from './routes/todo.routes'
 import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
 import planRoutes from './routes/plan.routes';
+import twilioRoutes from './routes/twilio.routes';
+import whatsappRoutes from './routes/whatsapp.routes'; // Añadir importación de rutas de WhatsApp
+import contentGenerationRoutes from './routes/contentGeneration.routes'; // Importar rutas de generación de contenido
 import { errorHandler } from './middleware/error.handler';
 import cookieParser from 'cookie-parser';
 
@@ -28,6 +31,9 @@ app.use('/api/todos', todoRoutes)
 app.use('/api/auth', authRoutes);
 app.use('/api', userRoutes); // Montamos las rutas de usuarios en /api/users
 app.use('/api', planRoutes); // Montamos las rutas de planes en /api/plans
+app.use('/api/twilio', twilioRoutes); // Montamos las rutas de Twilio para webhooks
+app.use('/api/whatsapp', whatsappRoutes); // Montamos las rutas de WhatsApp
+app.use('/api/content', contentGenerationRoutes); // Montamos las rutas de generación de contenido
 
 // Middleware de manejo de errores
 app.use(errorHandler)

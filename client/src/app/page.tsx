@@ -14,10 +14,10 @@ export default function Home() {
           className="space-y-8"
         >
           <h1 className="text-5xl lg:text-7xl font-bold bg-gradient-to-r from-purple-400 via-blue-400 to-green-400 bg-clip-text text-transparent  ">
-            Potencia tus Ventas con IA
+            Transforma tu Negocio con Agentes de IA para Ventas
           </h1>
           <p className="text-xl lg:text-2xl text-gray-300 max-w-3xl mx-auto">
-            Automatiza, optimiza y escala tu proceso de ventas con nuestros agentes de IA inteligentes
+            Nuestros agentes de IA entienden, procesan y responden mensajes automáticamente, como si fueran una persona real. Atienden a tus clientes al instante por texto, audio o incluso llamadas telefónicas, 24/7.
           </p>
           <div className="flex justify-center gap-4">
             <button className="bg-gradient-to-r from-purple-500 to-blue-500 text-white py-3 px-8 rounded-lg hover:opacity-90 transition-opacity text-lg font-medium">
@@ -83,13 +83,13 @@ export default function Home() {
           className="bg-gradient-to-r from-purple-500/20 to-blue-500/20 backdrop-blur-xl rounded-2xl p-12 border border-white/10"
         >
           <h2 className="text-3xl font-bold mb-6 text-white">
-            ¿Listo para revolucionar tus ventas?
+            ¿Listo para llevar tu negocio al siguiente nivel?
           </h2>
           <p className="text-xl text-gray-300 mb-8">
-            Únete a cientos de empresas que ya están aprovechando el poder de la IA
+            No necesitas ser programador. Nuestro equipo configura el agente IA por ti. Si recibes muchos mensajes diarios, ¡esta tecnología es para ti!
           </p>
           <button className="bg-gradient-to-r from-purple-500 to-blue-500 text-white py-3 px-8 rounded-lg hover:opacity-90 transition-opacity text-lg font-medium">
-            Empieza tu Prueba Gratuita
+            Comienza con 15 Días GRATIS
           </button>
         </motion.div>
       </section>
@@ -98,6 +98,63 @@ export default function Home() {
 }
 
 const features = [
+  {
+    title: 'Respuesta Instantánea 24/7',
+    description: 'Tu agente IA nunca duerme y puede atender a todos tus clientes al instante, mejorando la satisfacción y no perdiendo oportunidades de venta.',
+    icon: (
+      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Comunicación Multicanal Fluida',
+    description: 'Integra tu agente IA en Facebook, Instagram, WhatsApp (próximamente), tu sitio web, Mercado Libre, Tiendanube y más. Gestiona todas las conversaciones desde un solo lugar.',
+    icon: (
+      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Entrenamiento y Adaptación Continua',
+    description: 'El agente aprende de cada conversación y se entrena con tus respuestas reales para hablar como tú y conocer tus productos a fondo, mejorando cada día.',
+    icon: (
+      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a4 4 0 00-5.656 0M14 10l-2 2m0 0l-2-2m2 2V6m0 8a2 2 0 100-4 2 2 0 000 4zm-2 4a4 4 0 01-4-4h-2m0 0a4 4 0 014-4V2m0 0a4 4 0 014 4v2m0 0a4 4 0 01-4 4h-2m10 0a4 4 0 00-4-4v-2m0 0a4 4 0 00-4 4v2m0 0a4 4 0 004 4h2" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Automatización Inteligente de Tareas',
+    description: 'Desde responder preguntas frecuentes hasta guiar en compras o agendar servicios. Libera tu tiempo para enfocarte en el crecimiento de tu negocio.',
+    icon: (
+      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Integración con Herramientas Clave',
+    description: 'Conecta tu agente IA con sistemas externos como CRMs, ERPs y plataformas como Dropi para una gestión de ventas optimizada y centralizada.',
+    icon: (
+      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 14v6m-3-3h6M6 10h2a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2zm10 0h2a2 2 0 002-2V6a2 2 0 00-2-2h-2a2 2 0 00-2 2v2a2 2 0 002 2zM6 18h2a2 2 0 002-2v-2a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2zm10 0h2a2 2 0 002-2v-2a2 2 0 00-2-2h-2a2 2 0 00-2 2v2a2 2 0 002 2z" />
+      </svg>
+    ),
+  },
+  {
+    title: 'No Requiere Conocimientos Técnicos',
+    description: 'Nuestro equipo configura el agente por ti, adaptado a tu negocio, tono de marca y objetivos. ¡Empieza a automatizar sin complicaciones!',
+    icon: (
+      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+      </svg>
+    ),
+  },
+];
+
+const oldFeatures = [
   {
     title: 'Automatización Inteligente',
     description: 'Automatiza tareas repetitivas y procesos de ventas con IA avanzada',

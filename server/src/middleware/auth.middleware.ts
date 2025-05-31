@@ -15,11 +15,11 @@ interface UserPayload {
 }
 
 // Extiende la interfaz Request de Express para incluir la propiedad 'user'
-interface AuthenticatedRequest extends Request {
+export interface AuthenticatedRequest extends Request {
   user?: UserPayload;
 }
 
-export const authRequired = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+export const authMiddleware = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   // Intenta obtener el token de la cookie 'next-auth.session-token' o '__Secure-next-auth.session-token'
   const token = await getToken({ req, secret, cookieName: process.env.NODE_ENV === 'production' ? '__Secure-next-auth.session-token' : 'next-auth.session-token' });
 

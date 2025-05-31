@@ -67,3 +67,9 @@ export const deletePlan = async (id: string): Promise<{ message: string }> => {
   const response = await api.delete<{ message: string }>(`/plans/${id}`);
   return response.data;
 };
+
+// Activar/Desactivar un plan
+export const togglePlanStatus = async (id: string): Promise<Plan> => {
+  const response = await api.patch<Plan>(`/plans/${id}/toggle`);
+  return response.data;
+};
