@@ -1,9 +1,6 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
   "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
-  "/auth/error/page": "app/auth/error/page.js",
   "/page": "app/page.js",
-  "/planes/page": "app/planes/page.js",
-  "/usuarios/generacion-contenidos/page": "app/usuarios/generacion-contenidos/page.js",
   "/usuarios/page": "app/usuarios/page.js"
 }

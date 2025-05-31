@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { handleWebhook, getConversations, getMessagesByConversation, sendMessage } from '../controllers/twilio.controller';
-import { authRequired as authMiddleware } from '../middleware/auth.middleware'; // Renombrado para coincidir con el uso, o puedes usar authRequired directamente.
+import { authMiddleware } from '../middleware/auth.middleware';
 import express from 'express';
 
 const router = Router();
