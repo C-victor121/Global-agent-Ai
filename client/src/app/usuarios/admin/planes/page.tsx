@@ -3,7 +3,7 @@
 import React, { useState, useEffect, FormEvent } from 'react';
 import { Plan, getPlans, createPlan, updatePlan, deletePlan, togglePlanStatus } from '@/services/plan.service'; // Importar togglePlanStatus
 import Link from 'next/link';
-import { PlanCard } from '@/app/planes/page'; // Importar PlanCard
+import { PlanCard } from '@/components/PlanCard'; // Importar PlanCard
 
 interface PlanFormData extends Omit<Plan, '_id' | 'createdAt' | 'updatedAt' | 'features'> {
   features: {

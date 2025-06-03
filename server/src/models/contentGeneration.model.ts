@@ -1,7 +1,7 @@
 import { Schema, model, Document } from 'mongoose';
 
 export interface IContentGeneration extends Document {
-  userId: Schema.Types.ObjectId;
+  userId: string;
   intencion: string;
   tono: string;
   objetivo: string;
@@ -16,7 +16,7 @@ export interface IContentGeneration extends Document {
 }
 
 const ContentGenerationSchema = new Schema<IContentGeneration>({
-  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true }, // Asumiendo que tienes un modelo User
+  userId: { type: String, required: true },
   intencion: { type: String, required: true },
   tono: { type: String, required: true },
   objetivo: { type: String, required: true },

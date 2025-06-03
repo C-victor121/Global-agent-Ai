@@ -1,9 +1,9 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 
-export default function ErrorPage() {
+function ErrorMessageDisplay() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const error = searchParams.get('error');
@@ -14,7 +14,8 @@ export default function ErrorPage() {
     }
   }, [error, router]);
 
-  const getErrorMessage = (errorCode: string) => {
+  const getErrorMessage = (errorCode: string | null) => {
+    if (!errorCode) return 'Redirigiendo...';
     switch (errorCode) {
       case 'AccessDenied':
         return 'No tienes permiso para acceder a esta página. Por favor, verifica tus credenciales.';
@@ -35,7 +36,7 @@ export default function ErrorPage() {
             Error de Autenticación
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            {error ? getErrorMessage(error) : 'Redirigiendo...'}
+            {getErrorMessage(error)}
           </p>
           <div className="mt-6 text-center">
             <button
@@ -48,5 +49,13 @@ export default function ErrorPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ErrorPage() {
+  return (
+    <Suspense fallback={<div>Cargando...</div>}>
+      <ErrorMessageDisplay />
+    </Suspense>
   );
 }

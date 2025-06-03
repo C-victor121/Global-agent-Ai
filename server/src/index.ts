@@ -13,14 +13,15 @@ import { errorHandler } from './middleware/error.handler';
 import cookieParser from 'cookie-parser';
 
 
-dotenv.config()
+// dotenv.config() // Se recomienda gestionar las variables de entorno a través de Docker Compose en producción
+console.log('N8N_CONTENT_GENERATION_WEBHOOK_URL on startup:', process.env.N8N_CONTENT_GENERATION_WEBHOOK_URL);
 
 const app = express()
 const PORT = process.env.PORT || 3001
 
 // Middleware
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
+  origin: [process.env.CLIENT_URL || 'http://localhost:3000', 'http://192.168.101.6:3000', 'http://localhost:3000'], // Asegura que ambas URLs comunes estén permitidas
   credentials: true
 }))
 app.use(express.json());
@@ -39,7 +40,13 @@ app.use('/api/content', contentGenerationRoutes); // Montamos las rutas de gener
 app.use(errorHandler)
 
 // Conexión a MongoDB
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/global-agent-ai')
+const mongoUri = process.env.MONGODB_URI;
+if (!mongoUri) {
+  console.error('Error: MONGODB_URI no está configurado en las variables de entorno.');
+  process.exit(1); // Salir si MONGODB_URI no está definida
+}
+
+mongoose.connect(mongoUri)
   .then(() => {
     console.log('Conectado a MongoDB')
     app.listen(PORT, () => {

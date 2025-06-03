@@ -1,0 +1,49 @@
+# Git
+.git
+
+# Node modules
+node_modules
+*/node_modules
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build artifacts
+.next
+*/.next
+build
+*/build
+dist
+*/dist
+
+# Docker
+Dockerfile*
+*.dockerignore
+docker-compose.yml
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE / Editor specific
+.idea
+.vscode
+*.swp
+*.swo
+
+# n8n data (if it's in the root, though it's configured for ./docker/n8n_data)
+./n8n_data
+
+# Other potentially large or unnecessary files/folders
+*.md
+*.txt
+# Consider adding other specific large files or directories if they exist
+# and are not needed for the Docker build.

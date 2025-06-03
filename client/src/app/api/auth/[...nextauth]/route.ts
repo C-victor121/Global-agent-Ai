@@ -55,7 +55,9 @@ const handler = NextAuth({
         }
 
         try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/auth/signin`, {
+          const apiUrl = process.env.INTERNAL_API_URL || process.env.NEXT_PUBLIC_API_URL;
+          console.log('API URL para Credentials Auth (server-side):', apiUrl);
+          const response = await fetch(`${apiUrl}/api/auth/signin`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -93,9 +95,11 @@ const handler = NextAuth({
   },
   callbacks: {
     async signIn({ user, account, profile }) {
+        const apiUrl = process.env.INTERNAL_API_URL || process.env.NEXT_PUBLIC_API_URL;
       if (account?.provider === 'google') {
+        console.log('API URL para Google Auth (server-side):', apiUrl);
         try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/google`, {
+          const response = await fetch(`${apiUrl}/api/auth/google`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -126,8 +130,9 @@ const handler = NextAuth({
           return false;
         }
       } else if (account?.provider === 'facebook') {
+        console.log('API URL para Facebook Auth (server-side):', apiUrl);
         try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/facebook`, {
+          const response = await fetch(`${apiUrl}/api/auth/facebook`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

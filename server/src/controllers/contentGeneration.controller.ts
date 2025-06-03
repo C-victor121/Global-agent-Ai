@@ -4,11 +4,15 @@ import ContentGeneration, { IContentGeneration } from '../models/contentGenerati
 import { AuthenticatedRequest } from '../middleware/auth.middleware'; // Asumiendo que tienes un middleware de autenticación
 
 // Asegúrate de tener una variable de entorno para la URL del webhook de n8n
-const N8N_WEBHOOK_URL = process.env.N8N_CONTENT_GENERATION_WEBHOOK_URL;
 
 export const generateContent = async (req: AuthenticatedRequest, res: Response): Promise<Response> => {
+  const N8N_WEBHOOK_URL = process.env.N8N_CONTENT_GENERATION_WEBHOOK_URL;
+  console.log('N8N_CONTENT_GENERATION_WEBHOOK_URL from env:', N8N_WEBHOOK_URL);
+  console.log('generateContent - req.user:', req.user);
   const { intencion, tono, objetivo, producto_servicio, audiencia, palabras_clave, longitud, formato } = req.body;
-  const userId = req.user?.id; // Asumiendo que el middleware de autenticación añade el usuario al request
+  const userId = req.user?.id;
+  // console.log('getContentGenerationHistory - userId:', userId); // Comentado para reducir ruido en logs, ya se loguea en la otra función
+  console.log('generateContent - userId:', userId);
 
   if (!userId) {
     return res.status(401).json({ message: 'Usuario no autenticado.' });
@@ -91,7 +95,9 @@ export const generateContent = async (req: AuthenticatedRequest, res: Response):
 };
 
 export const getContentGenerationHistory = async (req: AuthenticatedRequest, res: Response): Promise<Response> => {
+  console.log('getContentGenerationHistory - req.user:', req.user);
   const userId = req.user?.id;
+  console.log('getContentGenerationHistory - userId:', userId);
 
   if (!userId) {
     return res.status(401).json({ message: 'Usuario no autenticado.' });

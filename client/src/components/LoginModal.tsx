@@ -3,8 +3,9 @@
 import { useState } from 'react';
 import { FaGoogle, FaFacebook } from 'react-icons/fa';
 import { IoMdClose } from 'react-icons/io';
-import { loginSchema, registerSchema, forgotPasswordSchema } from '../../../shared/validations/auth.schema';
 import { ZodError } from 'zod';
+import { loginSchema, registerSchema, forgotPasswordSchema } from '@/shared/validations/auth.schema';
+
 import { signIn, useSession } from 'next-auth/react';
 
 interface LoginModalProps {

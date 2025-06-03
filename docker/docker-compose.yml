@@ -1,4 +1,51 @@
 services:
+  client:
+    build:
+      context: ../client
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://server:3001
+      - INTERNAL_API_URL=http://server:3001
+    networks:
+      - global_network
+    depends_on:
+      - server
+
+  server:
+    build:
+      context: ../server
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - MONGODB_URI=mongodb://mongo:27017/global-agent-ai
+      - CLIENT_URL=http://client:3000
+      - N8N_CONTENT_GENERATION_WEBHOOK_URL=http://n8n:5678/webhook-test/content-generation
+      # Variables de Twilio (reemplaza con tus valores y nombres de variable correctos)
+      - TWILIO_ACCOUNT_SID=YOUR_TWILIO_ACCOUNT_SID_HERE
+      - TWILIO_AUTH_TOKEN=YOUR_TWILIO_AUTH_TOKEN_HERE
+      - TWILIO_PHONE_NUMBER=YOUR_TWILIO_PHONE_NUMBER_HERE # O el nombre de variable que uses
+      # Variable de Meta App Secret (reemplaza con tu valor)
+      - META_APP_SECRET=YOUR_META_APP_SECRET_HERE
+      
+    depends_on:
+      - mongo
+    networks:
+      - global_network
+
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - global_network
+
   n8n:
     image: n8nio/n8n
     restart: always
@@ -8,18 +55,19 @@ services:
       - N8N_BASIC_AUTH_ACTIVE=true
       - N8N_BASIC_AUTH_USER=${N8N_BASIC_AUTH_USER}
       - N8N_BASIC_AUTH_PASSWORD=${N8N_BASIC_AUTH_PASSWORD}
-      - N8N_HOST=${N8N_HOST}
-      - N8N_PORT=${N8N_PORT}
-      - WEBHOOK_URL=${WEBHOOK_URL}
-      - NODE_ENV=production
-
-
-
+      - N8N_HOST=n8n
+      - N8N_PORT=5678
+      - WEBHOOK_URL=http://n8n:5678 
+      - N8N_EDITOR_BASE_URL=http://localhost:5678
+      - GENERIC_WEBHOOK_URL=http://n8n:5678 # Añadido para que n8n sepa su propia URL interna para webhooks
     volumes:
       - ./n8n_data:/home/node/.n8n
     networks:
-      - n8n_network
+      - global_network
 
 networks:
-  n8n_network:
+  global_network:
     driver: bridge
+
+volumes:
+  mongo_data:

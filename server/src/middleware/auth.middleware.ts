@@ -1,46 +1,67 @@
 import { Request, Response, NextFunction } from 'express';
-import { getToken } from 'next-auth/jwt';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
-// Asegúrate de que NEXTAUTH_SECRET esté configurada en tus variables de entorno (.env)
-// y que coincida con la usada en la configuración de NextAuth en el cliente.
 const secret = process.env.NEXTAUTH_SECRET;
 
-interface UserPayload {
-  sub?: string; // 'sub' es comúnmente usado por next-auth para el id del usuario
-  id?: string; // Mantenemos 'id' por si se usa en otras partes o se prefiere
+interface CustomUserPayload extends JwtPayload {
+  sub?: string; 
+  id?: string; 
   email?: string;
   name?: string;
   role?: string;
-  // Agrega aquí otros campos que esperas en el payload del token
 }
 
-// Extiende la interfaz Request de Express para incluir la propiedad 'user'
 export interface AuthenticatedRequest extends Request {
-  user?: UserPayload;
+  user?: CustomUserPayload;
 }
 
-export const authMiddleware = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-  // Intenta obtener el token de la cookie 'next-auth.session-token' o '__Secure-next-auth.session-token'
-  const token = await getToken({ req, secret, cookieName: process.env.NODE_ENV === 'production' ? '__Secure-next-auth.session-token' : 'next-auth.session-token' });
+export const authMiddleware = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  let token: string | undefined;
+
+  // 1. Intentar obtener el token de la cabecera Authorization (Bearer token)
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    token = authHeader.split(' ')[1];
+  }
+
+  // 2. Si no está en la cabecera, intentar obtenerlo de las cookies (ajusta el nombre de la cookie si es necesario)
+  // Esta es una forma común si NextAuth en el cliente lo establece como una cookie httpOnly.
+  // El nombre exacto de la cookie puede variar según tu configuración de NextAuth.
+  if (!token) {
+    const cookieName = process.env.NODE_ENV === 'production' 
+      ? '__Secure-next-auth.session-token' 
+      : 'next-auth.session-token';
+    token = req.cookies?.[cookieName];
+  }
 
   if (!token) {
     return res.status(401).json({ message: 'No token, authorization denied' });
   }
 
+  if (!secret) {
+    console.error('JWT secret is not configured.');
+    return res.status(500).json({ message: 'Internal server error: JWT secret missing' });
+  }
+
   try {
-    // El token ya está verificado y decodificado por getToken
-    // El payload del token (que puede incluir id, email, role, etc.) está en 'token'
-    // Puedes ajustar UserPayload según lo que necesites y lo que devuelva tu configuración de NextAuth
+    const decoded = jwt.verify(token, secret) as CustomUserPayload;
+    
     req.user = {
-      id: token.sub || token.id, // Usa 'sub' o 'id' según esté disponible
-      email: token.email,
-      name: token.name,
-      role: token.role as string | undefined, // Asegúrate de que 'role' esté en tu token si lo necesitas
-      ...token // Incluye cualquier otro campo del token
-    } as UserPayload;
+      id: decoded.sub || decoded.id, // 'sub' es el estándar para el ID de usuario en JWT
+      email: decoded.email,
+      name: decoded.name,
+      role: decoded.role,
+      ...decoded // Incluye cualquier otro campo del token
+    };
     next();
   } catch (error) {
-    console.error('Token processing error:', error);
+    console.error('Token verification error:', error);
+    // Diferenciar errores de token inválido/expirado de otros errores
+    if (error instanceof jwt.JsonWebTokenError) {
+      return res.status(401).json({ message: 'Token is not valid' });
+    } else if (error instanceof jwt.TokenExpiredError) {
+      return res.status(401).json({ message: 'Token has expired' });
+    }
     return res.status(500).json({ message: 'Failed to authenticate token' });
   }
 };
