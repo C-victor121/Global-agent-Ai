@@ -5,6 +5,7 @@ import { Plan, getPlans } from '@/services/plan.service';
 import { PlanCard } from '@/components/PlanCard'; // Importar PlanCard
 
 
+
 export default function PlanesPage() {
   const [plans, setPlans] = useState<Plan[]>([]);
   const [isLoading, setIsLoading] = useState(true);

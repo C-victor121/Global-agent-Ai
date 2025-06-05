@@ -184,7 +184,9 @@ const handler = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules
                     return null;
                 }
                 try {
-                    const response = await fetch(`${("TURBOPACK compile-time value", "http://localhost:3001") || 'http://localhost:3001'}/api/auth/signin`, {
+                    const apiUrl = process.env.INTERNAL_API_URL || ("TURBOPACK compile-time value", "http://localhost:3001/api");
+                    console.log('API URL para Credentials Auth (server-side):', apiUrl);
+                    const response = await fetch(`${apiUrl}/api/auth/signin`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -219,9 +221,11 @@ const handler = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules
     },
     callbacks: {
         async signIn ({ user, account, profile }) {
+            const apiUrl = process.env.INTERNAL_API_URL || ("TURBOPACK compile-time value", "http://localhost:3001/api");
             if (account?.provider === 'google') {
+                console.log('API URL para Google Auth (server-side):', apiUrl);
                 try {
-                    const response = await fetch(`${("TURBOPACK compile-time value", "http://localhost:3001")}/api/auth/google`, {
+                    const response = await fetch(`${apiUrl}/api/auth/google`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -248,8 +252,9 @@ const handler = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules
                     return false;
                 }
             } else if (account?.provider === 'facebook') {
+                console.log('API URL para Facebook Auth (server-side):', apiUrl);
                 try {
-                    const response = await fetch(`${("TURBOPACK compile-time value", "http://localhost:3001")}/api/auth/facebook`, {
+                    const response = await fetch(`${apiUrl}/api/auth/facebook`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'

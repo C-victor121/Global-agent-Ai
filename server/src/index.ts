@@ -27,7 +27,6 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Rutas
-app.use('/api/todos', todoRoutes)
 app.use('/api/auth', authRoutes);
 app.use('/api', userRoutes); // Montamos las rutas de usuarios en /api/users
 app.use('/api', planRoutes); // Montamos las rutas de planes en /api/plans

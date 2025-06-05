@@ -2,7 +2,7 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../api/auth/[...nextauth]/options';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { FaUser, FaCog, FaClipboardList, FaSignOutAlt, FaUsers, FaCommentDots, FaBrain } from 'react-icons/fa';
+import { FaUser, FaCog, FaUsers, FaCommentDots, FaBrain } from 'react-icons/fa';
 
 export default async function UsersLayout({
   children,
@@ -27,10 +27,6 @@ export default async function UsersLayout({
           <Link href="/usuarios" className="flex items-center space-x-3 text-gray-300 hover:text-white transition-colors">
             <FaUser className="w-5 h-5" />
             <span>Perfil</span>
-          </Link>
-          <Link href="/usuarios/tareas" className="flex items-center space-x-3 text-gray-300 hover:text-white transition-colors">
-            <FaClipboardList className="w-5 h-5" />
-            <span>Tareas</span>
           </Link>
           <Link href="/usuarios/configuracion" className="flex items-center space-x-3 text-gray-300 hover:text-white transition-colors">
             <FaCog className="w-5 h-5" />
