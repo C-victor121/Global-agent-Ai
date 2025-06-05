@@ -2,7 +2,6 @@ import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
-import todoRoutes from './routes/todo.routes'
 import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
 import planRoutes from './routes/plan.routes';
