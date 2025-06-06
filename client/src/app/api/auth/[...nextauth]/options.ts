@@ -54,8 +54,7 @@ export const authOptions: NextAuthOptions = {
 
           console.log('Datos recibidos del backend:', data);
           console.log('Usuario completo del backend:', data.user);
-          
-          // Asegurarse de que el rol esté presente en la respuesta
+        // Asegurarse de que el rol esté presente en la respuesta
           if (!data.user.role) {
             console.error('No se encontró el rol en la respuesta del backend');
           }

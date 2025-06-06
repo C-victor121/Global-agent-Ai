@@ -94,6 +94,45 @@ export const generateContent = async (req: AuthenticatedRequest, res: Response):
   }
 };
 
+// Nueva función para guardar contenido generado aceptado desde el frontend
+export const saveGeneratedContent = async (req: AuthenticatedRequest, res: Response): Promise<Response> => {
+  const { intencion, tono, objetivo, producto_servicio, audiencia, palabras_clave, longitud, formato, generatedText, descripcion_producto } = req.body;
+  const userId = req.user?.id;
+
+  if (!userId) {
+    return res.status(401).json({ message: 'Usuario no autenticado.' });
+  }
+
+  // Validación básica
+  if (!intencion || !generatedText) { // intencion y generatedText son mínimos
+    return res.status(400).json({ message: 'Faltan campos requeridos para guardar (intención, texto generado).' });
+  }
+
+  const newContentData: Partial<IContentGeneration> = {
+    userId,
+    intencion,
+    tono,
+    objetivo,
+    producto_servicio,
+    audiencia,
+    palabras_clave,
+    longitud,
+    formato,
+    generatedText,
+     // Añadido para la descripción del producto
+    // n8nWebhookResponse podría ser opcional aquí o se podría enviar desde el frontend si se tiene
+  };
+
+  try {
+    const savedContent = new ContentGeneration(newContentData);
+    await savedContent.save();
+    return res.status(201).json({ message: 'Contenido guardado exitosamente.', data: savedContent });
+  } catch (error: any) {
+    console.error('Error al guardar el contenido generado:', error);
+    return res.status(500).json({ message: 'Error interno del servidor al guardar el contenido.', error: error.message });
+  }
+};
+
 export const getContentGenerationHistory = async (req: AuthenticatedRequest, res: Response): Promise<Response> => {
   console.log('getContentGenerationHistory - req.user:', req.user);
   const userId = req.user?.id;
@@ -109,5 +148,41 @@ export const getContentGenerationHistory = async (req: AuthenticatedRequest, res
   } catch (error: any) {
     console.error('Error al obtener el historial de generación de contenido:', error);
     return res.status(500).json({ message: 'Error al obtener el historial.', error: error.message });
+  }
+};
+
+export const deleteContentGeneration = async (req: AuthenticatedRequest, res: Response): Promise<Response> => {
+  const { id } = req.params;
+  const userId = req.user?.id;
+
+  if (!userId) {
+    return res.status(401).json({ message: 'Usuario no autenticado.' });
+  }
+
+  try {
+    const result = await ContentGeneration.findOneAndDelete({ _id: id, userId });
+    if (!result) {
+      return res.status(404).json({ message: 'Elemento del historial no encontrado o no pertenece al usuario.' });
+    }
+    return res.status(200).json({ message: 'Elemento del historial eliminado exitosamente.' });
+  } catch (error: any) {
+    console.error('Error al eliminar elemento del historial:', error);
+    return res.status(500).json({ message: 'Error interno del servidor al eliminar el elemento.', error: error.message });
+  }
+};
+
+export const deleteAllContentGenerations = async (req: AuthenticatedRequest, res: Response): Promise<Response> => {
+  const userId = req.user?.id;
+
+  if (!userId) {
+    return res.status(401).json({ message: 'Usuario no autenticado.' });
+  }
+
+  try {
+    await ContentGeneration.deleteMany({ userId });
+    return res.status(200).json({ message: 'Todo el historial de generación de contenido ha sido eliminado.' });
+  } catch (error: any) {
+    console.error('Error al eliminar todo el historial:', error);
+    return res.status(500).json({ message: 'Error interno del servidor al eliminar el historial.', error: error.message });
   }
 };
