@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   client:
     build:
@@ -6,13 +8,15 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NEXT_PUBLIC_API_URL=http://server:3001
-      - INTERNAL_API_URL=http://server:3001
-      - NEXTAUTH_SECRET=844efe23b9b81ad485b25d11b1f5548b2e8862010576da1c53c41df2b01cc546
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+      - INTERNAL_API_URL=${INTERNAL_API_URL}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
     networks:
       - global_network
     depends_on:
       - server
+    env_file:
+      - .env
 
   server:
     build:
@@ -21,22 +25,21 @@ services:
     ports:
       - "3001:3001"
     environment:
-      - PORT=3001
-      - MONGODB_URI=mongodb://mongo:27017/global-agent-ai
-      - CLIENT_URL=http://client:3000
-      - NEXTAUTH_SECRET=844efe23b9b81ad485b25d11b1f5548b2e8862010576da1c53c41df2b01cc546
-      - N8N_CONTENT_GENERATION_WEBHOOK_URL=http://n8n:5678/webhook-test/content-generation
-      # Variables de Twilio (reemplaza con tus valores y nombres de variable correctos)
-      - TWILIO_ACCOUNT_SID=YOUR_TWILIO_ACCOUNT_SID_HERE
-      - TWILIO_AUTH_TOKEN=YOUR_TWILIO_AUTH_TOKEN_HERE
-      - TWILIO_PHONE_NUMBER=YOUR_TWILIO_PHONE_NUMBER_HERE # O el nombre de variable que uses
-      # Variable de Meta App Secret (reemplaza con tu valor)
-      - META_APP_SECRET=YOUR_META_APP_SECRET_HERE
-      
-    depends_on:
-      - mongo
+      - PORT=${PORT}
+      - MONGODB_URI=${MONGODB_URI}
+      - CLIENT_URL=${CLIENT_URL}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - N8N_CONTENT_GENERATION_WEBHOOK_URL=${N8N_CONTENT_GENERATION_WEBHOOK_URL}
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
+      - TWILIO_PHONE_NUMBER=${TWILIO_PHONE_NUMBER}
+      - META_APP_SECRET=${META_APP_SECRET}
     networks:
       - global_network
+    depends_on:
+      - mongo
+    env_file:
+      - .env
 
   mongo:
     image: mongo
@@ -59,14 +62,16 @@ services:
       - N8N_BASIC_AUTH_PASSWORD=${N8N_BASIC_AUTH_PASSWORD}
       - N8N_HOST=n8n
       - N8N_PORT=5678
-      - NEXTAUTH_SECRET=844efe23b9b81ad485b25d11b1f5548b2e8862010576da1c53c41df2b01cc546
-      - WEBHOOK_URL=http://n8n:5678 
-      - N8N_EDITOR_BASE_URL=http://localhost:5678
-      - GENERIC_WEBHOOK_URL=http://n8n:5678 
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - WEBHOOK_URL=${WEBHOOK_URL}
+      - N8N_EDITOR_BASE_URL=${N8N_EDITOR_BASE_URL}
+      - GENERIC_WEBHOOK_URL=${GENERIC_WEBHOOK_URL}
     volumes:
       - ./n8n_data:/home/node/.n8n
     networks:
       - global_network
+    env_file:
+      - .env
 
 networks:
   global_network:
