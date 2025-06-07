@@ -47,7 +47,8 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
           // Manejar error de autenticación
           if (result?.error) {
             console.error('Error de autenticación:', result.error);
-            setErrors({ auth: 'Credenciales inválidas' });
+            // Usar el mensaje de error devuelto por NextAuth/backend
+            setErrors({ auth: result.error }); 
           } else {
             onClose();
           }
@@ -56,7 +57,7 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
           await registerSchema.parseAsync({ name, email, password, confirmPassword });
           
           try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/auth/signup`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'}/auth/signup`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
@@ -91,7 +92,8 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
               window.location.href = '/usuarios';
             } else if (loginResult?.error) {
               console.error('Error al iniciar sesión automáticamente:', loginResult.error);
-              setErrors({ auth: 'Error al iniciar sesión automáticamente' });
+              // Usar el mensaje de error devuelto por NextAuth/backend
+              setErrors({ auth: loginResult.error }); 
             } else {
               onClose();
             }

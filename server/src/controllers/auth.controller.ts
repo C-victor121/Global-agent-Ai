@@ -200,7 +200,7 @@ export const signin = async (req: Request, res: Response) => {
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: 'Credenciales inválidas'
+        message: 'Usuario no registrado o credenciales inválidas'
       });
     }
 
@@ -217,19 +217,16 @@ export const signin = async (req: Request, res: Response) => {
     if (!isMatch) {
       return res.status(401).json({
         success: false,
-        message: 'Credenciales inválidas'
+        message: 'Usuario no registrado o credenciales inválidas'
       });
     }
 
     res.status(200).json({
-      success: true,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        avatar: user.avatar,
-        role: user.role
-      }
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      avatar: user.avatar,
+      role: user.role
     });
   } catch (error) {
     console.error('Error en signin:', error);

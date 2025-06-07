@@ -68,19 +68,29 @@ const handler = NextAuth({
             })
           });
 
-          const data = await response.json();
-
-          if (!data.success) {
-            console.error('Error de autenticación:', data.message);
-            return null;
+          if (!response.ok) {
+            let errorMessage = 'Error de autenticación';
+            try {
+              const errorData = await response.json();
+              if (errorData && errorData.message) {
+                errorMessage = errorData.message;
+              }
+            } catch (e) {
+              // No se pudo parsear el JSON de error, usar mensaje genérico
+              console.error('Error al parsear JSON de error de autenticación:', e);
+            }
+            console.error('Error de autenticación desde el backend:', errorMessage);
+            throw new Error(errorMessage);
           }
 
+          const data = await response.json();
+
           return {
-            id: data.user.id,
-            name: data.user.name,
-            email: data.user.email,
-            image: data.user.avatar || null,
-            role: data.user.role
+            id: data.id,
+            name: data.name,
+            email: data.email,
+            image: data.avatar || null,
+            role: data.role
           };
         } catch (error) {
           console.error('Error al autenticar usuario:', error);

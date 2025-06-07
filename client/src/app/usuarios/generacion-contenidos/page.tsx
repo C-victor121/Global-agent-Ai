@@ -418,8 +418,8 @@ const ContentGenerationPage = () => {
 
       {/* Modal para ver respuesta completa de PENDING RESPONSE */} 
       {showResponseModal && selectedResponseForModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 backdrop-blur-sm overflow-y-auto h-full w-full flex items-center justify-center p-4 z-50" onClick={closeResponseModal}>
-          <div className="relative bg-slate-800 p-6 md:p-8 rounded-lg shadow-2xl w-full max-w-2xl mx-auto ring-1 ring-white/10" onClick={e => e.stopPropagation()}>
+        <div className="fixed inset-0 bg-black bg-opacity-75 backdrop-blur-sm flex items-center justify-center p-4 z-50" onClick={closeResponseModal}>
+          <div className="relative bg-slate-800 p-6 md:p-8 rounded-lg shadow-2xl w-full max-w-2xl mx-auto ring-1 ring-white/10 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <button onClick={closeResponseModal} className="absolute top-4 right-4 text-slate-400 hover:text-slate-200 text-3xl font-light">&times;</button>
             <h3 className="text-2xl font-semibold text-sky-300 mb-4">Sugerencia de Contenido Completa</h3>
             <p className="text-sm text-slate-400 mb-1">Generado: {new Date(selectedResponseForModal.timestamp).toLocaleString()}</p>
@@ -448,8 +448,8 @@ const ContentGenerationPage = () => {
 
       {/* Modal para ver item completo del HISTORIAL */} 
       {showHistoryItemModal && selectedHistoryItemForModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 backdrop-blur-sm overflow-y-auto h-full w-full flex items-center justify-center p-4 z-50" onClick={closeHistoryItemModal}>
-          <div className="relative bg-slate-800 p-6 md:p-8 rounded-lg shadow-2xl w-full max-w-2xl mx-auto ring-1 ring-white/10" onClick={e => e.stopPropagation()}>
+        <div className="fixed inset-0 bg-black bg-opacity-75 backdrop-blur-sm flex items-center justify-center p-4 z-50" onClick={closeHistoryItemModal}>
+          <div className="relative bg-slate-800 p-6 md:p-8 rounded-lg shadow-2xl w-full max-w-2xl mx-auto ring-1 ring-white/10 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <button onClick={closeHistoryItemModal} className="absolute top-4 right-4 text-slate-400 hover:text-slate-200 text-3xl font-light">&times;</button>
             <h3 className="text-2xl font-semibold text-purple-400 mb-4">Detalle del Historial</h3>
             <p className="text-sm text-slate-400 mb-1">Guardado: {new Date(selectedHistoryItemForModal.createdAt).toLocaleString()}</p>
