@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 7, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/cvict/Desktop/Global%20Agent%20Ai/client/src/app/admin/planes/layout.tsx"],"sourcesContent":["import React from 'react';\n\nexport default function AdminPlanesLayout({\n  children,\n}: {\n  children: React.ReactNode;\n}) {\n  return (\n    <section>\n      {/* Aquí se podría agregar un encabezado específico para la gestión de planes o un submenú */}\n      {children}\n    </section>\n  );\n}"],"names":[],"mappings":";;;;;AAEe,SAAS,kBAAkB,EACxC,QAAQ,EAGT;IACC,qBACE,8OAAC;kBAEE;;;;;;AAGP","debugId":null}}]
-}

@@ -8,6 +8,7 @@ import planRoutes from './routes/plan.routes';
 import twilioRoutes from './routes/twilio.routes';
 import whatsappRoutes from './routes/whatsapp.routes'; // Añadir importación de rutas de WhatsApp
 import contentGenerationRoutes from './routes/contentGeneration.routes'; // Importar rutas de generación de contenido
+import dashboardRoutes from './routes/dashboard.routes'; // Importar rutas del dashboard
 import { errorHandler } from './middleware/error.handler';
 import cookieParser from 'cookie-parser';
 
@@ -33,6 +34,7 @@ app.use('/api', planRoutes); // Montamos las rutas de planes en /api/plans
 app.use('/api/twilio', twilioRoutes); // Montamos las rutas de Twilio para webhooks
 app.use('/api/whatsapp', whatsappRoutes); // Montamos las rutas de WhatsApp
 app.use('/api/content', contentGenerationRoutes); // Montamos las rutas de generación de contenido
+app.use('/api/dashboard', dashboardRoutes); // Montamos las rutas del dashboard
 
 // Middleware de manejo de errores
 app.use(errorHandler)

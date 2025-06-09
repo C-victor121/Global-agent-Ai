@@ -13,6 +13,7 @@ export interface IContentGeneration extends Document {
   generatedText?: string; // Texto generado por n8n
   n8nWebhookResponse?: any; // Respuesta completa del webhook de n8n por si se necesita para debug
   createdAt: Date;
+  isDeleted?: boolean; // Nuevo campo para borrado lógico
 }
 
 const ContentGenerationSchema = new Schema<IContentGeneration>({
@@ -28,6 +29,7 @@ const ContentGenerationSchema = new Schema<IContentGeneration>({
   generatedText: { type: String },
   n8nWebhookResponse: { type: Schema.Types.Mixed }, 
   createdAt: { type: Date, default: Date.now },
+  isDeleted: { type: Boolean, default: false }, // Nuevo campo para borrado lógico
 });
 
 export default model<IContentGeneration>('ContentGeneration', ContentGenerationSchema);

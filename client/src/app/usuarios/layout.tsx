@@ -2,7 +2,7 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../api/auth/[...nextauth]/options';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { FaUser, FaCog, FaUsers, FaCommentDots, FaBrain } from 'react-icons/fa';
+import { FaUser, FaCog, FaUsers, FaCommentDots, FaBrain, FaChartBar } from 'react-icons/fa';
 
 export default async function UsersLayout({
   children,
@@ -37,7 +37,7 @@ export default async function UsersLayout({
             <span>Generación de Contenidos</span>
           </Link>
 
-          {/* Enlace de Gestión de Usuarios para Admin */}
+          {/* Enlaces de Administración para Admin */}
           {userRole === 'admin' && (
             <>
               <Link href="/usuarios/gestion" className="flex items-center space-x-3 text-gray-300 hover:text-white transition-colors">
