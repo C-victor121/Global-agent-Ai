@@ -58,3 +58,6 @@ export const authMiddleware = async (
     });
   }
 };
+
+// Alias para compatibilidad con las rutas del dashboard
+export const authenticateToken = authMiddleware;
