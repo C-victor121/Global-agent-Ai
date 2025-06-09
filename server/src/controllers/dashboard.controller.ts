@@ -92,6 +92,89 @@ export const getDashboardMetrics = async (req: Request, res: Response) => {
       }
     ]);
 
+    // --- Inicio: Cálculo de Datos Históricos (últimos 30 días por defecto) ---
+    const defaultHistoricalStartDate = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+
+    const userRegistrationsHistorical = await User.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: defaultHistoricalStartDate }
+        }
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: {
+              format: '%Y-%m-%d',
+              date: '$createdAt'
+            }
+          },
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $sort: { '_id': 1 }
+      }
+    ]);
+
+    const dailyGenerationsHistorical = await ContentGeneration.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: defaultHistoricalStartDate }
+        }
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: {
+              format: '%Y-%m-%d',
+              date: '$createdAt'
+            }
+          },
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $sort: { '_id': 1 }
+      }
+    ]);
+    
+    // Combinar datos históricos en un formato adecuado para Recharts
+    const combinedHistoricalData = [];
+    const dateMap = new Map();
+
+    userRegistrationsHistorical.forEach(item => {
+      if (!dateMap.has(item._id)) {
+        dateMap.set(item._id, { date: item._id, userCount: 0, generationCount: 0 });
+      }
+      dateMap.get(item._id).userCount = item.count;
+    });
+
+    dailyGenerationsHistorical.forEach(item => {
+      if (!dateMap.has(item._id)) {
+        dateMap.set(item._id, { date: item._id, userCount: 0, generationCount: 0 });
+      }
+      dateMap.get(item._id).generationCount = item.count;
+    });
+    
+    // Llenar días faltantes con 0
+    let currentDate = new Date(defaultHistoricalStartDate);
+    const endDate = new Date();
+    while (currentDate <= endDate) {
+      const dateString = currentDate.toISOString().split('T')[0];
+      if (!dateMap.has(dateString)) {
+        dateMap.set(dateString, { date: dateString, userCount: 0, generationCount: 0 });
+      }
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    for (const value of dateMap.values()) {
+      combinedHistoricalData.push(value);
+    }
+    combinedHistoricalData.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+    // --- Fin: Cálculo de Datos Históricos ---
+
     const metrics = {
       users: {
         total: totalUsers,
@@ -106,7 +189,8 @@ export const getDashboardMetrics = async (req: Request, res: Response) => {
         thisMonth: generationsThisMonth
       },
       topUsers,
-      formatStats
+      formatStats,
+      historicalData: combinedHistoricalData // Añadido para los gráficos
     };
 
     res.status(200).json({

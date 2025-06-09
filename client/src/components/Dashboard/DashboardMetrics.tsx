@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { dashboardService, DashboardMetrics } from '@/services/dashboardService';
+import { dashboardService, DashboardMetrics, HistoricalDataPoint, FormatStat } from '@/services/dashboardService';
+import DashboardCharts from './DashboardCharts';
 import { FaUsers, FaUserShield, FaBrain, FaChartLine, FaEye, FaSpinner } from 'react-icons/fa';
 
 interface MetricCardProps {
@@ -46,6 +47,8 @@ const DashboardMetricsComponent: React.FC<DashboardMetricsProps> = ({ onCardClic
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [historicalData, setHistoricalData] = useState<HistoricalDataPoint[]>([]);
+  const [formatStats, setFormatStats] = useState<FormatStat[]>([]);
 
   useEffect(() => {
     loadMetrics();
@@ -58,6 +61,13 @@ const DashboardMetricsComponent: React.FC<DashboardMetricsProps> = ({ onCardClic
       const response = await dashboardService.getDashboardMetrics();
       if (response.success) {
         setMetrics(response.data);
+        // Cargar datos para los gráficos
+        if (response.data?.historicalData) {
+          setHistoricalData(response.data.historicalData);
+        }
+        if (response.data?.formatStats) {
+          setFormatStats(response.data.formatStats);
+        }
       } else {
         setError('Error al cargar las métricas');
       }
@@ -225,6 +235,13 @@ const DashboardMetricsComponent: React.FC<DashboardMetricsProps> = ({ onCardClic
               ))}
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Gráficos del Dashboard */}
+      {(historicalData.length > 0 || formatStats.length > 0) && (
+        <div className="mt-8">
+          <DashboardCharts historicalData={historicalData} formatStats={formatStats} />
         </div>
       )}
     </div>

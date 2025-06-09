@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { dashboardService, GenerationDetail, HistoricalData } from '@/services/dashboardService';
-import { FaTimes, FaSpinner, FaCalendar, FaUser, FaFileAlt, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { dashboardService, GenerationDetail, HistoricalDataPoint } from '@/services/dashboardService';
+import { FaTimes, FaSpinner, FaCalendar, FaUser,FaChartLine, FaBrain, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 interface DetailModalProps {
   isOpen: boolean;
@@ -15,7 +15,7 @@ const DetailModal: React.FC<DetailModalProps> = ({ isOpen, onClose, type, data }
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [generations, setGenerations] = useState<GenerationDetail[]>([]);
-  const [historicalData, setHistoricalData] = useState<HistoricalData | null>(null);
+  const [historicalData, setHistoricalData] = useState<HistoricalDataPoint[] | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [selectedPeriod, setSelectedPeriod] = useState<'7d' | '30d' | '90d'>('30d');
@@ -133,35 +133,21 @@ const DetailModal: React.FC<DetailModalProps> = ({ isOpen, onClose, type, data }
                   </div>
 
                   {/* Historical Charts Data */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="bg-white/5 rounded-xl p-4">
-                      <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
-                        <FaUser className="w-5 h-5 mr-2" />
-                        Registros de Usuarios
-                      </h3>
-                      <div className="space-y-2 max-h-64 overflow-y-auto">
-                        {historicalData.userRegistrations.map((item) => (
-                          <div key={item._id} className="flex justify-between items-center p-2 bg-white/5 rounded">
-                            <span className="text-gray-300">{item._id}</span>
-                            <span className="text-white font-medium">{item.count}</span>
+                  <div className="bg-white/5 rounded-xl p-4">
+                    <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+                      <FaChartLine className="w-5 h-5 mr-2" />
+                      Datos Históricos (Usuarios y Generaciones)
+                    </h3>
+                    <div className="space-y-2 max-h-80 overflow-y-auto">
+                      {historicalData.map((item) => (
+                        <div key={item.date} className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-3 bg-white/5 rounded mb-2">
+                          <span className="text-gray-300 font-medium mb-1 sm:mb-0">{new Date(item.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                          <div className="flex space-x-4">
+                            <span className="text-white"><FaUser className="inline mr-1" /> Usuarios: {item.userCount}</span>
+                            <span className="text-white"><FaBrain className="inline mr-1" /> Generaciones: {item.generationCount}</span>
                           </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="bg-white/5 rounded-xl p-4">
-                      <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
-                        <FaFileAlt className="w-5 h-5 mr-2" />
-                        Generaciones Diarias
-                      </h3>
-                      <div className="space-y-2 max-h-64 overflow-y-auto">
-                        {historicalData.dailyGenerations.map((item) => (
-                          <div key={item._id} className="flex justify-between items-center p-2 bg-white/5 rounded">
-                            <span className="text-gray-300">{item._id}</span>
-                            <span className="text-white font-medium">{item.count}</span>
-                          </div>
-                        ))}
-                      </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>

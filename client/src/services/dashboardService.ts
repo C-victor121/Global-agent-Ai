@@ -22,12 +22,26 @@ export interface DashboardMetrics {
     generationCount: number;
     lastGeneration: string;
   }>;
-  formatStats: Array<{
-    _id: string;
-    count: number;
-  }>;
+  formatStats: FormatStat[];
+  historicalData?: HistoricalDataPoint[]; // Añadido para los gráficos
 }
 
+export interface FormatStat {
+  _id: string;
+  count: number;
+}
+
+export interface HistoricalDataPoint {
+  date: string;
+  userCount: number;
+  generationCount: number;
+}
+
+// La interfaz HistoricalData original ya no es necesaria en esta forma,
+// ya que los datos históricos ahora son un array de HistoricalDataPoint.
+// Si getHistoricalData todavía devuelve la estructura anterior, necesitará ajustes.
+// Por ahora, la comentaremos o eliminaremos si no se usa en otro lugar.
+/*
 export interface HistoricalData {
   userRegistrations: Array<{
     _id: string;
@@ -39,6 +53,7 @@ export interface HistoricalData {
   }>;
   period: string;
 }
+*/
 
 export interface GenerationDetail {
   _id: string;
@@ -92,7 +107,7 @@ class DashboardService {
     return response.json();
   }
 
-  async getHistoricalData(period: '7d' | '30d' | '90d' = '30d'): Promise<ApiResponse<HistoricalData>> {
+  async getHistoricalData(period: '7d' | '30d' | '90d' = '30d'): Promise<ApiResponse<HistoricalDataPoint[]>> {
     const response = await this.fetchWithAuth(`${API_BASE_URL}/dashboard/historical?period=${period}`);
     return response.json();
   }

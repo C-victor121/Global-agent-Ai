@@ -48,6 +48,19 @@ export default function UsuariosPage() {
 
   return (
     <div>
+            <div className="bg-white/5 p-4 rounded-lg">
+        <h3 className="text-lg font-medium mb-2">Acciones Rápidas</h3>
+        <div className="flex flex-wrap gap-3">
+          <button className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md transition-colors">
+            Crear Nuevo Agente
+          </button>
+          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors">
+            Ver Estadísticas
+          </button>
+          {/* El componente ConnectWhatsAppButton ya maneja la lógica de conexión y prueba gratuita */}
+          <ConnectWhatsAppButton />
+        </div>
+      </div>
       <h2 className="text-xl font-semibold mb-6">Bienvenido, {session?.user?.name}</h2>
       
       {/* Dashboard de Métricas - Solo para Administradores */}
@@ -75,19 +88,7 @@ export default function UsuariosPage() {
       </div>
       
       {/* Acciones simplificadas */}
-      <div className="bg-white/5 p-4 rounded-lg">
-        <h3 className="text-lg font-medium mb-2">Acciones Rápidas</h3>
-        <div className="flex flex-wrap gap-3">
-          <button className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md transition-colors">
-            Crear Nuevo Agente
-          </button>
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors">
-            Ver Estadísticas
-          </button>
-          {/* El componente ConnectWhatsAppButton ya maneja la lógica de conexión y prueba gratuita */}
-          <ConnectWhatsAppButton />
-        </div>
-      </div>
+
 
       {/* Modal de Detalles */}
       <DetailModal
