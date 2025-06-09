@@ -48,7 +48,8 @@ export default function UsuariosPage() {
 
   return (
     <div>
-            <div className="bg-white/5 p-4 rounded-lg">
+      <h2 className="text-xl font-semibold mb-6">Bienvenido, {session?.user?.name}</h2>
+      <div className="bg-white/5 p-4 rounded-lg">
         <h3 className="text-lg font-medium mb-2">Acciones Rápidas</h3>
         <div className="flex flex-wrap gap-3">
           <button className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md transition-colors">
@@ -61,7 +62,6 @@ export default function UsuariosPage() {
           <ConnectWhatsAppButton />
         </div>
       </div>
-      <h2 className="text-xl font-semibold mb-6">Bienvenido, {session?.user?.name}</h2>
       
       {/* Dashboard de Métricas - Solo para Administradores */}
       {isAdmin && (
@@ -83,12 +83,9 @@ export default function UsuariosPage() {
         
         <div className="bg-white/5 p-4 rounded-lg">
           <h3 className="text-lg font-medium mb-2">Actividad Reciente</h3>
-          <p className="text-gray-400">No hay actividad reciente para mostrar.</p>
+  
         </div>
       </div>
-      
-      {/* Acciones simplificadas */}
-
 
       {/* Modal de Detalles */}
       <DetailModal

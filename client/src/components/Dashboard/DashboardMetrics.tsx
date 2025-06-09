@@ -121,45 +121,9 @@ const DashboardMetricsComponent: React.FC<DashboardMetricsProps> = ({ onCardClic
         </button>
       </div>
 
-      {/* Métricas de Usuarios */}
-      <div>
-        <h3 className="text-lg font-semibold text-white mb-4">Usuarios</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <MetricCard
-            title="Total de Usuarios"
-            value={metrics.users.total}
-            icon={<FaUsers className="w-6 h-6 text-white" />}
-            color="bg-blue-600"
-            onClick={() => onCardClick?.('users', { type: 'total' })}
-          />
-          <MetricCard
-            title="Usuarios Activos"
-            value={metrics.users.active}
-            icon={<FaUsers className="w-6 h-6 text-white" />}
-            color="bg-green-600"
-            onClick={() => onCardClick?.('users', { type: 'active' })}
-            subtitle="Con autenticación configurada"
-          />
-          <MetricCard
-            title="Administradores"
-            value={metrics.users.admin}
-            icon={<FaUserShield className="w-6 h-6 text-white" />}
-            color="bg-purple-600"
-            onClick={() => onCardClick?.('users', { type: 'admin' })}
-          />
-          <MetricCard
-            title="Usuarios Regulares"
-            value={metrics.users.regular}
-            icon={<FaUsers className="w-6 h-6 text-white" />}
-            color="bg-gray-600"
-            onClick={() => onCardClick?.('users', { type: 'regular' })}
-          />
-        </div>
-      </div>
-
       {/* Métricas de Generaciones */}
       <div>
-        <h3 className="text-lg font-semibold text-white mb-4">Generaciones con n8n</h3>
+        <h3 className="text-lg font-semibold text-white mb-4">Generaciones con AI</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <MetricCard
             title="Total de Generaciones"

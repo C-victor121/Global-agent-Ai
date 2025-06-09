@@ -40,10 +40,6 @@ export default async function UsersLayout({
           {/* Enlaces de Administración para Admin */}
           {userRole === 'admin' && (
             <>
-              <Link href="/usuarios" className="flex items-center space-x-3 text-gray-300 hover:text-white transition-colors">
-                <FaChartBar className="w-5 h-5" />
-                <span>Dashboard</span>
-              </Link>
               <Link href="/usuarios/gestion" className="flex items-center space-x-3 text-gray-300 hover:text-white transition-colors">
                 <FaUsers className="w-5 h-5" />
                 <span>Gestión de Usuarios</span>
