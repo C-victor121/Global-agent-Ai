@@ -32,6 +32,12 @@ services:
       - TWILIO_PHONE_NUMBER=YOUR_TWILIO_PHONE_NUMBER_HERE # O el nombre de variable que uses
       # Variable de Meta App Secret (reemplaza con tu valor)
       - META_APP_SECRET=${META_APP_SECRET}
+      # Variables de Mercado Pago
+      - MERCADOPAGO_ACCESS_TOKEN=${MERCADOPAGO_ACCESS_TOKEN}
+      - MERCADOPAGO_PUBLIC_KEY=${MERCADOPAGO_PUBLIC_KEY}
+      - MERCADOPAGO_WEBHOOK_SECRET=${MERCADOPAGO_WEBHOOK_SECRET}
+      # JWT Secret
+      - JWT_SECRET=${JWT_SECRET}
       
     depends_on:
       - mongo
