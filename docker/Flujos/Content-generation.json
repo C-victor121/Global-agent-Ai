@@ -1,0 +1,117 @@
+{
+  "name": "content",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "content-generation",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "c605b118-b182-44e4-bf4e-7bdf680604a2",
+      "name": "Webhook",
+      "webhookId": "b6d1e6a1-7b69-4856-ae4c-d6f83be490a8"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Actúa como un experto en redacción persuasiva y copywriting especializado en comercio electrónico, dropshipping y ventas virtuales. Tu tarea es generar contenido de alta conversión adaptado a los siguientes parámetros:\n\n- Intención del texto: {{ $json.body.intencion }}\n- Tono del texto: {{ $json.body.tono }}\n- Objetivo principal del texto: {{ $json.body.objetivo }}\n- Descripción del producto o servicio: {{ $json.body.producto_servicio }}\n- Público objetivo (quién leerá el texto): {{ $json.body.audiencia }}\n- Palabras clave: {{ $json.body.palabras_clave }}\n- Longitud del texto: {{ $json.body.longitud }}\n- Formato de salida deseado: {{ $json.body.formato }}\n\n\nInstrucciones adicionales:\n\n1. Si el tipo de contenido es **título**, genera una frase breve, llamativa y orientada a captar atención rápidamente.\n2. Si es una **descripción de producto**, resalta beneficios clave, genera confianza y apela a emociones del comprador.\n3. Si es un **email de venta**, utiliza estructura AIDA (Atención, Interés, Deseo, Acción) y un llamado a la acción fuerte.\n4. Si es un **mensaje a cliente**, responde de forma clara, cordial y orientada a resolver objeciones o facilitar la compra.\n5. Si es un **término legal**, utiliza un lenguaje formal pero entendible, centrado en condiciones claras para comprador y vendedor.\n\nTu redacción debe ser natural, confiable, adaptada al tono solicitado y alineada con buenas prácticas de conversión online.",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        220,
+        0
+      ],
+      "id": "3a8f8198-1e55-4722-abb4-d5f79587a897",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-1.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        320,
+        220
+      ],
+      "id": "89363250-f1e4-4a40-87b6-862474097564",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "QhGQLVQA74oUKVbN",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        580,
+        0
+      ],
+      "id": "55320d71-89e0-46d2-8c55-e616114bf278",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f462ce5d-fcff-4b51-a2eb-5aa5d4058951",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0a010d58ecc6487da57fa317b8e96cacc3629fcf25dbeec4e21b7b4f095d15d3"
+  },
+  "id": "zlkiEoImXdbjzBZf",
+  "tags": []
+}

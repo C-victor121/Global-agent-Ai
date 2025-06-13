@@ -81,6 +81,11 @@ const ContentGenerationPage = () => {
     const toastId = toast.loading('Generando contenido con IA...'); // Guardar ID para dismiss específico
 
     const webhookUrl = process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL || 'http://localhost:5678/webhook/content-generation';
+    console.log('Client N8N Webhook URL (handleSubmit):', webhookUrl);
+    
+    // Modificación: Anidar formData dentro de un objeto query
+    const payload = { query: formData };
+    console.log('Datos del formulario (payload para n8n):', JSON.stringify(payload));
 
     try {
       const n8nResponse = await fetch(webhookUrl, {
@@ -88,7 +93,7 @@ const ContentGenerationPage = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload), // Enviar el payload modificado
       });
 
       if (!n8nResponse.ok) {

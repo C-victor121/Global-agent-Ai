@@ -1,0 +1,117 @@
+{
+    "name": "content-generation",
+    "nodes": [
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "content-generation",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "position": [
+          0,
+          0
+        ],
+        "id": "60446c58-b227-4294-b516-87d894797b57",
+        "name": "Webhook",
+        "webhookId": "b6d1e6a1-7b69-4856-ae4c-d6f83be490a8"
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "=Actúa como un experto en redacción de contenido enfocado en ventas y documentos legales. Tu tarea es generar un texto adaptado a los siguientes parámetros:\n\n- Intención del texto: {{ $json.query.intencion }}\n- Tono del texto: {{ $json.query.tono }}\n- Objetivo principal del texto: {{ $json.query.objetivo }}\n- Descripción del producto o servicio: {{ $json.query.producto_servicio }}\n- Público objetivo (quién leerá el texto): {{ $json.query.audiencia }}\n- Palabras clave: {{ $json.query.palabras_clave }}\n- Longitud del texto: {{ $json.query.longitud }}\n- Formato de salida deseado: {{ $json.query.formato }}\n\n### Instrucciones adicionales:\n\n1. Si la intención está relacionada con **ventas**, crea un texto enfocado en destacar beneficios, resolver objeciones del cliente y guiar hacia una acción (ej. compra, contacto, cotización).\n2. Si la intención está relacionada con **documentos legales**, utiliza lenguaje técnico-jurídico, claro, preciso y formal. Puedes estructurar el texto como una carta, demanda, contrato, o escrito legal, según el objetivo.\n3. El tono debe adaptarse estrictamente al indicado por el usuario.\n4. Integra de forma natural las palabras clave, sin parecer forzado.\n5. Respeta la longitud solicitada: si es \"corto\", limita a 1 párrafo o 100 palabras como máximo.\n6. Entrega el contenido exactamente en el formato solicitado (párrafo, lista, viñetas, etc.).\n7. No incluyas títulos extra, explicaciones, ni comillas. Solo entrega el texto final limpio.\n\n",
+          "batching": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "typeVersion": 1.7,
+        "position": [
+          220,
+          0
+        ],
+        "id": "532d76e2-fd05-4d31-a71b-9149e0484ab9",
+        "name": "Basic LLM Chain"
+      },
+      {
+        "parameters": {
+          "modelName": "models/gemini-1.5-flash",
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+        "typeVersion": 1,
+        "position": [
+          320,
+          220
+        ],
+        "id": "f909e3e8-f467-4e91-9cb1-7bbbb7bf024e",
+        "name": "Google Gemini Chat Model",
+        "credentials": {
+          "googlePalmApi": {
+            "id": "8Dw5bFiK4cwmNJVG",
+            "name": "Google Gemini(PaLM) Api account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "options": {}
+        },
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.4,
+        "position": [
+          580,
+          0
+        ],
+        "id": "14e976c2-ead6-405b-8824-d17b91000635",
+        "name": "Respond to Webhook"
+      }
+    ],
+    "pinData": {},
+    "connections": {
+      "Webhook": {
+        "main": [
+          [
+            {
+              "node": "Basic LLM Chain",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Google Gemini Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "Basic LLM Chain",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Basic LLM Chain": {
+        "main": [
+          [
+            {
+              "node": "Respond to Webhook",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "active": true,
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "versionId": "f5a02a2a-b460-4023-8c2c-d556b0ad9ca5",
+    "meta": {
+      "templateCredsSetupCompleted": true,
+      "instanceId": "0a010d58ecc6487da57fa317b8e96cacc3629fcf25dbeec4e21b7b4f095d15d3"
+    },
+    "id": "CNV9Dv5k3Z4lnbCu",
+    "tags": []
+  }

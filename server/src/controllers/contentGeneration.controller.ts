@@ -47,16 +47,18 @@ export const generateContent = async (req: AuthenticatedRequest, res: Response):
 
     // 2. Enviar datos al webhook de n8n
     const n8nResponse = await axios.post(N8N_WEBHOOK_URL, {
-      intencion,
-      tono,
-      objetivo,
-      producto_servicio,
-      audiencia,
-      palabras_clave,
-      longitud,
-      formato,
+      query: {
+        intencion,
+        tono,
+        objetivo,
+        producto_servicio,
+        audiencia,
+        palabras_clave,
+        longitud,
+        formato
+      },
       // Puedes añadir el ID de la generación para que n8n lo devuelva y facilitar la actualización
-      generationId: initialGeneration._id 
+      generationId: initialGeneration._id
     });
 
     // Asumiendo que n8n responde con un JSON que contiene el texto generado, por ejemplo: { generatedText: "..." }
