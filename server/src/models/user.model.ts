@@ -9,6 +9,11 @@ export interface IUser extends Document {
   avatar?: string;
   role: 'user' | 'admin';
   twilioPhoneNumber?: string; // Añadido para la lógica de Twilio
+  // Campos para integración WordPress
+  apiKey?: string;
+  messageCount: number;
+  messageLimit: number;
+  wordpressUrl?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -51,6 +56,28 @@ const userSchema = new Schema<IUser>({
     type: String,
     enum: ['user', 'admin'],
     default: 'user'
+  },
+  twilioPhoneNumber: {
+    type: String,
+    sparse: true
+  },
+  // Campos para integración WordPress
+  apiKey: {
+    type: String,
+    unique: true,
+    sparse: true
+  },
+  messageCount: {
+    type: Number,
+    default: 0
+  },
+  messageLimit: {
+    type: Number,
+    default: 25
+  },
+  wordpressUrl: {
+    type: String,
+    trim: true
   }
 }, {
   timestamps: true,

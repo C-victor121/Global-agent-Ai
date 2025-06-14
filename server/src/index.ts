@@ -9,6 +9,7 @@ import twilioRoutes from './routes/twilio.routes';
 import whatsappRoutes from './routes/whatsapp.routes'; // Añadir importación de rutas de WhatsApp
 import contentGenerationRoutes from './routes/contentGeneration.routes'; // Importar rutas de generación de contenido
 import dashboardRoutes from './routes/dashboard.routes'; // Importar rutas del dashboard
+import contactMessageRoutes from './routes/contactMessage.routes'; // Importar rutas de mensajes de contacto
 import { errorHandler } from './middleware/error.handler';
 import cookieParser from 'cookie-parser';
 
@@ -35,6 +36,7 @@ app.use('/api/twilio', twilioRoutes); // Montamos las rutas de Twilio para webho
 app.use('/api/whatsapp', whatsappRoutes); // Montamos las rutas de WhatsApp
 app.use('/api/content', contentGenerationRoutes); // Montamos las rutas de generación de contenido
 app.use('/api/dashboard', dashboardRoutes); // Montamos las rutas del dashboard
+app.use('/api', contactMessageRoutes); // Montamos las rutas de mensajes de contacto
 
 // Middleware de manejo de errores
 app.use(errorHandler)

@@ -416,35 +416,7 @@ const ContentGenerationPage = () => {
         </div>
       </div>
 
-      {/* Modal para ver respuesta completa de PENDING RESPONSE */} 
-      {showResponseModal && selectedResponseForModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 backdrop-blur-sm flex items-center justify-center p-4 z-50" onClick={closeResponseModal}>
-          <div className="relative bg-slate-800 p-6 md:p-8 rounded-lg shadow-2xl w-full max-w-2xl mx-auto ring-1 ring-white/10 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-            <button onClick={closeResponseModal} className="absolute top-4 right-4 text-slate-400 hover:text-slate-200 text-3xl font-light">&times;</button>
-            <h3 className="text-2xl font-semibold text-sky-300 mb-4">Sugerencia de Contenido Completa</h3>
-            <p className="text-sm text-slate-400 mb-1">Generado: {new Date(selectedResponseForModal.timestamp).toLocaleString()}</p>
-            <p className="font-medium text-slate-300">Intención: <span className="font-normal text-slate-200">{intencionOptions.find(o => o.value === selectedResponseForModal.intention)?.label || selectedResponseForModal.intention}</span></p>
-            {selectedResponseForModal.target && <p className="font-medium text-slate-300">Objetivo: <span className="font-normal text-slate-200">{selectedResponseForModal.target}</span></p>}
-            {selectedResponseForModal.product_service && <p className="font-medium text-slate-300">Producto/Servicio: <span className="font-normal text-slate-200">{selectedResponseForModal.product_service}</span></p>}
-            <div className="mt-4 mb-6 p-3 border border-slate-700 rounded-md bg-slate-900/50 max-h-[40vh] overflow-y-auto">
-              <h4 className="text-lg font-semibold text-slate-200 mb-2">Texto Completo:</h4>
-              <pre className="whitespace-pre-wrap text-sm text-slate-300 font-mono">{selectedResponseForModal.response}</pre>
-            </div>
-            <div className="flex flex-wrap gap-3 justify-end">
-              <button 
-                onClick={() => { navigator.clipboard.writeText(selectedResponseForModal.response); toast.success('Texto copiado!'); }}
-                className="py-2 px-4 text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 rounded-md shadow-md transition-colors"
-              >
-                Copiar Texto
-              </button>
-              {!history.find(h => h.generatedText === selectedResponseForModal.response && new Date(h.createdAt).toISOString().split('T')[0] === selectedResponseForModal.timestamp.split('T')[0]) && pendingResponse?.id === selectedResponseForModal.id && (
-                <button onClick={() => { acceptResponse(selectedResponseForModal); }} className="py-2 px-4 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-md shadow-md transition-colors">Aceptar y Guardar</button>
-              )}
-              <button onClick={closeResponseModal} className="py-2 px-4 text-sm font-medium text-slate-800 bg-slate-300 hover:bg-slate-400 rounded-md shadow-md transition-colors">Cerrar</button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* El modal para mostrar la respuesta completa de PENDING RESPONSE ya no es necesario */}
 
       {/* Modal para ver item completo del HISTORIAL */} 
       {showHistoryItemModal && selectedHistoryItemForModal && (

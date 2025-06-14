@@ -2,7 +2,7 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../api/auth/[...nextauth]/options';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { FaUser, FaCog, FaUsers, FaCommentDots, FaBrain, FaChartBar } from 'react-icons/fa';
+import { FaUser, FaCog, FaUsers, FaCommentDots, FaBrain, FaChartBar, FaKey, FaWordpress } from 'react-icons/fa';
 
 export default async function UsersLayout({
   children,
@@ -36,6 +36,14 @@ export default async function UsersLayout({
             <FaBrain className="w-5 h-5" />
             <span>Generación de Contenidos</span>
           </Link>
+          <Link href="/usuarios/mensajes" className="flex items-center space-x-3 text-gray-300 hover:text-white transition-colors">
+            <FaCommentDots className="w-5 h-5" />
+            <span>Mensajes WordPress</span>
+          </Link>
+          <Link href="/usuarios/wordpress-integration" className="flex items-center space-x-3 text-gray-300 hover:text-white transition-colors">
+            <FaWordpress className="w-5 h-5" />
+            <span>WordPress</span>
+          </Link>
 
           {/* Enlaces de Administración para Admin */}
           {userRole === 'admin' && (
@@ -49,10 +57,10 @@ export default async function UsersLayout({
                 <FaCog className="w-5 h-5" /> 
                 <span>Gestión de Planes</span>
               </Link>
-              <Link href="/usuarios/mensajes" className="flex items-center space-x-3 text-gray-300 hover:text-white transition-colors">
+              <Link href="/usuarios/admin/mensajes" className="flex items-center space-x-3 text-gray-300 hover:text-white transition-colors">
                 {/* Ícono para Mensajes, puedes cambiarlo si tienes uno más específico */}
                 <FaCommentDots className="w-5 h-5" /> 
-                <span>Mensajes</span>
+                <span>Admin Mensajes</span>
               </Link>
             </>
           )}
