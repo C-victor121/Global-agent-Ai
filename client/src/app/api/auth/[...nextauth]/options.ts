@@ -1,7 +1,7 @@
 import GoogleProvider from 'next-auth/providers/google';
 import FacebookProvider from 'next-auth/providers/facebook';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { NextAuthOptions } from 'next-auth';
+import type { NextAuthOptions } from 'next-auth';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -34,7 +34,7 @@ export const authOptions: NextAuthOptions = {
         }
 
         try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/auth/signin`, {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'}/auth/signin`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -106,7 +106,7 @@ export const authOptions: NextAuthOptions = {
           const userId = token.sub;
           if (userId) {
             // Realizar una solicitud a la API para obtener los datos actualizados del usuario
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/users/${userId}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'}/users/${userId}`, {
               headers: {
                 'Authorization': `Bearer ${token.jti}`,
                 'Content-Type': 'application/json'

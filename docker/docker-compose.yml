@@ -6,9 +6,10 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NEXT_PUBLIC_API_URL=http://server:3001
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:3001/api}
+      - NEXTAUTH_URL=${NEXTAUTH_URL:-http://localhost:3000}
+      - NEXTAUTH_SECRET=844efe23b9b81ad485b25d11b1f5548b2e8862010576da1c53c41df2b01cc546
       - INTERNAL_API_URL=http://server:3001
-      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
     networks:
       - global_network
     depends_on:
@@ -23,7 +24,7 @@ services:
     environment:
       - PORT=3001
       - MONGODB_URI=mongodb://mongo:27017/global-agent-ai
-      - CLIENT_URL=http://client:3000
+      - CLIENT_URL=${CLIENT_URL}
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
       - N8N_CONTENT_GENERATION_WEBHOOK_URL=http://n8n:5678/webhook-test/content-generation
       # Variables de Twilio (reemplaza con tus valores y nombres de variable correctos)

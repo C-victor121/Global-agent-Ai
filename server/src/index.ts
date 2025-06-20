@@ -10,6 +10,7 @@ import whatsappRoutes from './routes/whatsapp.routes'; // Añadir importación d
 import contentGenerationRoutes from './routes/contentGeneration.routes'; // Importar rutas de generación de contenido
 import dashboardRoutes from './routes/dashboard.routes'; // Importar rutas del dashboard
 import contactMessageRoutes from './routes/contactMessage.routes'; // Importar rutas de mensajes de contacto
+import legalAssistantRoutes from './routes/legalAssistant.routes'; // Importar rutas del asistente legal
 import { errorHandler } from './middleware/error.handler';
 import cookieParser from 'cookie-parser';
 
@@ -37,6 +38,7 @@ app.use('/api/whatsapp', whatsappRoutes); // Montamos las rutas de WhatsApp
 app.use('/api/content', contentGenerationRoutes); // Montamos las rutas de generación de contenido
 app.use('/api/dashboard', dashboardRoutes); // Montamos las rutas del dashboard
 app.use('/api', contactMessageRoutes); // Montamos las rutas de mensajes de contacto
+app.use('/api/legal', legalAssistantRoutes); // Montamos las rutas del asistente legal
 
 // Middleware de manejo de errores
 app.use(errorHandler)

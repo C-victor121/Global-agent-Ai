@@ -24,7 +24,7 @@ export default function WordPressIntegrationPage() {
   const fetchApiInfo = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:3001/api-info');
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'}/api-info`);
       if (response.ok) {
         const data = await response.json();
         setApiInfo(data);
@@ -41,7 +41,7 @@ export default function WordPressIntegrationPage() {
 
   const generateApiKey = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/generate-api-key', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'}/generate-api-key`, {
         method: 'POST'
       });
       if (response.ok) {

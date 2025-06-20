@@ -2,7 +2,7 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../api/auth/[...nextauth]/options';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { FaUser, FaCog, FaUsers, FaCommentDots, FaBrain, FaChartBar, FaKey, FaWordpress } from 'react-icons/fa';
+import { FaUser, FaCog, FaUsers, FaCommentDots, FaBrain, FaChartBar, FaKey, FaWordpress, FaBalanceScale } from 'react-icons/fa';
 
 export default async function UsersLayout({
   children,
@@ -43,6 +43,10 @@ export default async function UsersLayout({
           <Link href="/usuarios/wordpress-integration" className="flex items-center space-x-3 text-gray-300 hover:text-white transition-colors">
             <FaWordpress className="w-5 h-5" />
             <span>WordPress</span>
+          </Link>
+          <Link href="/usuarios/asistente-legal" className="flex items-center space-x-3 text-gray-300 hover:text-white transition-colors">
+            <FaBalanceScale className="w-5 h-5" />
+            <span>Asistente Legal</span>
           </Link>
 
           {/* Enlaces de Administración para Admin */}

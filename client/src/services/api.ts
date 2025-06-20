@@ -2,7 +2,7 @@ import axios from 'axios';
 import { ApiResponse, User } from '../types'; // Asegúrate que los tipos existan y estén bien definidos
 
 // URL base del backend (usualmente definida en .env como NEXT_PUBLIC_API_URL)
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 
 // Cliente Axios configurado para todo el backend
 const apiClient = axios.create({
