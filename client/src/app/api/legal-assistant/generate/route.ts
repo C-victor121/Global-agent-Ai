@@ -16,11 +16,23 @@ export async function POST(request: NextRequest) {
     // Procesar el FormData
     const formData = await request.formData();
     const documentType = formData.get('documentType');
+    const description = formData.get('description');
+    const partiesData = formData.get('parties');
     const files = formData.getAll('files');
+    
+    // Parsear los datos de las partes si existen
+    const parties = partiesData ? JSON.parse(partiesData.toString()) : [];
 
-    if (!documentType || files.length === 0) {
+    if (!documentType || !description || files.length === 0) {
       return NextResponse.json(
-        { error: 'Faltan datos requeridos' },
+        { 
+          error: 'Faltan datos requeridos',
+          details: {
+            documentType: !documentType ? 'Tipo de documento es requerido' : null,
+            description: !description ? 'Descripción es requerida' : null,
+            files: files.length === 0 ? 'Debe adjuntar al menos un archivo' : null
+          }
+        },
         { status: 400 }
       );
     }
@@ -51,6 +63,8 @@ export async function POST(request: NextRequest) {
       },
       body: JSON.stringify({
         documentType,
+        description,
+        parties,
         files: filesData,
         userId: session.user.id,
         userEmail: session.user.email

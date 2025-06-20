@@ -27,6 +27,7 @@ services:
       - CLIENT_URL=${CLIENT_URL}
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
       - N8N_CONTENT_GENERATION_WEBHOOK_URL=http://n8n:5678/webhook-test/content-generation
+      - N8N_LEGAL_ASSISTANT_WEBHOOK_URL=http://n8n:5678/webhook/legal-assistant
       # Variables de Twilio (reemplaza con tus valores y nombres de variable correctos)
       - TWILIO_ACCOUNT_SID=YOUR_TWILIO_ACCOUNT_SID_HERE
       - TWILIO_AUTH_TOKEN=YOUR_TWILIO_AUTH_TOKEN_HERE
