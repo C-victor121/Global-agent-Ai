@@ -1,0 +1,115 @@
+{
+  "name": "legal-assistant",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "webhook-test/legal-assistant",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "legal-webhook-001",
+      "name": "Legal Assistant Webhook",
+      "webhookId": "legal-assistant-webhook-id"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Actúa como un experto abogado especializado en redacción de documentos legales. Tu tarea es generar documentos legales profesionales y precisos basados en los siguientes parámetros:\n\n- Tipo de documento: {{ $json.body.documentType }}\n- Descripción del caso: {{ $json.body.description }}\n- Partes involucradas: {{ $json.body.parties }}\n- Archivos de contexto: {{ $json.body.files }}\n- Usuario ID: {{ $json.body.userId }}\n- Email del usuario: {{ $json.body.userEmail }}\n\nInstrucciones:\n\n1. Genera un documento legal completo y profesional\n2. Utiliza lenguaje jurídico apropiado pero comprensible\n3. Incluye todas las cláusulas necesarias según el tipo de documento\n4. Asegúrate de que el documento sea válido legalmente\n5. Personaliza el contenido según la información proporcionada\n6. Incluye espacios para firmas y fechas cuando sea apropiado\n\nEl documento debe ser preciso, completo y listo para uso legal.",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        220,
+        0
+      ],
+      "id": "legal-llm-chain-001",
+      "name": "Legal Document LLM Chain"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-1.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        320,
+        220
+      ],
+      "id": "legal-gemini-model-001",
+      "name": "Legal Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "google-palm-credentials",
+          "name": "Google PaLM API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.text }}"
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ],
+      "id": "legal-response-001",
+      "name": "Legal Response"
+    }
+  ],
+  "connections": {
+    "Legal Assistant Webhook": {
+      "main": [
+        [
+          {
+            "node": "Legal Document LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Legal Document LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Legal Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Legal Google Gemini Chat Model": {
+      "main": [
+        [
+          {
+            "node": "Legal Document LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "versionId": "legal-assistant-v1"
+}

@@ -112,15 +112,20 @@ export default function AsistenteLegal() {
         return;
       }
 
+      // Mostrar el resultado generado
+      if (data.data && typeof data.data === 'string') {
+        // Mostrar el documento generado en un modal o área de resultados
+        alert(`Documento generado exitosamente:\n\n${data.data.substring(0, 500)}...`);
+      } else {
+        alert('Documento generado exitosamente');
+      }
+      
       // Limpiar el formulario después de un envío exitoso
       setSelectedDocument('');
       setDescription('');
       setFiles([]);
       setIncludeParties(false);
       setParties([{ name: '', documentType: '', documentNumber: '', address: '', phone: '' }]);
-      
-      // Mostrar mensaje de éxito
-      alert('Documento generado exitosamente');
 
     } catch (err) {
       setGeneralError(err instanceof Error ? err.message : 'Error al procesar la solicitud. Por favor intenta nuevamente.');

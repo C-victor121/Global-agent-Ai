@@ -50,11 +50,21 @@ export async function POST(request: NextRequest) {
       })
     );
 
-    // Enviar datos a N8N
-    const n8nWebhookUrl = process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL;
+    // Enviar datos a N8N - Usar URL específica para legal-assistant
+    const n8nWebhookUrl = process.env.NEXT_PUBLIC_N8N_LEGAL_ASSISTANT_WEBHOOK_URL || 'http://localhost:5678/webhook-test/legal-assistant';
     if (!n8nWebhookUrl) {
       throw new Error('URL del webhook de N8N no configurada');
     }
+
+    console.log('Legal Assistant Webhook URL:', n8nWebhookUrl);
+    console.log('Sending data to N8N:', {
+      documentType,
+      description,
+      parties: parties.length,
+      files: filesData.length,
+      userId: session.user.id,
+      userEmail: session.user.email
+    });
 
     const n8nResponse = await fetch(n8nWebhookUrl, {
       method: 'POST',

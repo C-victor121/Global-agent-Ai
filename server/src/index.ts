@@ -23,7 +23,13 @@ const PORT = process.env.PORT || 3001
 
 // Middleware
 app.use(cors({
-  origin: [process.env.CLIENT_URL || 'http://localhost:3000', 'http://192.168.101.6:3000', 'http://localhost:3000'], // Asegura que ambas URLs comunes estén permitidas
+  origin: [
+    process.env.CLIENT_URL || 
+    'http://192.168.101.6:3000', 
+    'http://localhost:3000',
+    'http://100.27.191.200',
+    'http://100.27.191.200:3000'
+  ], // Asegura que todas las URLs estén permitidas
   credentials: true
 }))
 app.use(express.json());
