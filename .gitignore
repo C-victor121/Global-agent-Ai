@@ -26,6 +26,7 @@ yarn-error.log*
 # local env files
 .env*.local
 .env
+echo "docker/n8n_data/database.sqlite" >> .gitignore
 
 # vercel
 .vercel
