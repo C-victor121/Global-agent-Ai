@@ -1,0 +1,93 @@
+Builder
+
+El usuario reporta que el script SSL falló en la construcción de nginx debido a un error con el directorio certbot/accounts. Necesito revisar el nginx.Dockerfile para identificar el problema específico.
+
+docker\nginx.Dockerfile :( 2 - 50 )
+
+Ahora necesito revisar el docker-compose.yml para entender cómo se está configurando el servicio nginx y qué está causando el error con el directorio certbot/accounts.
+
+docker\docker-compose.yml :( 2 - 100 )
+
+## Análisis del Problema
+El error principal es que el script setup-ssl.sh está fallando en la construcción del contenedor nginx debido a que está intentando acceder al directorio /home/ubuntu/Global-agent-Ai/docker/certbot/accounts que no existe.
+
+### Problemas Identificados:
+1. Error de construcción de nginx : error checking context: can't stat '/home/ubuntu/Global-agent-Ai/docker/certbot/accounts'
+2. Certificados autofirmados : Como falló Let's Encrypt, se están usando certificados autofirmados
+3. Variables de entorno faltantes : Múltiples warnings sobre variables no configuradas
+## Solución Paso a Paso
+### 1. Crear Directorios Necesarios
+En tu servidor Ubuntu, ejecuta:
+
+### 2. Limpiar Contenedores e Imágenes
+### 3. Verificar Variables de Entorno
+Revisa tu archivo .env y asegúrate de que contenga:
+
+Debe incluir al menos:
+
+### 4. Actualizar Docker Buildx (Opcional)
+Para eliminar la advertencia de deprecated builder:
+
+### 5. Ejecutar Setup SSL Nuevamente
+### 6. Verificación Manual de Certificados
+Si el script sigue fallando, puedes obtener certificados manualmente:
+
+### 7. Verificar Estado de los Servicios
+### 8. Limpiar Cache del Navegador
+Para resolver el error ERR_CERT_AUTHORITY_INVALID :
+
+1. En Chrome/Brave:
+   
+   - Ve a chrome://settings/content/all
+   - Busca globalsolarco.shop
+   - Elimina todos los datos del sitio
+   - Ve a chrome://net-internals/#hsts
+   - En "Delete domain security policies" escribe globalsolarco.shop
+   - Haz clic en "Delete"
+2. Alternativamente:
+   
+   - Usa modo incógnito temporalmente
+   - O limpia completamente el cache del navegador
+## Comandos de Diagnóstico
+Si persisten problemas:
+
+```
+# Verificar puertos
+sudo netstat -tlnp | grep 
+:443
+sudo netstat -tlnp | grep :80
+
+# Verificar firewall
+sudo ufw status
+
+# Verificar DNS
+nslookup globalsolarco.shop
+
+# Verificar certificados
+openssl s_client -connect 
+globalsolarco.shop:443 
+-servername globalsolarco.
+shop
+```
+## Resultado Esperado
+Una vez completados estos pasos:
+
+- Los contenedores se construirán correctamente
+- Se obtendrán certificados SSL válidos de Let's Encrypt
+- La aplicación será accesible en https://globalsolarco.shop sin advertencias de seguridad
+- El navegador mostrará el candado verde de conexión segura
+Si el problema persiste después de estos pasos, comparte los logs específicos del error para un diagnóstico más detallado.
+
+verificar Abre el archivo nginx.conf para editarlo:
+nano nginx.conf
+
+Busca las siguientes líneas dentro del bloque server { que escucha en el puerto 443 ssl (HTTPS):
+
+ssl_certificate     /etc/letsencrypt/live/globalsolarco.shop/fullchain.pem;
+ssl_certificate_key /etc/letsencrypt/live/globalsolarco.shop/privkey.pem;
+
+docker-compose down
+docker-compose up --build -d
+
+docker-compose down
+docker-compose up --build -d

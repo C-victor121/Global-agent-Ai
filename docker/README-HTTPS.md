@@ -3,6 +3,7 @@
 ## Resumen de Cambios
 
 Se ha configurado la aplicación para usar HTTPS en producción con el dominio `globalsolarco.shop` y la IP estática `107.20.220.167`.
+ssh -i "C:\Users\cvict\Desktop\LightsailDefaultKey-us-east-1.pem" ubuntu@107.20.220.167
 
 ### Componentes Agregados:
 

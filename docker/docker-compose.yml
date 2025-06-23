@@ -26,7 +26,7 @@ services:
       - "3000"
     environment:
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:3001/api}
-      - NEXTAUTH_URL=${NEXTAUTH_URL:-http://100.27.191.200}
+      - NEXTAUTH_URL=${NEXTAUTH_URL:-http://107.20.220.167}
       - NEXTAUTH_SECRET=844efe23b9b81ad485b25d11b1f5548b2e8862010576da1c53c41df2b01cc546
       - INTERNAL_API_URL=http://server:3001
       - NEXT_PUBLIC_N8N_WEBHOOK_URL=${NEXT_PUBLIC_N8N_WEBHOOK_URL:-http://localhost:5678/webhook/content-generation}

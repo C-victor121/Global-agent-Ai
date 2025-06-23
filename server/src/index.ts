@@ -27,8 +27,8 @@ app.use(cors({
     process.env.CLIENT_URL || 
     'http://192.168.101.6:3000', 
     'http://localhost:3000',
-    'http://100.27.191.200',
-    'http://100.27.191.200:3000'
+    'http://107.20.220.167',
+    'http://107.20.220.167:3000'
   ], // Asegura que todas las URLs estén permitidas
   credentials: true
 }))

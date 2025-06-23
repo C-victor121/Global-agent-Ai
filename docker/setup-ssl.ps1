@@ -1,4 +1,4 @@
-# Script de PowerShell para configurar SSL con Let's Encrypt para globalsolarco.shop
+    # Script de PowerShell para configurar SSL con Let's Encrypt para globalsolarco.shop
 # Este script debe ejecutarse después de que el dominio apunte a la IP del servidor
 
 Write-Host "=== Configuración SSL para globalsolarco.shop ===" -ForegroundColor Green
