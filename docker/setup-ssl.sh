@@ -16,6 +16,11 @@ echo ""
 echo "Creando directorios para certificados..."
 mkdir -p ./certbot
 mkdir -p ./certbot-webroot
+sudo mkdir -p certbot/accounts
+sudo mkdir -p certbot/live
+sudo mkdir -p certbot/archive
+sudo mkdir -p certbot-webroot
+
 
 # Detener contenedores si están corriendo
 echo "Deteniendo contenedores..."
@@ -27,7 +32,18 @@ docker-compose up --build -d nginx
 
 # Esperar a que nginx esté listo
 echo "Esperando a que nginx esté listo..."
-sleep 10
+sleep 15
+
+# Verificar que nginx esté respondiendo
+echo "Verificando que nginx esté funcionando..."
+for i in {1..5}; do
+    if curl -f http://107.20.220.167 >/dev/null 2>&1; then
+        echo "Nginx está funcionando correctamente"
+        break
+    fi
+    echo "Intento $i/5: Esperando a que nginx responda..."
+    sleep 5
+done
 
 # Obtener certificados SSL
 echo "Obteniendo certificados SSL de Let's Encrypt..."
