@@ -15,23 +15,39 @@ import { errorHandler } from './middleware/error.handler';
 import cookieParser from 'cookie-parser';
 
 
-// dotenv.config() // Se recomienda gestionar las variables de entorno a través de Docker Compose en producción
-console.log('N8N_CONTENT_GENERATION_WEBHOOK_URL on startup:', process.env.N8N_CONTENT_GENERATION_WEBHOOK_URL);
+// Cargar variables de entorno
+dotenv.config()
+
+// Verificar la carga de variables críticas al inicio
+console.log('Verificando configuración del servidor...');
+console.log('URLs configuradas:', {
+  FRONTEND_URL: process.env.FRONTEND_URL || 'https://globalsolarco.shop',
+  BACKEND_URL: process.env.BACKEND_URL || 'https://globalsolarco.shop/api'
+});
+console.log('Puerto configurado:', process.env.PORT);
+console.log('MongoDB URI configurada:', process.env.MONGODB_URI ? '✓ Presente' : '✗ Faltante');
+console.log('JWT Secret configurado:', process.env.JWT_SECRET ? '✓ Presente' : '✗ Faltante');
+console.log('NextAuth Secret configurado:', process.env.NEXTAUTH_SECRET ? '✓ Presente' : '✗ Faltante');
 
 const app = express()
 const PORT = process.env.PORT || 3001
 
 // Middleware
 app.use(cors({
-  origin: [
-    process.env.CLIENT_URL || 
-    'http://192.168.101.6:3000', 
-    'http://localhost:3000',
-    'http://107.20.220.167',
-    'http://107.20.220.167:3000'
-  ], // Asegura que todas las URLs estén permitidas
+  origin: (origin, callback) => {
+    const allowedOrigins = [
+      process.env.FRONTEND_URL,
+      'http://localhost:3000' // Desarrollo local
+    ].filter((o): o is string => !!o);
+
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
-}))
+}));
 app.use(express.json());
 app.use(cookieParser());
 
