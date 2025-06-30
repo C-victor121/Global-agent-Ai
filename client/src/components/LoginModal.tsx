@@ -7,6 +7,7 @@ import { ZodError } from 'zod';
 import { loginSchema, registerSchema, forgotPasswordSchema } from '@/shared/validations/auth.schema';
 
 import { signIn, useSession } from 'next-auth/react';
+import apiClient from '@/services/api';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -57,28 +58,19 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
           await registerSchema.parseAsync({ name, email, password, confirmPassword });
           
           try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'}/auth/signup`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({ name, email, password })
+            const response = await apiClient.post('/auth/signup', {
+              name,
+              email,
+              password
             });
-            
-            let data;
-            try {
-              data = await response.json();
-            } catch (jsonError) {
-              console.error('Error al procesar la respuesta JSON:', jsonError);
-              setErrors({ auth: 'Error en la comunicación con el servidor. Verifique la URL de la API.' });
-              return;
-            }
-            
+
+            const data = response.data;
+
             if (!data.success) {
               setErrors({ auth: data.message || 'Error en el registro' });
               return;
             }
-            
+
             // Registro exitoso, iniciar sesión automáticamente con el proveedor de credenciales
             const loginResult = await signIn('credentials', {
               redirect: false,
