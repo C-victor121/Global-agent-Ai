@@ -14,8 +14,9 @@ services:
     networks:
       - global_network
     volumes:
-      - ./certbot:/etc/letsencrypt
-      - ./certbot-webroot:/var/www/certbot
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+      - ./certbot/logs:/var/log/letsencrypt
     restart: unless-stopped
 
   client:
