@@ -51,15 +51,23 @@ services:
       - PORT=3001
       - MONGODB_URI=mongodb://mongo:27017/global-agent-ai
       - CLIENT_URL=${CLIENT_URL}
+      - FRONTEND_URL=${CLIENT_URL}
+      - BACKEND_URL=${NEXT_PUBLIC_API_URL}
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
       - N8N_CONTENT_GENERATION_WEBHOOK_URL=http://n8n:5678/webhook-test/content-generation
       - N8N_LEGAL_ASSISTANT_WEBHOOK_URL=http://n8n:5678/webhook-test/legal-assistant
-      # Variables de Twilio (reemplaza con tus valores y nombres de variable correctos)
-      - TWILIO_ACCOUNT_SID=YOUR_TWILIO_ACCOUNT_SID_HERE
-      - TWILIO_AUTH_TOKEN=YOUR_TWILIO_AUTH_TOKEN_HERE
-      - TWILIO_PHONE_NUMBER=YOUR_TWILIO_PHONE_NUMBER_HERE # O el nombre de variable que uses
-      # Variable de Meta App Secret (reemplaza con tu valor)
+      # OAuth Credentials
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - FACEBOOK_CLIENT_ID=${FACEBOOK_CLIENT_ID}
+      - FACEBOOK_CLIENT_SECRET=${FACEBOOK_CLIENT_SECRET}
+      # Variables de Twilio
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
+      - TWILIO_PHONE_NUMBER=${TWILIO_PHONE_NUMBER}
+      # Variable de Meta App Secret
       - META_APP_SECRET=${META_APP_SECRET}
+      - META_APP_ID=${META_APP_ID}
       # Variables de Mercado Pago
       - MERCADOPAGO_ACCESS_TOKEN=${MERCADOPAGO_ACCESS_TOKEN}
       - MERCADOPAGO_PUBLIC_KEY=${MERCADOPAGO_PUBLIC_KEY}

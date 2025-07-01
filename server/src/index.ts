@@ -11,6 +11,7 @@ import contentGenerationRoutes from './routes/contentGeneration.routes'; // Impo
 import dashboardRoutes from './routes/dashboard.routes'; // Importar rutas del dashboard
 import contactMessageRoutes from './routes/contactMessage.routes'; // Importar rutas de mensajes de contacto
 import legalAssistantRoutes from './routes/legalAssistant.routes'; // Importar rutas del asistente legal
+import paymentRoutes from './routes/payment.routes'; // Importar rutas de pago
 import { errorHandler } from './middleware/error.handler';
 import { authMiddleware } from './middleware/auth.middleware'; // Importar authMiddleware
 import cookieParser from 'cookie-parser';
@@ -35,27 +36,26 @@ const PORT = process.env.PORT || 3001
 
 // Middleware
 app.use(cors({
-  origin: (origin, callback) => {
-    console.log('Request origin:', origin); // <--- AÑADIR ESTA LÍNEA PARA DEBUGGING
+  origin: function (origin, callback) {
+    console.log('🌐 CORS - Origen de la solicitud:', origin);
     const allowedOrigins = [
-      process.env.FRONTEND_URL || 'https://globalsolarco.shop',
-      'http://localhost:3000', // Desarrollo local
       'https://globalsolarco.shop',
+      'http://localhost:3000',
       'https://www.globalsolarco.shop'
-    ].filter((o): o is string => !!o);
-
-    // Permitir requests sin origin (como Postman, aplicaciones móviles, etc.)
+    ];
+    
+    // Permitir solicitudes sin origen (como desde aplicaciones móviles o Postman)
     if (!origin) {
-      callback(null, true);
-      return;
+      console.log('✅ CORS - Permitiendo solicitud sin origen');
+      return callback(null, true);
     }
-
-    // Verificar si el origin está en la lista de permitidos
+    
     if (allowedOrigins.includes(origin)) {
+      console.log('✅ CORS - Origen permitido:', origin);
       callback(null, true);
     } else {
-      console.log('CORS blocked origin:', origin);
-      callback(new Error('Not allowed by CORS'));
+      console.log('❌ CORS - Origen no permitido:', origin);
+      callback(new Error('No permitido por CORS'));
     }
   },
   credentials: true,
@@ -67,6 +67,7 @@ app.use(cookieParser());
 
 // Rutas públicas (sin autenticación)
 app.use('/api/auth', authRoutes);
+app.use('/api/payment', paymentRoutes); // Rutas de pago (incluye webhooks públicos y rutas protegidas)
 
 // Middleware de autenticación para rutas protegidas
 app.use('/api', authMiddleware);

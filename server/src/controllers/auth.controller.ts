@@ -250,11 +250,14 @@ export const signin = async (req: Request, res: Response) => {
     }
 
     res.status(200).json({
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      avatar: user.avatar,
-      role: user.role
+      success: true,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar,
+        role: user.role
+      }
     });
   } catch (error) {
     console.error('Error en signin:', error);

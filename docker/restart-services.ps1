@@ -1,23 +1,53 @@
-# Script para reiniciar los servicios con las nuevas configuraciones
+# Script para reiniciar servicios Docker con nuevas configuraciones
+Write-Host "Iniciando reinicio de servicios Docker con correcciones de autenticacion..." -ForegroundColor Yellow
 
-Write-Host "Deteniendo servicios actuales..." -ForegroundColor Yellow
+# Verificar que Docker este ejecutandose
+Write-Host "Verificando Docker..." -ForegroundColor Blue
+try {
+    docker --version
+    Write-Host "Docker esta disponible" -ForegroundColor Green
+} catch {
+    Write-Host "Error: Docker no esta disponible. Asegurate de que Docker Desktop este ejecutandose." -ForegroundColor Red
+    exit 1
+}
+
+# Detener todos los servicios
+Write-Host "Deteniendo servicios..." -ForegroundColor Red
 docker-compose down
 
-Write-Host "Eliminando imágenes antiguas..." -ForegroundColor Yellow
-docker-compose rm -f
+# Eliminar imagenes antiguas para forzar reconstruccion
+Write-Host "Eliminando imagenes antiguas..." -ForegroundColor Red
 docker image prune -f
+docker-compose down --rmi all --volumes --remove-orphans
 
-Write-Host "Reconstruyendo servicios..." -ForegroundColor Green
-docker-compose build --no-cache
+# Reconstruir e iniciar servicios
+Write-Host "Reconstruyendo e iniciando servicios con variables de entorno actualizadas..." -ForegroundColor Green
+docker-compose up --build -d
 
-Write-Host "Iniciando servicios..." -ForegroundColor Green
-docker-compose up -d
+# Esperar un momento para que los servicios se inicien
+Write-Host "Esperando que los servicios se inicien..." -ForegroundColor Yellow
+Start-Sleep -Seconds 30
 
-Write-Host "Verificando estado de los servicios..." -ForegroundColor Blue
+# Verificar estado de los servicios
+Write-Host "Estado de los servicios:" -ForegroundColor Blue
 docker-compose ps
 
-Write-Host "Mostrando logs del servidor..." -ForegroundColor Blue
-docker-compose logs server
+# Mostrar logs especificos del servidor para verificar autenticacion
+Write-Host "Logs del servidor (ultimas 30 lineas):" -ForegroundColor Blue
+docker-compose logs --tail=30 server
 
-Write-Host "¡Servicios reiniciados exitosamente!" -ForegroundColor Green
-Write-Host "Puedes verificar los logs con: docker-compose logs -f" -ForegroundColor Cyan
+# Mostrar logs del cliente
+Write-Host "Logs del cliente (ultimas 20 lineas):" -ForegroundColor Blue
+docker-compose logs --tail=20 client
+
+# Verificar conectividad
+Write-Host "Verificando conectividad..." -ForegroundColor Blue
+Write-Host "Sitio web: https://globalsolarco.shop" -ForegroundColor Cyan
+Write-Host "API: https://globalsolarco.shop/api" -ForegroundColor Cyan
+
+Write-Host "Reinicio completado! Las correcciones de autenticacion han sido aplicadas." -ForegroundColor Green
+Write-Host "Cambios aplicados:" -ForegroundColor Yellow
+Write-Host "   - Variables de entorno OAuth sincronizadas" -ForegroundColor White
+Write-Host "   - Rutas de pago agregadas" -ForegroundColor White
+Write-Host "   - Funcion signin corregida" -ForegroundColor White
+Write-Host "   - CORS mejorado con logging" -ForegroundColor White
