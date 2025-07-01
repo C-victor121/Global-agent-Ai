@@ -36,6 +36,7 @@ const PORT = process.env.PORT || 3001
 // Middleware
 app.use(cors({
   origin: (origin, callback) => {
+    console.log('Request origin:', origin); // <--- AÑADIR ESTA LÍNEA PARA DEBUGGING
     const allowedOrigins = [
       process.env.FRONTEND_URL || 'https://globalsolarco.shop',
       'http://localhost:3000', // Desarrollo local
