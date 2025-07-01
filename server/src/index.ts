@@ -67,9 +67,13 @@ app.use(cookieParser());
 
 // Rutas públicas (sin autenticación)
 app.use('/api/auth', authRoutes);
-app.use('/api/payment', paymentRoutes); // Rutas de pago (incluye webhooks públicos y rutas protegidas)
+
+// Rutas de pago (algunas públicas como webhooks, otras protegidas)
+// Se aplicará middleware de forma selectiva si es necesario dentro de las rutas de pago
+app.use('/api/payment', paymentRoutes);
 
 // Middleware de autenticación para rutas protegidas
+// Se aplica a todas las rutas que lo necesiten a partir de este punto
 app.use('/api', authMiddleware);
 
 // Rutas protegidas
