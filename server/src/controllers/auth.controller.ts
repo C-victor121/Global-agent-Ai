@@ -198,7 +198,6 @@ export const login = async (req: Request, res: Response) => {
         id: user._id,
         name: user.name,
         email: user.email,
-        avatar: user.avatar,
         role: user.role
       }
     });
@@ -211,59 +210,43 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
-// Endpoint para NextAuth (signin)
+// Autenticación para NextAuth (formato de respuesta específico)
 export const signin = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({
-        success: false,
-        message: 'Email y contraseña son requeridos'
-      });
+      throw new CustomError('Email y contraseña son requeridos', 400);
     }
 
-    // Buscar usuario por email
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: 'Usuario no registrado o credenciales inválidas'
-      });
+      throw new CustomError('Credenciales inválidas', 401);
     }
 
-    // Verificar si el usuario tiene contraseña (podría haberse registrado con Google/Facebook)
     if (!user.password) {
-      return res.status(400).json({
-        success: false,
-        message: 'Este usuario debe iniciar sesión con Google o Facebook'
-      });
+      throw new CustomError('Este usuario debe iniciar sesión con un proveedor externo (Google/Facebook)', 403);
     }
 
-    // Verificar contraseña
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({
-        success: false,
-        message: 'Usuario no registrado o credenciales inválidas'
-      });
+      throw new CustomError('Credenciales inválidas', 401);
     }
 
+    // NextAuth espera el objeto de usuario directamente
     res.status(200).json({
-      success: true,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        avatar: user.avatar,
-        role: user.role
-      }
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      avatar: user.avatar
     });
+
   } catch (error) {
+    if (error instanceof CustomError) {
+      return res.status(error.statusCode).json({ message: error.message });
+    }
     console.error('Error en signin:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error en el servidor'
-    });
+    res.status(500).json({ message: 'Error interno del servidor' });
   }
 };
