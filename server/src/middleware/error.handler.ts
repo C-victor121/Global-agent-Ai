@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express'
+import { Request, Response, NextFunction } from 'express';
 
 // Interfaz para errores personalizados de la aplicación
 export interface AppError extends Error {

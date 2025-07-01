@@ -1,4 +1,4 @@
-import express from 'express'
+import express from 'express';
 import cors from 'cors'
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
@@ -12,6 +12,7 @@ import dashboardRoutes from './routes/dashboard.routes'; // Importar rutas del d
 import contactMessageRoutes from './routes/contactMessage.routes'; // Importar rutas de mensajes de contacto
 import legalAssistantRoutes from './routes/legalAssistant.routes'; // Importar rutas del asistente legal
 import { errorHandler } from './middleware/error.handler';
+import { authMiddleware } from './middleware/auth.middleware'; // Importar authMiddleware
 import cookieParser from 'cookie-parser';
 
 
@@ -36,31 +37,48 @@ const PORT = process.env.PORT || 3001
 app.use(cors({
   origin: (origin, callback) => {
     const allowedOrigins = [
-      process.env.FRONTEND_URL,
-      'http://localhost:3000' // Desarrollo local
+      process.env.FRONTEND_URL || 'https://globalsolarco.shop',
+      'http://localhost:3000', // Desarrollo local
+      'https://globalsolarco.shop',
+      'https://www.globalsolarco.shop'
     ].filter((o): o is string => !!o);
 
-    if (!origin || allowedOrigins.includes(origin)) {
+    // Permitir requests sin origin (como Postman, aplicaciones móviles, etc.)
+    if (!origin) {
+      callback(null, true);
+      return;
+    }
+
+    // Verificar si el origin está en la lista de permitidos
+    if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.log('CORS blocked origin:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 app.use(express.json());
 app.use(cookieParser());
 
-// Rutas
+// Rutas públicas (sin autenticación)
 app.use('/api/auth', authRoutes);
-app.use('/api', userRoutes); // Montamos las rutas de usuarios en /api/users
-app.use('/api', planRoutes); // Montamos las rutas de planes en /api/plans
-app.use('/api/twilio', twilioRoutes); // Montamos las rutas de Twilio para webhooks
-app.use('/api/whatsapp', whatsappRoutes); // Montamos las rutas de WhatsApp
-app.use('/api/content', contentGenerationRoutes); // Montamos las rutas de generación de contenido
-app.use('/api/dashboard', dashboardRoutes); // Montamos las rutas del dashboard
-app.use('/api', contactMessageRoutes); // Montamos las rutas de mensajes de contacto
-app.use('/api/legal', legalAssistantRoutes); // Montamos las rutas del asistente legal
+
+// Middleware de autenticación para rutas protegidas
+app.use('/api', authMiddleware);
+
+// Rutas protegidas
+app.use('/api/users', userRoutes);
+app.use('/api/plans', planRoutes);
+app.use('/api/twilio', twilioRoutes);
+app.use('/api/whatsapp', whatsappRoutes);
+app.use('/api/content', contentGenerationRoutes);
+app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/contact', contactMessageRoutes);
+app.use('/api/legal', legalAssistantRoutes);
 
 // Middleware de manejo de errores
 app.use(errorHandler)

@@ -8,7 +8,10 @@ export const googleAuth = async (req: Request, res: Response) => {
     const { name, email, googleId, avatar } = req.body;
 
     if (!email || !googleId) {
-      throw new CustomError('Datos de autenticación incompletos', 400);
+      return res.status(400).json({
+        success: false,
+        message: 'Datos de autenticación incompletos'
+      });
     }
 
     // Buscar usuario existente por googleId o email
@@ -42,10 +45,11 @@ export const googleAuth = async (req: Request, res: Response) => {
       }
     });
   } catch (error) {
-    if (error instanceof CustomError) {
-      throw error;
-    }
-    throw new CustomError('Error en la autenticación con Google', 500);
+    console.error('Error en googleAuth:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error en la autenticación con Google'
+    });
   }
 };
 
@@ -54,7 +58,10 @@ export const facebookAuth = async (req: Request, res: Response) => {
     const { name, email, facebookId, avatar } = req.body;
 
     if (!email || !facebookId) {
-      throw new CustomError('Datos de autenticación incompletos', 400);
+      return res.status(400).json({
+        success: false,
+        message: 'Datos de autenticación incompletos'
+      });
     }
 
     // Buscar usuario existente por facebookId o email
@@ -88,10 +95,11 @@ export const facebookAuth = async (req: Request, res: Response) => {
       }
     });
   } catch (error) {
-    if (error instanceof CustomError) {
-      throw error;
-    }
-    throw new CustomError('Error en la autenticación con Facebook', 500);
+    console.error('Error en facebookAuth:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error en la autenticación con Facebook'
+    });
   }
 };
 
@@ -101,13 +109,19 @@ export const signup = async (req: Request, res: Response) => {
     const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
-      throw new CustomError('Todos los campos son requeridos', 400);
+      return res.status(400).json({
+        success: false,
+        message: 'Todos los campos son requeridos'
+      });
     }
 
     // Verificar si el usuario ya existe
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      throw new CustomError('El correo electrónico ya está registrado', 400);
+      return res.status(400).json({
+        success: false,
+        message: 'El correo electrónico ya está registrado'
+      });
     }
 
     // Encriptar la contraseña
@@ -132,10 +146,11 @@ export const signup = async (req: Request, res: Response) => {
       message: 'Usuario registrado exitosamente'
     });
   } catch (error) {
-    if (error instanceof CustomError) {
-      throw error;
-    }
-    throw new CustomError('Error en el registro de usuario', 500);
+    console.error('Error en signup:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error en el registro de usuario'
+    });
   }
 };
 
@@ -145,24 +160,36 @@ export const login = async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      throw new CustomError('Email y contraseña son requeridos', 400);
+      return res.status(400).json({
+        success: false,
+        message: 'Email y contraseña son requeridos'
+      });
     }
 
     // Buscar usuario por email
     const user = await User.findOne({ email });
     if (!user) {
-      throw new CustomError('Credenciales inválidas', 401);
+      return res.status(401).json({
+        success: false,
+        message: 'Credenciales inválidas'
+      });
     }
 
     // Verificar si el usuario tiene contraseña (podría haberse registrado con Google/Facebook)
     if (!user.password) {
-      throw new CustomError('Este usuario debe iniciar sesión con Google o Facebook', 400);
+      return res.status(400).json({
+        success: false,
+        message: 'Este usuario debe iniciar sesión con Google o Facebook'
+      });
     }
 
     // Verificar contraseña
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      throw new CustomError('Credenciales inválidas', 401);
+      return res.status(401).json({
+        success: false,
+        message: 'Credenciales inválidas'
+      });
     }
 
     res.status(200).json({
@@ -176,10 +203,11 @@ export const login = async (req: Request, res: Response) => {
       }
     });
   } catch (error) {
-    if (error instanceof CustomError) {
-      throw error;
-    }
-    throw new CustomError('Error en el inicio de sesión', 500);
+    console.error('Error en login:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error en el inicio de sesión'
+    });
   }
 };
 
