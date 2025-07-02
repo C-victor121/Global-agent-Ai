@@ -16,9 +16,6 @@ export const authMiddleware = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    console.log('🔐 Auth middleware iniciado');
-    console.log('📋 Headers disponibles:', Object.keys(req.headers));
-    console.log('🍪 Cookies disponibles:', req.headers.cookie);
     
     // Usar getToken de next-auth/jwt para descifrar el token JWE
     const token = await getToken({ 
@@ -28,16 +25,12 @@ export const authMiddleware = async (
     });
 
     if (!token) {
-      console.log('❌ No se encontró token de autenticación válido');
       res.status(401).json({ 
         success: false, 
         message: 'Token de autenticación requerido' 
       });
       return;
     }
-
-    console.log('✅ Token descifrado exitosamente');
-    console.log('📄 Payload del token:', token);
 
     // Adjuntar la información del usuario al objeto de solicitud
     req.user = {
@@ -47,7 +40,6 @@ export const authMiddleware = async (
       role: (token.role as string) || 'user'
     };
 
-    console.log('👤 Usuario autenticado:', req.user);
     next();
   } catch (error: any) {
     console.error('❌ Error en auth middleware:', error.message);

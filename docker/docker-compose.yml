@@ -27,10 +27,9 @@ services:
     expose:
       - "3000"
     environment:
-      - NEXT_PUBLIC_API_URL=https://globalsolarco.shop/api
+      - NEXT_PUBLIC_API_URL=http://server:3001
       - NEXTAUTH_URL=https://globalsolarco.shop
       - NEXTAUTH_SECRET=844efe23b9b81ad485b25d11b1f5548b2e8862010576da1c53c41df2b01cc546
-      - INTERNAL_API_URL=http://server:3001
       - NEXT_PUBLIC_N8N_WEBHOOK_URL=${NEXT_PUBLIC_N8N_WEBHOOK_URL:-http://localhost:5678/webhook/content-generation}
       - NEXT_PUBLIC_N8N_LEGAL_ASSISTANT_WEBHOOK_URL=${NEXT_PUBLIC_N8N_LEGAL_ASSISTANT_WEBHOOK_URL:-http://localhost:5678/webhook/legal-assistant}
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
