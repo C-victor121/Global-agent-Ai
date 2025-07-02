@@ -89,7 +89,7 @@ export const handleWebhook = async (req: Request, res: Response) => {
     await newMessage.save();
 
     // 4. Actualizar la conversación
-    conversation.lastMessage = newMessage._id;
+    conversation.lastMessage = newMessage._id as IMessage['_id'];
     conversation.unreadCount = (conversation.unreadCount || 0) + 1;
     conversation.status = 'open'; // Asegurarse de que esté abierta
     await conversation.save();
@@ -152,7 +152,7 @@ export const sendMessage = async (req: Request, res: Response) => {
     await newMessage.save();
 
     // Actualizar la conversación con el último mensaje
-    conversation.lastMessage = newMessage._id;
+    conversation.lastMessage = newMessage._id as IMessage['_id'];
     // conversation.unreadCount = 0; // Opcional: resetear si la conversación se considera activa
     await conversation.save();
 

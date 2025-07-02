@@ -76,6 +76,10 @@ class MercadoPagoService {
       // Configuración específica según el método de pago
       const paymentMethods = this.getPaymentMethodsConfig(paymentMethod);
 
+      if (!user || !user._id || !plan || !plan._id) {
+        throw new Error('User or Plan information is missing or invalid.');
+      }
+
       const preferenceData = {
         items: [
           {

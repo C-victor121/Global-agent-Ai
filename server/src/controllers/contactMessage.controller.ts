@@ -171,10 +171,16 @@ export const receiveContactMessage = async (req: WordPressContactRequest, res: R
       await sendToN8nForProcessing(contactMessage, user);
     } catch (n8nError) {
       console.error('Error enviando a n8n:', n8nError);
-      // No fallar la request si n8n falla, pero marcar como failed
-      await ContactMessage.findByIdAndUpdate(contactMessage._id, {
-        responseStatus: 'failed'
-      });
+      if (contactMessage && contactMessage._id) {
+        // No fallar la request si n8n falla, pero marcar como failed
+        await ContactMessage.findByIdAndUpdate(contactMessage._id, {
+          responseStatus: 'failed'
+        });
+      }
+    }
+
+    if (!contactMessage || !contactMessage._id || !user || !user._id) {
+        return res.status(500).json({ success: false, error: 'Error al crear el mensaje o al encontrar el usuario.' });
     }
 
     return res.status(200).json({ 
