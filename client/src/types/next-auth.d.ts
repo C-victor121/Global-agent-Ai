@@ -13,4 +13,14 @@ declare module 'next-auth' {
       role?: string;
     } & DefaultSession['user'];
   }
+
+  interface Profile {
+    id?: string;
+    sub?: string;
+    name?: string;
+    email?: string;
+    image?: string;
+    picture?: string;
+    role?: string;
+  }
 }

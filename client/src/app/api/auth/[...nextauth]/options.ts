@@ -33,8 +33,8 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'}/auth/signin`, {
+          try {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/auth/signin`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -106,7 +106,7 @@ export const authOptions: NextAuthOptions = {
           const userId = token.sub;
           if (userId) {
             // Realizar una solicitud a la API para obtener los datos actualizados del usuario
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'}/users/${userId}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/users/${userId}`, {
               headers: {
                 'Authorization': `Bearer ${token.jti}`,
                 'Content-Type': 'application/json'
@@ -132,7 +132,7 @@ export const authOptions: NextAuthOptions = {
     async signIn({ user, account, profile }) {
       if (account?.provider === 'google') {
         try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/google`, {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/auth/google`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -168,7 +168,7 @@ export const authOptions: NextAuthOptions = {
         }
       } else if (account?.provider === 'facebook') {
         try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/facebook`, {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/auth/facebook`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
