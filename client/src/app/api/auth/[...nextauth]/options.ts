@@ -254,4 +254,36 @@ export const authOptions: NextAuthOptions = {
     // Establecer un tiempo máximo de sesión para forzar la actualización
     maxAge: 24 * 60 * 60, // 1 día en segundos
   },
+  // Configuración de cookies para producción
+  cookies: {
+    sessionToken: {
+      name: 'next-auth.session-token',
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+        domain: process.env.NODE_ENV === 'production' ? '.globalsolarco.shop' : undefined
+      }
+    },
+    callbackUrl: {
+      name: 'next-auth.callback-url',
+      options: {
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+        domain: process.env.NODE_ENV === 'production' ? '.globalsolarco.shop' : undefined
+      }
+    },
+    csrfToken: {
+      name: 'next-auth.csrf-token',
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+        domain: process.env.NODE_ENV === 'production' ? '.globalsolarco.shop' : undefined
+      }
+    }
+  },
 };

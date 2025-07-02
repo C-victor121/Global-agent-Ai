@@ -161,11 +161,8 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
                 className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-white placeholder-gray-400"
                 required
               />
-              {errors.confirmPassword && (
-                <p className="mt-1 text-sm text-red-500">{errors.confirmPassword}</p>
-              )}
-              {errors.password && (
-                <p className="mt-1 text-sm text-red-500">{errors.password}</p>
+              {errors.name && (
+                <p className="mt-1 text-sm text-red-500">{errors.name}</p>
               )}
             </div>
           )}
@@ -181,9 +178,6 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
             {errors.email && (
               <p className="mt-1 text-sm text-red-500">{errors.email}</p>
             )}
-            {errors.name && (
-              <p className="mt-1 text-sm text-red-500">{errors.name}</p>
-            )}
           </div>
           {(activeTab === 'login' || activeTab === 'register') && (
             <div>
@@ -195,9 +189,6 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
                 className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-white placeholder-gray-400"
                 required
               />
-              {errors.confirmPassword && (
-                <p className="mt-1 text-sm text-red-500">{errors.confirmPassword}</p>
-              )}
               {errors.password && (
                 <p className="mt-1 text-sm text-red-500">{errors.password}</p>
               )}
@@ -215,9 +206,6 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
               />
               {errors.confirmPassword && (
                 <p className="mt-1 text-sm text-red-500">{errors.confirmPassword}</p>
-              )}
-              {errors.password && (
-                <p className="mt-1 text-sm text-red-500">{errors.password}</p>
               )}
             </div>
           )}

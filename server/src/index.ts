@@ -72,19 +72,21 @@ app.use('/api/auth', authRoutes);
 // Se aplicará middleware de forma selectiva si es necesario dentro de las rutas de pago
 app.use('/api/payment', paymentRoutes);
 
-// Middleware de autenticación para rutas protegidas
-// Se aplica a todas las rutas que lo necesiten a partir de este punto
-app.use('/api', authMiddleware);
-
-// Rutas protegidas
-app.use('/api/users', userRoutes);
-app.use('/api/plans', planRoutes);
-app.use('/api/twilio', twilioRoutes);
+// Rutas de WhatsApp (algunas públicas como webhooks de verificación)
 app.use('/api/whatsapp', whatsappRoutes);
-app.use('/api/content', contentGenerationRoutes);
-app.use('/api/dashboard', dashboardRoutes);
+
+// Rutas de Twilio (webhooks públicos)
+app.use('/api/twilio', twilioRoutes);
+
+// Rutas de mensajes de contacto (algunas públicas para recibir mensajes)
 app.use('/api/contact', contactMessageRoutes);
-app.use('/api/legal', legalAssistantRoutes);
+
+// Rutas protegidas (requieren autenticación)
+app.use('/api/users', authMiddleware, userRoutes);
+app.use('/api/plans', authMiddleware, planRoutes);
+app.use('/api/content', authMiddleware, contentGenerationRoutes);
+app.use('/api/dashboard', authMiddleware, dashboardRoutes);
+app.use('/api/legal', authMiddleware, legalAssistantRoutes);
 
 // Middleware de manejo de errores
 app.use(errorHandler)
