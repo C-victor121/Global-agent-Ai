@@ -216,37 +216,52 @@ export const signin = async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      throw new CustomError('Email y contraseña son requeridos', 400);
+      return res.status(400).json({
+        success: false,
+        message: 'Email y contraseña son requeridos'
+      });
     }
 
     const user = await User.findOne({ email });
     if (!user) {
-      throw new CustomError('Credenciales inválidas', 401);
+      return res.status(401).json({
+        success: false,
+        message: 'Credenciales inválidas'
+      });
     }
 
     if (!user.password) {
-      throw new CustomError('Este usuario debe iniciar sesión con un proveedor externo (Google/Facebook)', 403);
+      return res.status(400).json({
+        success: false,
+        message: 'Este usuario debe iniciar sesión con un proveedor externo (Google/Facebook)'
+      });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      throw new CustomError('Credenciales inválidas', 401);
+      return res.status(401).json({
+        success: false,
+        message: 'Credenciales inválidas'
+      });
     }
 
-    // NextAuth espera el objeto de usuario directamente
+    // NextAuth espera el formato con success y user
     res.status(200).json({
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      avatar: user.avatar
+      success: true,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        avatar: user.avatar
+      }
     });
 
   } catch (error) {
-    if (error instanceof CustomError) {
-      return res.status(error.statusCode).json({ message: error.message });
-    }
     console.error('Error en signin:', error);
-    res.status(500).json({ message: 'Error interno del servidor' });
+    res.status(500).json({
+      success: false,
+      message: 'Error interno del servidor'
+    });
   }
 };
