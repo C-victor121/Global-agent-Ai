@@ -46,8 +46,9 @@ export const authOptions: NextAuthOptions = {
           const data = await response.json();
 
           if (!response.ok || !data.success) {
-            console.error('Error de autenticación:', data.message);
-            return null;
+            console.error('Error de autenticación desde el backend:', data.message);
+            // Lanzar un error que será mostrado en la página de error de NextAuth
+            throw new Error(data.message || 'Error de autenticación');
           }
 
           const userRole = data.user.role || 'user';
@@ -115,7 +116,9 @@ export const authOptions: NextAuthOptions = {
             return false;
           }
           
-          if (data.data && data.data.role) {
+          // Asignar el ID y el rol del usuario desde la respuesta del backend
+          if (data.data) {
+            user.id = data.data.id;
             user.role = data.data.role;
           }
           
@@ -145,7 +148,9 @@ export const authOptions: NextAuthOptions = {
             return false;
           }
           
-          if (data.data && data.data.role) {
+          // Asignar el ID y el rol del usuario desde la respuesta del backend
+          if (data.data) {
+            user.id = data.data.id;
             user.role = data.data.role;
           }
           

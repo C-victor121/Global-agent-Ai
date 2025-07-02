@@ -58,15 +58,17 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
           await registerSchema.parseAsync({ name, email, password, confirmPassword });
           
           try {
-            const response = await apiClient.post('/auth/signup', {
-              name,
-              email,
-              password
+            const response = await fetch('/api/auth/signup', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ name, email, password }),
             });
 
-            const data = response.data;
+            const data = await response.json();
 
-            if (!data.success) {
+            if (!response.ok) {
               setErrors({ auth: data.message || 'Error en el registro' });
               return;
             }
