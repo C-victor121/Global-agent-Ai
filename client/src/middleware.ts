@@ -38,12 +38,7 @@ export async function middleware(request: NextRequest) {
 // Configurar las rutas que serán procesadas por el middleware
 export const config = {
   matcher: [
-    /*
-     * Coincide con todas las rutas excepto:
-     * 1. /api/auth (rutas de NextAuth)
-     * 2. /_next (rutas internas de Next.js)
-     * 3. /favicon.ico, /sitemap.xml, etc.
-     */
-    '/((?!api/auth|_next/static|_next/image|favicon.ico).*)',
+    '/usuarios/:path*', // Proteger todas las sub-rutas de /usuarios
+    '/auth/signin',
   ],
 };

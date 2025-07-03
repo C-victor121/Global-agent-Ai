@@ -18,6 +18,9 @@ node_modules
 .DS_Store
 *.pem
 
+# Logs and revision files
+docker/revision
+
 # debug
 npm-debug.log*
 yarn-debug.log*

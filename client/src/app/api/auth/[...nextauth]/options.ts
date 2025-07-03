@@ -92,40 +92,18 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async signIn({ user, account, profile }) {
-      if (account?.provider === 'google') {
-        try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/google`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              name: user.name,
-              email: user.email,
-              googleId: profile.sub,
-              avatar: user.image,
-            }),
-          });
+      if (account?.provider === 'google' || account?.provider === 'facebook') {
+        const provider = account.provider;
+        let providerId;
 
-          const data = await res.json();
-          if (!res.ok || !data.success) {
-            console.error('Fallo en la autenticación de Google:', data.message || res.status);
-            return false;
-          }
-
-          if (data.data) {
-            user.id = data.data.id;
-            user.role = data.data.role;
-          }
-
-          return true;
-        } catch (error) {
-          console.error('Error inesperado durante la autenticación de Google:', error);
-          return false;
+        if (provider === 'google') {
+          providerId = profile.sub;
+        } else if (provider === 'facebook') {
+          providerId = profile.id?.toString();
         }
-      } else if (account?.provider === 'facebook') {
+
         try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/facebook`, {
+          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/${provider}` , {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -133,14 +111,14 @@ export const authOptions: NextAuthOptions = {
             body: JSON.stringify({
               name: user.name,
               email: user.email,
-              facebookId: profile.id?.toString(),
+              [`${provider}Id`]: providerId,
               avatar: user.image,
             }),
           });
 
           const data = await res.json();
           if (!res.ok || !data.success) {
-            console.error('Fallo en la autenticación de Facebook:', data.message || res.status);
+            console.error(`Fallo en la autenticación de ${provider}:`, data.message || res.status);
             return false;
           }
 
@@ -151,7 +129,7 @@ export const authOptions: NextAuthOptions = {
 
           return true;
         } catch (error) {
-          console.error('Error inesperado durante la autenticación de Facebook:', error);
+          console.error(`Error inesperado durante la autenticación de ${provider}:`, error);
           return false;
         }
       }
