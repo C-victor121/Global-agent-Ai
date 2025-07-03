@@ -1,212 +1,25 @@
+🧨 Problemas detectados
+1. ❌ POST /api/api/auth/google, POST /api/api/auth/facebook, POST /api/api/auth/signin → Error 404
+Estos errores indican que la ruta /api/auth/* se está duplicando como /api/api/auth/*, lo cual rompe NextAuth.
 
-Request URL: https://globalsolarco.shop/api/auth/error  
-Status Code: 404 Not Found
-significa que NextAuth está redirigiendo a la ruta /api/auth/error cuando ocurre un problema con la autenticación, pero esa ruta no está bien definida o no está manejando el error correctamente.
+Causa:
+Tu proxy de nginx está agregando /api dos veces al enviar al cliente.
+Ejemplo: NextAuth llama a /api/auth/google, y nginx lo convierte en /api/api/auth/google, lo cual no existe.
 
-🧠 ¿Por qué ocurre esto?
-Este tipo de error puede deberse a varias razones, pero en tu caso, basado en el historial reciente, es muy probable que:
+2. ❌ CredentialsSignin = credenciales correctas, pero NextAuth no puede autenticar
+En los logs se ve:
 
-Tu app esté en producción en globalsolarco.shop, pero aún conserve cookies antiguas de Shopify.
-
-El sistema esté redirigiendo hacia /api/auth/error porque algo falló en la autenticación con Facebook google o login con formularo , y NextAuth intenta mostrar la página de error… pero no encuentra la ruta (por eso da 404).
-
-✅ ¿Cómo lo solucionas?
-✅ 1. Asegúrate de tener esta ruta en tu proyecto Next.js
-Tu archivo debe estar en:
-
-/pages/api/auth/[...nextauth].ts
-Y debe exportar la configuración correctamente, por ejemplo:
-
-
-import NextAuth from "next-auth";
-import FacebookProvider from "next-auth/providers/facebook";
-
-const handler = NextAuth({
-  providers: [
-    FacebookProvider({
-      clientId: process.env.FACEBOOK_CLIENT_ID!,
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
-    }),
-  ],
-  pages: {
-    error: '/auth/error', // Asegúrate que esta ruta exista en /pages/auth/error.tsx
-  },
-});
-
-export { handler as GET, handler as POST };
-✅ 2. Crea la página de error personalizada
-Asegúrate de tener este archivo:
-
-
-/pages/auth/error.tsx
-Contenido ejemplo:
-
-tsx
-
-import { useSearchParams } from 'next/navigation';
-
-export default function AuthErrorPage() {
-  const searchParams = useSearchParams();
-  const error = searchParams.get('error');
-
-  return (
-    <div>
-      <h1>Error al iniciar sesión</h1>
-      <p>Ocurrió un error: {error}</p>
-    </div>
-  );
-}
-✅ 3. Limpia cookies viejas (si tenías una tienda Shopify antes)
-Las cookies que ves en los headers incluyen muchas de Shopify:
-
-makefile
-
-cookie:
-  omnisendContactID=...
-  _shopify_y=...
-  storefront_digest=...
-Límpialas desde tu navegador o usa navegación privada para descartar que estén interfiriendo.
-
-✅ ¿Qué descubrimos?
-Tu app cliente de Next.js está corriendo en modo next-server, lo cual indica que se ejecutó con next start, no con next export.
-
-Esto es correcto y significa que sí debería tener disponibles las rutas de API como /api/auth/session.
-
-❌ Entonces, ¿por qué tienes errores 404 en esas rutas?
-Esto indica que el problema no está en cómo se ejecuta Next.js, sino en cómo Nginx está enroutando las peticiones hacia el cliente.
-
-Probablemente:
-
-Nginx no está redirigiendo correctamente las rutas /api/auth/* hacia el contenedor del cliente.
-
-O la cabecera Host no se está pasando bien, y NextAuth las rechaza.
-
-O bien hay un problema de cookies cruzadas (dominio incorrecto) si estás usando credentials: include.
-
-🧩 Resumen del diagnóstico
-Elemento	Estado actual	¿Correcto?
-next start activo	✅ Confirmado con ps aux	✅ Sí
-App en HTTPS con Nginx	✅ Redirige globalsolarco.shop vía proxy_pass	✅ Sí
-Rutas /api/auth/*	❌ Devuelven 404	❌ No
-Docker + Nginx	Redirige a client:3000 (según tu configuración)	⚠️ Posible error en nginx.conf
-
-✅ Qué se debe hacer ahora
-📂 Revisa nginx.conf (o nginx.default.conf)
-Asegúrate de que tenga:
-
-nginx
+javascript
 Copiar
 Editar
-location / {
-    proxy_pass http://client:3000;
-    proxy_http_version 1.1;
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header X-Forwarded-Proto $scheme;
-}
+client_1 | !!! Authorize callback INICIADO con credenciales
+...
+client_1 | Error al autenticar usuario: SyntaxError: Unexpected token < in JSON at position 0
+Esto pasa porque NextAuth intenta hacer JSON.parse() de la respuesta del backend, pero este devuelve un error HTML (404 o 500).
 
-location /api/ {
-    proxy_pass http://client:3000;
-    proxy_http_version 1.1;
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header X-Forwarded-Proto $scheme;
-}
-Ruta incorrecta o no existente en Next.js:
-
-El error indica que al hacer GET /api/auth/session, no se encuentra la ruta.
-
-En tu repo, el endpoint src/app/api/auth/[...nextauth]/route.ts está correctamente ubicado si estás usando Next.js 13/14 con la App Router.
-
-La ruta /api/auth/session debe ser gestionada por NextAuth automáticamente a través del archivo route.ts. Esto solo funciona si el archivo está bien definido como:
-
-ts
-Copiar
-Editar
-// client/src/app/api/auth/[...nextauth]/route.ts
-export { handler as GET, handler as POST } from "@/lib/auth"
-Y en @/lib/auth, defines el handler con NextAuth(authOptions).
-
-Posibles causas del error 404:
-
-🔴 El servidor de Next.js (cliente) no está sirviendo las rutas API correctamente o Nginx no las enruta bien.
-
-🔴 appDir mal configurado (en next.config.js).
-
-🔴 No se está accediendo al backend correcto. Tal vez estás apuntando a /api/... y el proxy lo manda mal.
-
-✅ Solución sugerida paso a paso:
-1. Verifica que tu archivo de rutas tenga esta estructura:
-client/src/app/api/auth/[...nextauth]/route.ts
-
-ts
-Copiar
-Editar
-import NextAuth from "next-auth"
-import { authOptions } from "@/lib/auth"
-
-const handler = NextAuth(authOptions)
-export { handler as GET, handler as POST }
-2. Verifica que el archivo lib/auth.ts contenga tu configuración de NextAuth:
-ts
-Copiar
-Editar
-import { NextAuthOptions } from "next-auth"
-import FacebookProvider from "next-auth/providers/facebook"
-
-export const authOptions: NextAuthOptions = {
-  providers: [
-    FacebookProvider({
-      clientId: process.env.FACEBOOK_CLIENT_ID!,
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
-    }),
-  ],
-  pages: {
-    signIn: "/login",
-  },
-  secret: process.env.NEXTAUTH_SECRET,
-}
-3. Revisa que en next.config.js tengas activado experimental.appDir: true si usas App Router:
-
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  experimental: {
-    appDir: true,
-  },
-}
-module.exports = nextConfig
-4. Asegúrate de que las rutas /api/auth/... no estén siendo bloqueadas por Nginx. El bloque del proxy /api en nginx debe ir a client si la API es parte de Next.js, no al backend Express:
-nginx
-Copiar
-Editar
-location /api {
-    proxy_pass http://client;
-    ...
-}
-Actualmente está apuntando a server:3001, pero NextAuth vive en client:3000.
-
-Tu frontend (Next.js) expone las rutas de autenticación desde client, específicamente en:
-
-swift
-Copiar
-Editar
-/client/src/app/api/auth/[...nextauth]/route.ts
-Pero tu archivo nginx.conf actualmente tiene esto:
-
-nginx
-Copiar
-Editar
-location /api {
-    proxy_pass http://server;  # 👈 Esto apunta al backend Express
-    ...
-}
-Esto rompe NextAuth porque las rutas /api/auth/... deberían ir al cliente (client:3000), no al servidor Express (server:3001).
-
-✅ Solución recomendada:
-🔁 Opción 1: Separar explícitamente /api/auth y /api en Nginx
-Cambia en tu nginx.conf este bloque:
+✅ Solución Paso a Paso
+✅ 1. Corrige rutas en nginx.conf
+Ubica esta parte en tu nginx:
 
 nginx
 Copiar
@@ -215,49 +28,124 @@ location /api {
     proxy_pass http://server;
     ...
 }
-Por:
+Y actualízala para no agregar doble /api:
 
 nginx
 Copiar
 Editar
-# Redirige rutas de autenticación a Next.js (client)
-location ~ ^/api/auth {
-    proxy_pass http://client;
-    proxy_http_version 1.1;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection 'upgrade';
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header X-Forwarded-Proto $scheme;
-    proxy_cache_bypass $http_upgrade;
-    proxy_redirect off;
-}
-
-# El resto de las rutas /api van al servidor Express
-location /api {
+location ~ ^/api/(?!auth) {
     proxy_pass http://server;
-    proxy_http_version 1.1;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection 'upgrade';
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header X-Forwarded-Proto $scheme;
-    proxy_cache_bypass $http_upgrade;
-    proxy_redirect off;
+    rewrite ^/api(/.*)$ $1 break;
+    ...
 }
-Esto separa claramente:
 
-/api/auth → Next.js (client)
+# NextAuth debe ir al frontend
+location /api/auth {
+    proxy_pass http://client;
+    ...
+}
+✅ 2. Revisa en Express que usas /api
+En server/src/index.ts o main.ts, asegúrate de no duplicar /api, algo así:
 
-/api/* → Express (server)
+ts
+Copiar
+Editar
+import authRoutes from './routes/auth.routes';
+app.use('/api', authRoutes);
+Y en auth.routes.ts NO pongas esto:
 
-🛠️ Pasos para aplicar el cambio:
-Edita el archivo nginx.conf dentro de tu carpeta docker.
+ts
+Copiar
+Editar
+router.post('/api/signin') // ❌ Esto generaría /api/api/signin
+Sino:
 
-Reemplaza el bloque location /api como se indica arriba.
+ts
+Copiar
+Editar
+router.post('/signin', signin); // ✅ Correcto
+✅ 3. Revisa el authorize() de NextAuth
+En tu archivo options.ts de NextAuth (/client/src/app/api/auth/[...nextauth]/options.ts), asegúrate de que este bloque esté bien:
 
-Vuelve a crear tus contenedores:
+ts
+Copiar
+Editar
+CredentialsProvider({
+  name: "credentials",
+  credentials: {
+    email: { label: "Correo", type: "text" },
+    password: { label: "Contraseña", type: "password" }
+  },
+  async authorize(credentials) {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/signin`, {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: credentials?.email,
+          password: credentials?.password,
+        }),
+      });
 
+      if (!res.ok) throw new Error("Error en autenticación");
 
+      const user = await res.json();
+      if (user) return user;
+      return null;
+    } catch (error) {
+      console.error("Authorize error:", error);
+      return null;
+    }
+  }
+})
+Y en .env.local de Next.js:
+
+env
+Copiar
+Editar
+NEXT_PUBLIC_API_URL=https://globalsolarco.shop/api
+✅ 4. Reinicia y prueba
+Después de hacer estos cambios:
+
+bash
+Copiar
+Editar
+docker-compose down
+docker-compose up --build -d
+Y luego prueba en consola:
+
+bash
+Copiar
+Editar
+curl -k -X POST https://globalsolarco.shop/api/signin \
+-H 'Content-Type: application/json' \
+-d '{"email":"prueba@yahoo.es", "password":"Lunero121@"}'
+✅ 5. Asegura redirección correcta
+En options.ts, configura pages si quieres forzar ruta tras login:
+
+ts
+Copiar
+Editar
+pages: {
+  signIn: '/auth',
+  error: '/auth/error',
+  newUser: '/usuarios',
+}
+Y en callbacks:
+
+ts
+Copiar
+Editar
+callbacks: {
+  async redirect({ url, baseUrl }) {
+    return `${baseUrl}/usuarios`
+  },
+  ...
+}
+🧪 Extra
+Puedes activar logs más detallados de NextAuth para depuración:
+
+ts
+Copiar
+Editar
+debug: true,

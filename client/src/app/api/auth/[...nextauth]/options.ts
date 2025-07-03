@@ -43,16 +43,15 @@ export const authOptions: NextAuthOptions = {
             })
           });
 
-          const data = await response.json();
+          const data = await res.json();
 
-          if (!response.ok || !data.success) {
+          if (!res.ok || !data.success) {
             console.error('Error de autenticación desde el backend:', data.message);
-            // Lanzar un error que será mostrado en la página de error de NextAuth
             throw new Error(data.message || 'Error de autenticación');
           }
 
           const userRole = data.user.role || 'user';
-          
+
           const user = {
             id: data.user.id,
             name: data.user.name,
@@ -60,7 +59,7 @@ export const authOptions: NextAuthOptions = {
             image: data.user.avatar || null,
             role: userRole
           };
-          
+
           return user;
         } catch (error) {
           console.error('Error al autenticar usuario:', error);
@@ -81,11 +80,9 @@ export const authOptions: NextAuthOptions = {
       }
 
       if (trigger === 'update' && session?.user) {
-        // Lógica para actualizar el token cuando se llama `update`
-        // Por ejemplo, si se actualiza el rol del usuario
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${token.id}`);
-        if (response.ok) {
-          const updatedUser = await response.json();
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${token.id}`);
+        if (res.ok) {
+          const updatedUser = await res.json();
           if (updatedUser) {
             token.role = updatedUser.role;
           }
@@ -110,18 +107,17 @@ export const authOptions: NextAuthOptions = {
             }),
           });
 
-          const data = await response.json();
-          if (!response.ok || !data.success) {
-            console.error('Fallo en la autenticación de Google:', data.message || response.status);
+          const data = await res.json();
+          if (!res.ok || !data.success) {
+            console.error('Fallo en la autenticación de Google:', data.message || res.status);
             return false;
           }
-          
-          // Asignar el ID y el rol del usuario desde la respuesta del backend
+
           if (data.data) {
             user.id = data.data.id;
             user.role = data.data.role;
           }
-          
+
           return true;
         } catch (error) {
           console.error('Error inesperado durante la autenticación de Google:', error);
@@ -142,18 +138,17 @@ export const authOptions: NextAuthOptions = {
             }),
           });
 
-          const data = await response.json();
-          if (!response.ok || !data.success) {
-            console.error('Fallo en la autenticación de Facebook:', data.message || response.status);
+          const data = await res.json();
+          if (!res.ok || !data.success) {
+            console.error('Fallo en la autenticación de Facebook:', data.message || res.status);
             return false;
           }
-          
-          // Asignar el ID y el rol del usuario desde la respuesta del backend
+
           if (data.data) {
             user.id = data.data.id;
             user.role = data.data.role;
           }
-          
+
           return true;
         } catch (error) {
           console.error('Error inesperado durante la autenticación de Facebook:', error);
@@ -170,27 +165,19 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
     async redirect({ url, baseUrl }) {
-      // Redirigir a la página de usuarios después del inicio de sesión
       if (url.startsWith(baseUrl)) {
         return `${baseUrl}/usuarios`;
-      }
-      // Si es una URL externa, mantener la URL original
-      else if (url.startsWith('http')) {
+      } else if (url.startsWith('http')) {
         return url;
       }
-      // Por defecto, redirigir a la URL base
       return baseUrl;
     },
   },
   secret: process.env.NEXTAUTH_SECRET,
-  // Configurar la duración de la sesión para que se actualice con frecuencia
   session: {
-    // La estrategia JWT almacena la información de la sesión en una cookie del navegador
     strategy: 'jwt',
-    // Establecer un tiempo máximo de sesión para forzar la actualización
-    maxAge: 24 * 60 * 60, // 1 día en segundos
+    maxAge: 24 * 60 * 60,
   },
-  // Configuración de cookies para producción
   cookies: {
     sessionToken: {
       name: 'next-auth.session-token',
@@ -223,4 +210,3 @@ export const authOptions: NextAuthOptions = {
     }
   },
 };
-
