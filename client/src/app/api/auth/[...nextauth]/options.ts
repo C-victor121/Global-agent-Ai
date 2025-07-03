@@ -32,7 +32,7 @@ export const authOptions: NextAuthOptions = {
         }
 
         try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin`, {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/signin`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -97,7 +97,7 @@ export const authOptions: NextAuthOptions = {
     async signIn({ user, account, profile }) {
       if (account?.provider === 'google') {
         try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/google`, {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/google`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -129,7 +129,7 @@ export const authOptions: NextAuthOptions = {
         }
       } else if (account?.provider === 'facebook') {
         try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/facebook`, {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/facebook`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
