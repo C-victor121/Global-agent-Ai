@@ -32,7 +32,7 @@ export const authOptions: NextAuthOptions = {
         }
 
         try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/signin`, {
+          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -94,7 +94,7 @@ export const authOptions: NextAuthOptions = {
     async signIn({ user, account, profile }) {
       if (account?.provider === 'google') {
         try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/google`, {
+          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/google`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -125,7 +125,7 @@ export const authOptions: NextAuthOptions = {
         }
       } else if (account?.provider === 'facebook') {
         try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/facebook`, {
+          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/facebook`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -165,12 +165,15 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
     async redirect({ url, baseUrl }) {
-      if (url.startsWith(baseUrl)) {
-        return `${baseUrl}/usuarios`;
-      } else if (url.startsWith('http')) {
-        return url;
+      // Si la URL es relativa, la convierte en absoluta.
+      if (url.startsWith('/')) {
+        return `${baseUrl}${url}`;
       }
-      return baseUrl;
+      // Si la URL es la base, redirige a /usuarios.
+      if (new URL(url).origin === baseUrl) {
+        return `${baseUrl}/usuarios`;
+      }
+      return url;
     },
   },
   secret: process.env.NEXTAUTH_SECRET,

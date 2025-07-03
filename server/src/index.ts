@@ -66,7 +66,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Rutas públicas (sin autenticación)
-app.use('/api/auth', authRoutes);
+app.use('/api', authRoutes);
 
 // Rutas de pago (algunas públicas como webhooks, otras protegidas)
 // Se aplicará middleware de forma selectiva si es necesario dentro de las rutas de pago
