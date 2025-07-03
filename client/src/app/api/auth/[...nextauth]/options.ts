@@ -165,15 +165,23 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
     async redirect({ url, baseUrl }) {
+      // Corrige el problema de redirección de Facebook que añade '#_=_'
+      if (url.startsWith(baseUrl) && (url.endsWith('#_=_') || url === baseUrl)) {
+        return `${baseUrl}/usuarios`;
+      }
+
       // Si la URL es relativa, la convierte en absoluta.
       if (url.startsWith('/')) {
         return `${baseUrl}${url}`;
       }
-      // Si la URL es la base, redirige a /usuarios.
-      if (new URL(url).origin === baseUrl) {
-        return `${baseUrl}/usuarios`;
+
+      // Si la URL es de un origen diferente, la devuelve tal cual.
+      if (new URL(url).origin !== new URL(baseUrl).origin) {
+        return url;
       }
-      return url;
+
+      // Por defecto, redirige a la URL base si no hay otra especificada.
+      return baseUrl;
     },
   },
   secret: process.env.NEXTAUTH_SECRET,
