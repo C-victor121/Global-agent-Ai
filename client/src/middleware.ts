@@ -6,9 +6,15 @@ export async function middleware(req: NextRequest) {
     console.log(`[Middleware] Path: ${req.nextUrl.pathname}`);
     const allCookies = req.cookies.getAll();
     console.log('[Middleware] All Cookies:', JSON.stringify(allCookies, null, 2));
+    if (allCookies.length === 0) {
+        console.warn('[Middleware] No cookies recibidas en la petición.');
+    }
 
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
     console.log('[Middleware] Token:', JSON.stringify(token, null, 2));
+    if (!token) {
+        console.warn('[Middleware] Token no encontrado o inválido.');
+    }
 
     const { pathname } = req.nextUrl;
 
