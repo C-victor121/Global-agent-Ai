@@ -21,7 +21,13 @@ export async function middleware(req: NextRequest) {
     // Proteger rutas que comienzan con /usuarios
     if (pathname.startsWith('/usuarios')) {
         if (!token) {
-            console.log('[Middleware] No token found for /usuarios, redirecting to /auth/signin');
+            // Fallback: permitir acceso si la cookie de sesión existe
+            const sessionCookie = req.cookies.get('next-auth.session-token');
+            if (sessionCookie) {
+                console.log('[Middleware] Cookie de sesión presente pero token no verificable, permitiendo acceso a /usuarios');
+                return NextResponse.next();
+            }
+            console.log('[Middleware] No token ni cookie de sesión para /usuarios, redirigiendo a /auth/signin');
             const url = new URL('/auth/signin', req.url);
             url.searchParams.set('callbackUrl', req.url);
             return NextResponse.redirect(url);
