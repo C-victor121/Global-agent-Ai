@@ -37,6 +37,9 @@ export async function middleware(req: NextRequest) {
 
         console.log('[Middleware] Token found. Allowing access to /usuarios.');
         console.log('[Middleware] Token details:', JSON.stringify(token, null, 2));
+        
+        // Asegurarse de que la solicitud continúe sin redirecciones adicionales
+        return NextResponse.next();
     }
 
     // Redirigir a /usuarios si un usuario autenticado intenta acceder a /auth/signin
