@@ -15,7 +15,11 @@ function logMiddleware(message: string, data?: unknown) {
 async function isAuthenticated(req: NextRequest): Promise<boolean> {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
   if (token) return true;
-  const sessionCookie = req.cookies.get('next-auth.session-token');
+
+  const cookieName = process.env.NODE_ENV === 'production'
+    ? '__Secure-next-auth.session-token'
+    : 'next-auth.session-token';
+  const sessionCookie = req.cookies.get(cookieName);
   return Boolean(sessionCookie);
 }
 
@@ -47,7 +51,7 @@ export async function middleware(req: NextRequest) {
             logMiddleware('No token ni cookie de sesión para /usuarios, redirigiendo a /auth/signin');
             const url = new URL('/auth/signin', req.url);
             url.searchParams.set('callbackUrl', req.url);
-            return NextResponse.redirect(url);
+            return NextResponse.redirect(url, 302); // Usar 302 para evitar caché
         }
     }
 
