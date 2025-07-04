@@ -1,65 +1,40 @@
 import { NextResponse } from 'next/server';
-import { NextRequest } from 'next/server';
+import type { NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 
-export async function middleware(request: NextRequest) {
-  const path = request.nextUrl.pathname;
-  
-  // Solo aplicar middleware a rutas específicas
-  if (path === '/auth/signin') {
-    // Verificar si ya está autenticado para redirigir desde signin
-    try {
-      const token = await getToken({ 
-        req: request,
-        secret: process.env.NEXTAUTH_SECRET,
-        cookieName: 'next-auth.session-token'
-      });
-      
-      if (token) {
-        return NextResponse.redirect(new URL('/usuarios', request.url));
-      }
-    } catch (error) {
-      console.error('Error verificando token en signin:', error);
+export async function middleware(req: NextRequest) {
+    console.log(`[Middleware] Path: ${req.nextUrl.pathname}`);
+    const allCookies = req.cookies.getAll();
+    console.log('[Middleware] All Cookies:', JSON.stringify(allCookies, null, 2));
+
+    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+    console.log('[Middleware] Token:', JSON.stringify(token, null, 2));
+
+    const { pathname } = req.nextUrl;
+
+    // Si el usuario está autenticado y trata de acceder a /auth/signin, redirigir a /usuarios
+    if (token && pathname.startsWith('/auth/signin')) {
+        console.log('[Middleware] User is authenticated, redirecting from /auth/signin to /usuarios');
+        return NextResponse.redirect(new URL('/usuarios', req.url));
     }
+
+    // Proteger rutas que comienzan con /usuarios
+    if (pathname.startsWith('/usuarios')) {
+        if (!token) {
+            console.log('[Middleware] No token found for /usuarios, redirecting to /auth/signin');
+            const url = new URL('/auth/signin', req.url);
+            url.searchParams.set('callbackUrl', req.url);
+            return NextResponse.redirect(url);
+        }
+    }
+
+    console.log(`[Middleware] Allowing request to ${pathname}`);
     return NextResponse.next();
-  }
-  
-  // Para rutas de /usuarios, usar verificación más permisiva
-  if (path.startsWith('/usuarios')) {
-    // Verificar si existe la cookie de sesión
-    const sessionCookie = request.cookies.get('next-auth.session-token');
-    
-    if (!sessionCookie) {
-      return NextResponse.redirect(new URL('/', request.url));
-    }
-    
-    // Si hay cookie, intentar verificar el token
-    try {
-      const token = await getToken({ 
-        req: request,
-        secret: process.env.NEXTAUTH_SECRET,
-        cookieName: 'next-auth.session-token'
-      });
-      
-      // Si no se puede verificar el token pero hay cookie, permitir acceso
-      // (esto evita problemas de timing después del OAuth)
-      if (!token) {
-        console.log(`Middleware: Cookie presente pero token no verificable para ${path} - Permitiendo acceso`);
-      }
-    } catch (error) {
-      console.error('Error verificando token:', error);
-    }
-    
-    return NextResponse.next();
-  }
-  
-  return NextResponse.next();
 }
 
-// Configurar las rutas que serán procesadas por el middleware
 export const config = {
-  matcher: [
-    '/usuarios/:path*', // Proteger todas las sub-rutas de /usuarios
-    '/auth/signin',
-  ],
+    matcher: [
+        '/usuarios/:path*',
+        '/auth/signin',
+    ],
 };
