@@ -17,6 +17,8 @@ export const metadata = {
 
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
+import AuthDebug from '../components/AuthDebug'
+import FacebookHashCleaner from '../components/FacebookHashCleaner'
 
 export default function RootLayout({
   children,
@@ -29,11 +31,13 @@ export default function RootLayout({
     <html lang="es">
       <body className={`${inter.className} bg-black text-white`}>
       <AuthProvider session={session}>
+          <FacebookHashCleaner />
           <Navbar />
           <main className="min-h-screen pt-16">
             {children}
           </main>
           <Footer />
+          <AuthDebug />
       </AuthProvider>
       </body>
     </html>

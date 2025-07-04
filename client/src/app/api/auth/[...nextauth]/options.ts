@@ -106,6 +106,13 @@ export const authOptions: NextAuthOptions = {
         }
 
         try {
+          console.log(`[NextAuth] Iniciando autenticación con ${provider}`, { 
+            name: user.name,
+            email: user.email,
+            providerId,
+            avatar: user.image
+          });
+
           const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/${provider}` , {
             method: 'POST',
             headers: {
@@ -120,17 +127,22 @@ export const authOptions: NextAuthOptions = {
           });
 
           const data = await res.json();
+          console.log(`[NextAuth] Respuesta del servidor para ${provider}:`, data);
+
           if (!res.ok || !data.success) {
+            console.error(`[NextAuth] Error en la autenticación con ${provider}:`, data.message || 'Error desconocido');
             return false;
           }
 
           if (data.data) {
             user.id = data.data.id;
             user.role = data.data.role;
+            console.log(`[NextAuth] Usuario autenticado con ${provider}:`, { id: user.id, role: user.role });
           }
 
           return true;
         } catch (error) {
+          console.error(`[NextAuth] Error inesperado en la autenticación con ${provider}:`, error);
           return false;
         }
       }
@@ -144,10 +156,42 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
     async redirect({ url, baseUrl }) {
+      console.log('[NextAuth] Redirect callback:', { url, baseUrl });
+      
+      // Decodificar la URL si está codificada
+      let decodedUrl = url;
+      try {
+        // Verificar si la URL parece estar codificada
+        if (url.includes('%2F')) {
+          decodedUrl = decodeURIComponent(url);
+          console.log('[NextAuth] URL decodificada:', decodedUrl);
+        }
+      } catch (error) {
+        console.error('[NextAuth] Error al decodificar URL:', error);
+      }
+      
       // Permite redirecciones relativas
-      if (url.startsWith('/')) return `${baseUrl}${url}`;
-      // Permite redirecciones a otros orígenes
-      if (new URL(url).origin === new URL(baseUrl).origin) return url;
+      if (decodedUrl.startsWith('/')) {
+        const redirectUrl = `${baseUrl}${decodedUrl}`;
+        console.log('[NextAuth] Redirigiendo a URL relativa:', redirectUrl);
+        return redirectUrl;
+      }
+      
+      // Permite redirecciones a otros orígenes si son del mismo dominio
+      try {
+        const urlOrigin = new URL(decodedUrl).origin;
+        const baseUrlOrigin = new URL(baseUrl).origin;
+        
+        if (urlOrigin === baseUrlOrigin) {
+          console.log('[NextAuth] Redirigiendo a URL del mismo origen:', decodedUrl);
+          return decodedUrl;
+        }
+      } catch (error) {
+        console.error('[NextAuth] Error al analizar URL:', error);
+      }
+      
+      // Por defecto, redirigir a la URL base
+      console.log('[NextAuth] Redirigiendo a URL base:', baseUrl);
       return baseUrl;
     },
   },

@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiSettings, FiLogOut, FiUser } from 'react-icons/fi';
+import { logout } from '@/lib/auth';
 
 interface UserMenuProps {
   avatar: string;
@@ -14,6 +15,7 @@ interface UserMenuProps {
 
 export default function UserMenu({ avatar, userName }: UserMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   // Cerrar el menú cuando se hace clic fuera de él
@@ -31,7 +33,28 @@ export default function UserMenu({ avatar, userName }: UserMenuProps) {
   }, []);
 
   const handleSignOut = async () => {
-    await signOut({ callbackUrl: '/' });
+    try {
+      // Cerrar el menú antes de cerrar sesión
+      setIsOpen(false);
+      // Activar el estado de carga
+      setIsLoggingOut(true);
+      
+      console.log('[UserMenu] Iniciando cierre de sesión...');
+      
+      // Usar la nueva función de cierre de sesión
+      const result = await logout('/');
+      
+      if (!result.success) {
+        console.error('[UserMenu] Error al cerrar sesión:', result.error);
+        // Aquí podrías mostrar un mensaje de error al usuario si lo deseas
+      } else {
+        console.log('[UserMenu] Sesión cerrada correctamente');
+      }
+    } catch (error) {
+      console.error('[UserMenu] Error inesperado al cerrar sesión:', error);
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
 
   return (
@@ -90,10 +113,20 @@ export default function UserMenu({ avatar, userName }: UserMenuProps) {
 
             <button
               onClick={handleSignOut}
-              className="flex w-full items-center px-4 py-2 text-sm text-gray-300 hover:bg-white/10 hover:text-white transition-colors"
+              disabled={isLoggingOut}
+              className={`flex w-full items-center px-4 py-2 text-sm text-gray-300 hover:bg-white/10 hover:text-white transition-colors ${isLoggingOut ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
-              <FiLogOut className="mr-2 h-4 w-4" />
-              Cerrar Sesión
+              {isLoggingOut ? (
+                <>
+                  <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                  Cerrando sesión...
+                </>
+              ) : (
+                <>
+                  <FiLogOut className="mr-2 h-4 w-4" />
+                  Cerrar Sesión
+                </>
+              )}
             </button>
           </motion.div>
         )}

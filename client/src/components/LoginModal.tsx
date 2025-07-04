@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { FaGoogle, FaFacebook } from 'react-icons/fa';
 import { IoMdClose } from 'react-icons/io';
 import { ZodError } from 'zod';
@@ -8,6 +8,7 @@ import { loginSchema, registerSchema, forgotPasswordSchema } from '@/shared/vali
 
 import { signIn, useSession } from 'next-auth/react';
 import apiClient from '@/services/api';
+import { loginWithProvider } from '@/lib/auth';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -22,12 +23,56 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [name, setName] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [isFacebookLoading, setIsFacebookLoading] = useState(false);
+  const [isCredentialsLoading, setIsCredentialsLoading] = useState(false);
 
   if (!isOpen) return null;
+
+  const handleGoogleLogin = useCallback(async () => {
+    try {
+      setErrors({});
+      setIsGoogleLoading(true);
+      console.log('[LoginModal] Iniciando sesión con Google...');
+      
+      const result = await loginWithProvider('google', '/usuarios');
+      
+      if (!result.success && result.error) {
+        console.error('[LoginModal] Error al iniciar sesión con Google:', result.error);
+        setErrors({ auth: result.error });
+      }
+    } catch (error) {
+      console.error('[LoginModal] Error inesperado al iniciar sesión con Google:', error);
+      setErrors({ auth: 'Error inesperado al iniciar sesión con Google' });
+    } finally {
+      setIsGoogleLoading(false);
+    }
+  }, []);
+
+  const handleFacebookLogin = useCallback(async () => {
+    try {
+      setErrors({});
+      setIsFacebookLoading(true);
+      console.log('[LoginModal] Iniciando sesión con Facebook...');
+      
+      const result = await loginWithProvider('facebook', '/usuarios');
+      
+      if (!result.success && result.error) {
+        console.error('[LoginModal] Error al iniciar sesión con Facebook:', result.error);
+        setErrors({ auth: result.error });
+      }
+    } catch (error) {
+      console.error('[LoginModal] Error inesperado al iniciar sesión con Facebook:', error);
+      setErrors({ auth: 'Error inesperado al iniciar sesión con Facebook' });
+    } finally {
+      setIsFacebookLoading(false);
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
+    setIsCredentialsLoading(true);
 
     try {
       switch (activeTab) {
@@ -111,7 +156,12 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
           }
         });
         setErrors(formattedErrors);
+      } else {
+        console.error('Error inesperado:', error);
+        setErrors({ auth: 'Error inesperado. Intente nuevamente.' });
       }
+    } finally {
+      setIsCredentialsLoading(false);
     }
   };
 
@@ -126,7 +176,8 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-white transition-colors"
+            disabled={isCredentialsLoading || isGoogleLoading || isFacebookLoading}
+            className={`text-gray-400 hover:text-white transition-colors ${(isCredentialsLoading || isGoogleLoading || isFacebookLoading) ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             <IoMdClose size={24} />
           </button>
@@ -135,13 +186,15 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
         <div className="flex space-x-2 mb-6">
           <button
             onClick={() => setActiveTab('login')}
-            className={`flex-1 py-2 text-sm font-medium rounded-lg transition-colors ${activeTab === 'login' ? 'bg-purple-500 text-white' : 'text-gray-400 hover:text-white'}`}
+            disabled={isCredentialsLoading || isGoogleLoading || isFacebookLoading}
+            className={`flex-1 py-2 text-sm font-medium rounded-lg transition-colors ${activeTab === 'login' ? 'bg-purple-500 text-white' : 'text-gray-400 hover:text-white'} ${(isCredentialsLoading || isGoogleLoading || isFacebookLoading) ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             Iniciar Sesión
           </button>
           <button
             onClick={() => setActiveTab('register')}
-            className={`flex-1 py-2 text-sm font-medium rounded-lg transition-colors ${activeTab === 'register' ? 'bg-purple-500 text-white' : 'text-gray-400 hover:text-white'}`}
+            disabled={isCredentialsLoading || isGoogleLoading || isFacebookLoading}
+            className={`flex-1 py-2 text-sm font-medium rounded-lg transition-colors ${activeTab === 'register' ? 'bg-purple-500 text-white' : 'text-gray-400 hover:text-white'} ${(isCredentialsLoading || isGoogleLoading || isFacebookLoading) ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             Registro
           </button>
@@ -213,11 +266,21 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
           )}
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white py-2 px-4 rounded-lg hover:opacity-90 transition-opacity"
+            disabled={isCredentialsLoading || isGoogleLoading || isFacebookLoading}
+            className={`w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white py-2 px-4 rounded-lg hover:opacity-90 transition-opacity ${isCredentialsLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
           >
-            {activeTab === 'login' && 'Iniciar Sesión'}
-            {activeTab === 'register' && 'Registrarse'}
-            {activeTab === 'forgot' && 'Enviar instrucciones'}
+            {isCredentialsLoading ? (
+              <div className="flex items-center justify-center">
+                <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
+                <span>Cargando...</span>
+              </div>
+            ) : (
+              <>
+                {activeTab === 'login' && 'Iniciar Sesión'}
+                {activeTab === 'register' && 'Registrarse'}
+                {activeTab === 'forgot' && 'Enviar instrucciones'}
+              </>
+            )}
           </button>
         </form>
 
@@ -233,24 +296,45 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
 
           <div className="mt-6 grid grid-cols-2 gap-3">
             <button
-              onClick={() => signIn('google', { callbackUrl: '/usuarios' })}
-              className="flex items-center justify-center px-4 py-2 border border-white/10 rounded-lg text-white hover:bg-white/5 transition-colors"
+              onClick={handleGoogleLogin}
+              disabled={isGoogleLoading || isFacebookLoading || isCredentialsLoading}
+              className={`flex items-center justify-center px-4 py-2 border border-white/10 rounded-lg text-white hover:bg-white/5 transition-colors ${isGoogleLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
             >
-              <FaGoogle className="mr-2" />
-              Google
+              {isGoogleLoading ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
+                  Cargando...
+                </>
+              ) : (
+                <>
+                  <FaGoogle className="mr-2" />
+                  Google
+                </>
+              )}
             </button>
             <button
-              onClick={() => signIn('facebook', { callbackUrl: '/usuarios' })}
-              className="flex items-center justify-center px-4 py-2 border border-white/10 rounded-lg text-white hover:bg-white/5 transition-colors"
+              onClick={handleFacebookLogin}
+              disabled={isGoogleLoading || isFacebookLoading || isCredentialsLoading}
+              className={`flex items-center justify-center px-4 py-2 border border-white/10 rounded-lg text-white hover:bg-white/5 transition-colors ${isFacebookLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
             >
-              <FaFacebook className="mr-2" />
-              Facebook
+              {isFacebookLoading ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
+                  Cargando...
+                </>
+              ) : (
+                <>
+                  <FaFacebook className="mr-2" />
+                  Facebook
+                </>
+              )}
             </button>
           </div>
 
           <button
             onClick={() => setActiveTab('forgot')}
-            className="w-full mt-4 text-purple-400 hover:text-purple-300 transition-colors text-sm font-medium"
+            disabled={isCredentialsLoading || isGoogleLoading || isFacebookLoading}
+            className={`w-full mt-4 text-purple-400 hover:text-purple-300 transition-colors text-sm font-medium ${(isCredentialsLoading || isGoogleLoading || isFacebookLoading) ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             ¿Olvidaste tu contraseña?
           </button>

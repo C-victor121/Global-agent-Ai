@@ -25,10 +25,14 @@ export default function UsuariosPage() {
       );
     }
     
+    // Redirigir a la página de inicio de sesión si no hay sesión
     if (status === 'unauthenticated') {
-      router.push('/');
+      console.log('Usuario no autenticado, redirigiendo a la página de inicio de sesión');
+      router.push('/auth/signin');
+    } else if (status === 'authenticated') {
+      console.log('Usuario autenticado:', session?.user);
     }
-  }, [status, router]);
+  }, [status, router, session]);
 
   if (status === 'loading') {
     return (
