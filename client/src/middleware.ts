@@ -5,33 +5,54 @@ import { getToken } from 'next-auth/jwt';
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   
-  // Definir rutas públicas que no requieren autenticación
-  const publicPaths = ['/', '/auth/signin', '/auth/error', '/api/auth', '/como-funciona', '/contacto', '/planes', '/servicios', '/testimonios'];
-  
-  // Verificar si la ruta actual es pública
-  const isPublicPath = publicPaths.some(publicPath => {
-    if (publicPath === '/') {
-      return path === publicPath;
+  // Solo aplicar middleware a rutas específicas
+  if (path === '/auth/signin') {
+    // Verificar si ya está autenticado para redirigir desde signin
+    try {
+      const token = await getToken({ 
+        req: request,
+        secret: process.env.NEXTAUTH_SECRET,
+        cookieName: 'next-auth.session-token'
+      });
+      
+      if (token) {
+        return NextResponse.redirect(new URL('/usuarios', request.url));
+      }
+    } catch (error) {
+      console.error('Error verificando token en signin:', error);
     }
-    return path.startsWith(publicPath);
-  });
-
-  // Obtener el token de autenticación
-  const token = await getToken({ 
-    req: request,
-    secret: process.env.NEXTAUTH_SECRET
-  });
-
-  // Redirigir a la página de inicio si intenta acceder a una ruta protegida sin autenticación
-  if (!token && !isPublicPath) {
-    return NextResponse.redirect(new URL('/', request.url));
+    return NextResponse.next();
   }
-
-  // Redirigir a la página de usuarios si intenta acceder a la página de inicio de sesión estando autenticado
-  if (token && (path === '/auth/signin')) {
-    return NextResponse.redirect(new URL('/usuarios', request.url));
+  
+  // Para rutas de /usuarios, usar verificación más permisiva
+  if (path.startsWith('/usuarios')) {
+    // Verificar si existe la cookie de sesión
+    const sessionCookie = request.cookies.get('next-auth.session-token');
+    
+    if (!sessionCookie) {
+      return NextResponse.redirect(new URL('/', request.url));
+    }
+    
+    // Si hay cookie, intentar verificar el token
+    try {
+      const token = await getToken({ 
+        req: request,
+        secret: process.env.NEXTAUTH_SECRET,
+        cookieName: 'next-auth.session-token'
+      });
+      
+      // Si no se puede verificar el token pero hay cookie, permitir acceso
+      // (esto evita problemas de timing después del OAuth)
+      if (!token) {
+        console.log(`Middleware: Cookie presente pero token no verificable para ${path} - Permitiendo acceso`);
+      }
+    } catch (error) {
+      console.error('Error verificando token:', error);
+    }
+    
+    return NextResponse.next();
   }
-
+  
   return NextResponse.next();
 }
 

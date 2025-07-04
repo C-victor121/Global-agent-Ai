@@ -80,12 +80,16 @@ export const authOptions: NextAuthOptions = {
       }
 
       if (trigger === 'update' && session?.user) {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${token.id}`);
-        if (res.ok) {
-          const updatedUser = await res.json();
-          if (updatedUser) {
-            token.role = updatedUser.role;
+        try {
+          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${token.id}`);
+          if (res.ok) {
+            const updatedUser = await res.json();
+            if (updatedUser) {
+              token.role = updatedUser.role;
+            }
           }
+        } catch (error) {
+          console.error('Error actualizando rol del usuario:', error);
         }
       }
 
@@ -172,7 +176,7 @@ export const authOptions: NextAuthOptions = {
         sameSite: 'lax',
         path: '/',
         secure: process.env.NODE_ENV === 'production',
-        domain: process.env.NODE_ENV === 'production' ? '.globalsolarco.shop' : undefined
+        domain: process.env.NODE_ENV === 'production' ? 'globalsolarco.shop' : undefined
       }
     },
     callbackUrl: {
@@ -181,7 +185,7 @@ export const authOptions: NextAuthOptions = {
         sameSite: 'lax',
         path: '/',
         secure: process.env.NODE_ENV === 'production',
-        domain: process.env.NODE_ENV === 'production' ? '.globalsolarco.shop' : undefined
+        domain: process.env.NODE_ENV === 'production' ? 'globalsolarco.shop' : undefined
       }
     },
     csrfToken: {
@@ -191,7 +195,7 @@ export const authOptions: NextAuthOptions = {
         sameSite: 'lax',
         path: '/',
         secure: process.env.NODE_ENV === 'production',
-        domain: process.env.NODE_ENV === 'production' ? '.globalsolarco.shop' : undefined
+        domain: process.env.NODE_ENV === 'production' ? 'globalsolarco.shop' : undefined
       }
     }
   },
