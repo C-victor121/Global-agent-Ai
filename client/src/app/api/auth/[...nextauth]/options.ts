@@ -182,7 +182,7 @@ export const authOptions: NextAuthOptions = {
     },
     csrfToken: {
       name: process.env.NODE_ENV === 'production'
-        ? '__Host-next-auth.csrf-token'
+        ? '__Secure-next-auth.csrf-token' // Cambiado de __Host- a __Secure-
         : 'next-auth.csrf-token',
       options: {
         httpOnly: true,
