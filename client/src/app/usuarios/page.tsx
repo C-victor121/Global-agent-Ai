@@ -8,14 +8,22 @@ import DashboardMetricsComponent from '@/components/Dashboard/DashboardMetrics';
 import DetailModal from '@/components/Dashboard/DetailModal';
 
 export default function UsuariosPage() {
-  const { data: session, status } = useSession();
+  const { data: session, status } = useSession({ required: true });
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<'users' | 'generations'>('users');
   const [modalData, setModalData] = useState<any>(null);
+  const [isClient, setIsClient] = useState(false);
+
+  // Verificar que estamos en el cliente
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // Verificación del lado del cliente
   useEffect(() => {
+    if (!isClient) return;
+    
     // Eliminar el fragmento #_=_ que Facebook añade a la URL
     if (window.location.hash && window.location.hash === '#_=_') {
       window.history.replaceState(
@@ -32,14 +40,19 @@ export default function UsuariosPage() {
     } else if (status === 'authenticated') {
       console.log('Usuario autenticado:', session?.user);
     }
-  }, [status, router, session]);
+  }, [status, router, session, isClient]);
 
-  if (status === 'loading') {
+  if (status === 'loading' || !isClient) {
     return (
       <div className="flex justify-center items-center h-40">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
       </div>
     );
+  }
+  
+  // Protección adicional contra renderizado sin sesión
+  if (!session) {
+    return null;
   }
 
   const handleCardClick = (type: 'users' | 'generations', data?: any) => {
