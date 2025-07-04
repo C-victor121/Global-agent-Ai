@@ -1,33 +1,44 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import LoginModal from '@/components/LoginModal';
-import { isAuthenticated, loginWithProvider } from '@/lib/auth';
+import { isAuthenticated } from '@/lib/auth';
 
-export default function SignInPage() {
+// Forzar renderizado dinámico para evitar problemas de prerendering
+export const dynamic = 'force-dynamic';
+
+function SignInContent() {
+
   const router = useRouter();
   const searchParams = useSearchParams();
   const { data: session, status } = useSession();
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isClient, setIsClient] = useState(false);
 
   // Obtener la URL de callback de los parámetros de búsqueda
-  const callbackUrlParam = searchParams.get('callbackUrl');
+  const callbackUrlParam = searchParams?.get('callbackUrl');
   const callbackUrl = callbackUrlParam ? decodeURIComponent(callbackUrlParam) : '/usuarios';
   
-  console.log('[SignInPage] CallbackUrl:', callbackUrl);
-  
   // Manejar errores de autenticación
-  const authError = searchParams.get('error');
+  const authError = searchParams?.get('error');
+
+  // Efecto para marcar que estamos en el cliente
+  useEffect(() => {
+    setIsClient(true);
+    console.log('[SignInPage] CallbackUrl:', callbackUrl);
+  }, [callbackUrl]);
 
   useEffect(() => {
+    if (!isClient) return;
+    
     console.log('[SignInPage] Estado de autenticación:', status);
     console.log('[SignInPage] Sesión:', session);
     
     // Limpiar el fragmento #_=_ que Facebook añade a la URL
-    if (typeof window !== 'undefined' && window.location.hash === '#_=_') {
+    if (window.location.hash === '#_=_') {
       console.log('[SignInPage] Limpiando fragmento #_=_ de Facebook');
       window.history.replaceState(
         null,
@@ -68,10 +79,12 @@ export default function SignInPage() {
           setError(`Error durante la autenticación: ${authError}`);
       }
     }
-  }, [authError]);
+  }, [authError, isClient, status, session]);
   
   // Efecto separado para manejar la redirección cuando el usuario está autenticado
   useEffect(() => {
+    if (!isClient) return;
+    
     // Solo redirigir cuando la sesión esté cargada (no en estado 'loading')
     if (status !== 'loading') {
       // Si el usuario ya está autenticado, redirigir a la página de callback
@@ -82,7 +95,7 @@ export default function SignInPage() {
         console.log('[SignInPage] Usuario no autenticado, mostrando modal de inicio de sesión');
       }
     }
-  }, [session, status, router, callbackUrl]);
+  }, [session, status, router, callbackUrl, isClient]);
 
   // Manejar el cierre del modal
   const handleCloseModal = () => {
@@ -109,5 +122,17 @@ export default function SignInPage() {
       )}
       <LoginModal isOpen={isModalOpen} onClose={handleCloseModal} />
     </div>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-black">
+        <div className="text-white">Cargando...</div>
+      </div>
+    }>
+      <SignInContent />
+    </Suspense>
   );
 }
