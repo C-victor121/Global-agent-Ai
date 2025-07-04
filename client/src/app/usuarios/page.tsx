@@ -8,7 +8,7 @@ import DashboardMetricsComponent from '@/components/Dashboard/DashboardMetrics';
 import DetailModal from '@/components/Dashboard/DetailModal';
 
 export default function UsuariosPage() {
-  const { data: session, status } = useSession({ required: true });
+  const { data: session, status } = useSession();
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<'users' | 'generations'>('users');
@@ -34,10 +34,10 @@ export default function UsuariosPage() {
     }
     
     // Redirigir a la página de inicio de sesión si no hay sesión
-    if (status === 'unauthenticated') {
+    if (isClient && status === 'unauthenticated' && !session) {
       console.log('Usuario no autenticado, redirigiendo a la página de inicio de sesión');
       router.push('/auth/signin');
-    } else if (status === 'authenticated') {
+    } else if (isClient && status === 'authenticated' && session) {
       console.log('Usuario autenticado:', session?.user);
     }
   }, [status, router, session, isClient]);

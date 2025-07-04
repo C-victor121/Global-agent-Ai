@@ -55,12 +55,6 @@
       "namedRegex": "^/auth/signin(?:/)?$"
     },
     {
-      "page": "/carrito",
-      "regex": "^/carrito(?:/)?$",
-      "routeKeys": {},
-      "namedRegex": "^/carrito(?:/)?$"
-    },
-    {
       "page": "/como-funciona",
       "regex": "^/como\\-funciona(?:/)?$",
       "routeKeys": {},
@@ -109,6 +103,12 @@
       "namedRegex": "^/usuarios/admin/planes(?:/)?$"
     },
     {
+      "page": "/usuarios/asistente-legal",
+      "regex": "^/usuarios/asistente\\-legal(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/usuarios/asistente\\-legal(?:/)?$"
+    },
+    {
       "page": "/usuarios/generacion-contenidos",
       "regex": "^/usuarios/generacion\\-contenidos(?:/)?$",
       "routeKeys": {},
@@ -125,6 +125,12 @@
       "regex": "^/usuarios/mensajes(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/usuarios/mensajes(?:/)?$"
+    },
+    {
+      "page": "/usuarios/wordpress-integration",
+      "regex": "^/usuarios/wordpress\\-integration(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/usuarios/wordpress\\-integration(?:/)?$"
     }
   ],
   "dataRoutes": [],
