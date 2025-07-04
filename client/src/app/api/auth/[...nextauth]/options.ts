@@ -46,7 +46,6 @@ export const authOptions: NextAuthOptions = {
           const data = await res.json();
 
           if (!res.ok || !data.success) {
-            console.error('Error de autenticación desde el backend:', data.message);
             throw new Error(data.message || 'Error de autenticación');
           }
 
@@ -122,7 +121,6 @@ export const authOptions: NextAuthOptions = {
 
           const data = await res.json();
           if (!res.ok || !data.success) {
-            console.error(`Fallo en la autenticación de ${provider}:`, data.message || res.status);
             return false;
           }
 
@@ -133,7 +131,6 @@ export const authOptions: NextAuthOptions = {
 
           return true;
         } catch (error) {
-          console.error(`Error inesperado durante la autenticación de ${provider}:`, error);
           return false;
         }
       }
@@ -147,19 +144,10 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
     async redirect({ url, baseUrl }) {
-      // Si el inicio de sesión es exitoso (la URL es la base), redirige a /usuarios.
-      if (url === baseUrl || url.startsWith(`${baseUrl}/#`)) {
-        return `${baseUrl}/usuarios`;
-      }
-      // Si la URL es relativa, la resuelve.
-      if (url.startsWith('/')) {
-        return `${baseUrl}${url}`;
-      }
-      // Permite redirecciones a otros orígenes.
-      if (new URL(url).origin !== new URL(baseUrl).origin) {
-        return url;
-      }
-      // Por defecto, redirige a la URL base.
+      // Permite redirecciones relativas
+      if (url.startsWith('/')) return `${baseUrl}${url}`;
+      // Permite redirecciones a otros orígenes
+      if (new URL(url).origin === new URL(baseUrl).origin) return url;
       return baseUrl;
     },
   },
