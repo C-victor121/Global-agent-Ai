@@ -1,5 +1,4 @@
-import { getServerSession } from 'next-auth';
-import { authOptions } from '../api/auth/[...nextauth]/options';
+import { auth } from '../../../auth';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { FaUser, FaCog, FaUsers, FaCommentDots, FaBrain, FaChartBar, FaKey, FaWordpress, FaBalanceScale } from 'react-icons/fa';
@@ -9,7 +8,7 @@ export default async function UsersLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
 
   // Redirigir a la página de inicio si no hay sesión
   if (!session) {

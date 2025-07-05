@@ -6,9 +6,6 @@ import { useSession } from 'next-auth/react';
 import LoginModal from '@/components/LoginModal';
 import { isAuthenticated } from '@/lib/auth';
 
-// Forzar renderizado dinámico para evitar problemas de prerendering
-export const dynamic = 'force-dynamic';
-
 function SignInContent() {
 
   const router = useRouter();
