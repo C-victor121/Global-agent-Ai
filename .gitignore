@@ -41,3 +41,7 @@ next-env.d.ts
 # IDE
 .idea
 .vscode
+
+echo "docker/n8n_data/database.sqlite" >> .gitignore
+git rm --cached docker/n8n_data/database.sqlite
+git commit -m "Ignorar base de datos sqlite en git"

@@ -10,9 +10,9 @@ export default async function UsersLayout({
 }) {
   const session = await auth();
 
-  // Redirigir a la página de inicio si no hay sesión
+  // Redirigir a la página de inicio de sesión si no hay sesión
   if (!session) {
-    redirect('/');
+    redirect('/auth/signin?callbackUrl=/usuarios');
   }
 
   const userRole = session.user.role;
