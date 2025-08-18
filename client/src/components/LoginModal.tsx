@@ -27,8 +27,7 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
   const [isFacebookLoading, setIsFacebookLoading] = useState(false);
   const [isCredentialsLoading, setIsCredentialsLoading] = useState(false);
 
-  if (!isOpen) return null;
-
+  // NO usar early return antes de los hooks. Definir callbacks primero.
   const handleGoogleLogin = useCallback(async () => {
     try {
       setErrors({});
@@ -164,6 +163,9 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
       setIsCredentialsLoading(false);
     }
   };
+
+  // Early return DESPUÉS de declarar todos los hooks
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-[100] min-h-screen p-4">
