@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const [currentFeature, setCurrentFeature] = useState(0);
@@ -12,6 +13,8 @@ export default function Home() {
     }, 3000);
     return () => clearInterval(interval);
   }, []);
+
+  const router = useRouter();
 
   return (
     <div className="min-h-screen py-12 mb-12 px-4 sm:px-6 lg:px-8">
@@ -49,6 +52,8 @@ export default function Home() {
               className="bg-gradient-to-r from-purple-500 to-blue-500 text-white py-3 px-8 rounded-lg hover:opacity-90 transition-all duration-300 text-lg font-medium shadow-lg hover:shadow-xl transform hover:scale-105"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={() => router.push('/auth/signin')}
+              aria-label="Comenzar Ahora"
             >
               Comenzar Ahora
             </motion.button>

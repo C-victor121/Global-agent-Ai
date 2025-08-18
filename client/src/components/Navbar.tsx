@@ -8,11 +8,13 @@ import LoginModal from './LoginModal';
 import UserMenu from './UserMenu';
 import { useSession } from 'next-auth/react';
 import logoSrc from '../images/Logo.png'; // Importar el logo
+import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const { data: session } = useSession();
+  const router = useRouter();
 
   const menuItems = [
     { title: 'Inicio', href: '/' },
@@ -50,7 +52,7 @@ export default function Navbar() {
               />
             ) : (
               <button 
-                onClick={() => setIsLoginModalOpen(true)}
+                onClick={() => router.push('/auth/signin')}
                 className="bg-gradient-to-r from-purple-500 to-blue-500 text-white py-2 px-4 rounded-lg hover:opacity-90 transition-opacity"
               >
                 Comenzar
@@ -119,7 +121,7 @@ export default function Navbar() {
               ) : (
                 <button 
                   onClick={() => {
-                    setIsLoginModalOpen(true);
+                    router.push('/auth/signin');
                     setIsOpen(false);
                   }}
                   className="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white py-2 px-4 rounded-lg hover:opacity-90 transition-opacity"

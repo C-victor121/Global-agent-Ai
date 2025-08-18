@@ -15,9 +15,18 @@ function SignInContent() {
   const [error, setError] = useState<string | null>(null);
   const [isClient, setIsClient] = useState(false);
 
-  // Obtener la URL de callback de los parámetros de búsqueda
+  // Obtener la URL de callback de los parámetros de búsqueda con decodificación segura
   const callbackUrlParam = searchParams?.get('callbackUrl');
-  const callbackUrl = callbackUrlParam ? decodeURIComponent(callbackUrlParam) : '/usuarios';
+  const callbackUrl = (() => {
+    if (!callbackUrlParam) return '/usuarios';
+    try {
+      return decodeURIComponent(callbackUrlParam);
+    } catch (e) {
+      console.error('[SignInPage] Error al decodificar callbackUrl:', e);
+      // Fallback al valor sin decodificar si es malformado
+      return callbackUrlParam || '/usuarios';
+    }
+  })();
   
   // Manejar errores de autenticación
   const authError = searchParams?.get('error');
@@ -27,6 +36,35 @@ function SignInContent() {
     setIsClient(true);
     console.log('[SignInPage] CallbackUrl:', callbackUrl);
   }, [callbackUrl]);
+
+  // Función auxiliar para redirigir de forma segura
+  const safeNavigate = (target: string) => {
+    try {
+      // Rutas internas
+      if (target.startsWith('/')) {
+        router.push(target);
+        return;
+      }
+      // Navegación en el cliente solo si estamos en navegador
+      if (typeof window !== 'undefined') {
+        const targetUrl = new URL(target, window.location.origin);
+        // Si es mismo origen, usar ruta relativa con router.push
+        if (targetUrl.origin === window.location.origin) {
+          const relative = targetUrl.pathname + targetUrl.search + targetUrl.hash;
+          router.push(relative || '/');
+        } else {
+          // Origen externo: forzar navegación completa
+          window.location.href = targetUrl.toString();
+        }
+      } else {
+        // Fallback conservador
+        router.push('/');
+      }
+    } catch (e) {
+      console.error('[SignInPage] Error en safeNavigate, usando ruta por defecto:/usuarios', e);
+      router.push('/usuarios');
+    }
+  };
 
   useEffect(() => {
     if (!isClient) return;
@@ -87,7 +125,7 @@ function SignInContent() {
       // Si el usuario ya está autenticado, redirigir a la página de callback
       if (isAuthenticated(session)) {
         console.log('[SignInPage] Usuario autenticado, redirigiendo a:', callbackUrl);
-        router.push(callbackUrl);
+        safeNavigate(callbackUrl);
       } else {
         console.log('[SignInPage] Usuario no autenticado, mostrando modal de inicio de sesión');
       }
@@ -103,7 +141,7 @@ function SignInContent() {
     // De lo contrario, redirigir a la página principal
     if (callbackUrl && callbackUrl !== '/usuarios') {
       console.log('[SignInPage] Redirigiendo a la URL anterior:', callbackUrl);
-      router.push(callbackUrl);
+      safeNavigate(callbackUrl);
     } else {
       console.log('[SignInPage] Redirigiendo a la página principal');
       router.push('/');

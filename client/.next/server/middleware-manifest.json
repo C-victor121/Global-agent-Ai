@@ -4,30 +4,21 @@
     "/": {
       "files": [
         "server/edge-runtime-webpack.js",
-        "server/auth.js",
-        "server/66.js",
         "server/src/middleware.js"
       ],
       "name": "src/middleware",
       "page": "/",
       "matchers": [
         {
-          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/usuarios(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(.json)?[\\/#\\?]?$",
-          "originalSource": "/usuarios/:path*"
-        },
-        {
-          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/auth\\/signin(.json)?[\\/#\\?]?$",
-          "originalSource": "/auth/signin"
+          "regexp": "^/.*$",
+          "originalSource": "/:path*"
         }
       ],
       "wasm": [],
       "assets": [],
       "env": {
-        "__NEXT_BUILD_ID": "ReY56Q4Z5p2W63SNtFlEm",
-        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "B48Eeq99ldJliAYyuWhAR+CvAwqaBPTZbmOjnCfhMd8=",
-        "__NEXT_PREVIEW_MODE_ID": "3634d0d846b195e0b74ee42ad5bf42ea",
-        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "b0201c2ad26910717b9db41faad081a2d045b65bcbecf92f66d52c41792c6d00",
-        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "8302ecff09abc4ed6a7d02333494fb1d8a45bcf8c4a8eb22591303553cdf333c"
+        "__NEXT_BUILD_ID": "development",
+        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "XMW7k0nz3snSyIJRffORiv7VwQp0/6BpGYyYVec1Xgc="
       }
     }
   },

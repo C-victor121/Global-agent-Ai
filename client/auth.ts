@@ -4,6 +4,9 @@ import FacebookProvider from 'next-auth/providers/facebook';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import type { NextAuthConfig } from 'next-auth';
 
+// Base URL del API con fallbacks seguros para evitar URLs inválidas en tiempo de ejecución
+const API_BASE = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+
 const authConfig: NextAuthConfig = {
   providers: [
     GoogleProvider({
@@ -33,7 +36,7 @@ const authConfig: NextAuthConfig = {
         }
 
         try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin`, {
+          const res = await fetch(`${API_BASE}/auth/signin`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -81,7 +84,7 @@ const authConfig: NextAuthConfig = {
 
       if (trigger === 'update' && session?.user) {
         try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${token.id}`);
+          const res = await fetch(`${API_BASE}/api/users/${token.id}`);
           if (res.ok) {
             const updatedUser = await res.json();
             if (updatedUser) {
@@ -101,9 +104,9 @@ const authConfig: NextAuthConfig = {
         let providerId;
 
         if (provider === 'google') {
-          providerId = profile.sub;
+          providerId = (profile as any).sub;
         } else if (provider === 'facebook') {
-          providerId = profile.id?.toString();
+          providerId = (profile as any).id?.toString();
         }
 
         try {
@@ -114,7 +117,7 @@ const authConfig: NextAuthConfig = {
             avatar: user.image
           });
 
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/${provider}` , {
+          const res = await fetch(`${API_BASE}/auth/${provider}` , {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -136,9 +139,9 @@ const authConfig: NextAuthConfig = {
           }
 
           if (data.data) {
-            user.id = data.data.id;
-            user.role = data.data.role;
-            console.log(`[NextAuth] Usuario autenticado con ${provider}:`, { id: user.id, role: user.role });
+            (user as any).id = data.data.id;
+            (user as any).role = data.data.role;
+            console.log(`[NextAuth] Usuario autenticado con ${provider}:`, { id: (user as any).id, role: (user as any).role });
           }
 
           return true;
@@ -151,8 +154,8 @@ const authConfig: NextAuthConfig = {
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.id as string;
-        session.user.role = token.role as string;
+        (session.user as any).id = token.id as string;
+        (session.user as any).role = token.role as string;
       }
       return session;
     },
