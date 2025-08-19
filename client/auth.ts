@@ -7,6 +7,8 @@ import type { NextAuthConfig } from 'next-auth';
 // Base URL del API con fallbacks seguros para evitar URLs inválidas en tiempo de ejecución
 const API_BASE = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 
+const publicBaseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+
 const authConfig: NextAuthConfig = {
   providers: [
     GoogleProvider({
@@ -36,7 +38,7 @@ const authConfig: NextAuthConfig = {
         }
 
         try {
-          const res = await fetch(`${API_BASE}/auth/signin`, {
+          const res = await fetch(`${API_BASE}/signin`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -84,7 +86,7 @@ const authConfig: NextAuthConfig = {
 
       if (trigger === 'update' && session?.user) {
         try {
-          const res = await fetch(`${API_BASE}/api/users/${token.id}`);
+          const res = await fetch(`${API_BASE}/users/${token.id}`);
           if (res.ok) {
             const updatedUser = await res.json();
             if (updatedUser) {
@@ -117,7 +119,7 @@ const authConfig: NextAuthConfig = {
             avatar: user.image
           });
 
-          const res = await fetch(`${API_BASE}/auth/${provider}` , {
+          const res = await fetch(`${API_BASE}/${provider}` , {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -161,11 +163,9 @@ const authConfig: NextAuthConfig = {
     },
     async redirect({ url, baseUrl }) {
       console.log('[NextAuth] Redirect callback:', { url, baseUrl });
-      
-      // Decodificar la URL si está codificada
+      const effectiveBaseUrl = publicBaseUrl || baseUrl;
       let decodedUrl = url;
       try {
-        // Verificar si la URL parece estar codificada
         if (url.includes('%2F')) {
           decodedUrl = decodeURIComponent(url);
           console.log('[NextAuth] URL decodificada:', decodedUrl);
@@ -173,19 +173,14 @@ const authConfig: NextAuthConfig = {
       } catch (error) {
         console.error('[NextAuth] Error al decodificar URL:', error);
       }
-      
-      // Permite redirecciones relativas
       if (decodedUrl.startsWith('/')) {
-        const redirectUrl = `${baseUrl}${decodedUrl}`;
+        const redirectUrl = `${effectiveBaseUrl}${decodedUrl}`;
         console.log('[NextAuth] Redirigiendo a URL relativa:', redirectUrl);
         return redirectUrl;
       }
-      
-      // Permite redirecciones a otros orígenes si son del mismo dominio
       try {
         const urlOrigin = new URL(decodedUrl).origin;
-        const baseUrlOrigin = new URL(baseUrl).origin;
-        
+        const baseUrlOrigin = new URL(effectiveBaseUrl).origin;
         if (urlOrigin === baseUrlOrigin) {
           console.log('[NextAuth] Redirigiendo a URL del mismo origen:', decodedUrl);
           return decodedUrl;
@@ -193,10 +188,8 @@ const authConfig: NextAuthConfig = {
       } catch (error) {
         console.error('[NextAuth] Error al analizar URL:', error);
       }
-      
-      // Por defecto, redirigir a la URL base
-      console.log('[NextAuth] Redirigiendo a URL base:', baseUrl);
-      return baseUrl;
+      console.log('[NextAuth] Redirigiendo a URL base:', effectiveBaseUrl);
+      return effectiveBaseUrl;
     },
   },
   secret: process.env.NEXTAUTH_SECRET,

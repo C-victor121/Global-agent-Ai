@@ -102,19 +102,11 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
           await registerSchema.parseAsync({ name, email, password, confirmPassword });
           
           try {
-            const response = await fetch('/api/auth/signup', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ name, email, password }),
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-              setErrors({ auth: data.message || 'Error en el registro' });
-              return;
+            // Usar el cliente de API configurado para apuntar a https://globalsolarco.shop/api
+            const { data } = await apiClient.post('/signup', { name, email, password });
+            if (!data?.success) {
+            setErrors({ auth: data?.message || 'Error en el registro' });
+            return;
             }
 
             // Registro exitoso, iniciar sesión automáticamente con el proveedor de credenciales

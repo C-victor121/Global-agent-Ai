@@ -36,17 +36,22 @@ interface MercadoPagoPreferenceResponse {
 }
 
 class MercadoPagoService {
-  private client: MercadoPagoConfig;
-  private preference: Preference;
-  private payment: Payment;
+  private client?: MercadoPagoConfig;
+  private preference?: Preference;
+  private payment?: Payment;
+  private disabled: boolean = false;
 
   constructor() {
-    if (!process.env.MERCADOPAGO_ACCESS_TOKEN) {
-      throw new Error('MERCADOPAGO_ACCESS_TOKEN is required');
+    const accessToken = process.env.MERCADOPAGO_ACCESS_TOKEN;
+    if (!accessToken) {
+      // No bloquear el arranque del servidor en entornos donde no se usará MercadoPago
+      this.disabled = true;
+      console.warn('[MercadoPago] Servicio deshabilitado: falta MERCADOPAGO_ACCESS_TOKEN. Las rutas de pago no estarán disponibles.');
+      return;
     }
 
     this.client = new MercadoPagoConfig({
-      accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN,
+      accessToken,
       options: {
         timeout: 5000,
         idempotencyKey: 'abc'
@@ -57,10 +62,17 @@ class MercadoPagoService {
     this.payment = new Payment(this.client);
   }
 
+  private ensureEnabled() {
+    if (this.disabled || !this.client || !this.preference || !this.payment) {
+      throw new Error('MercadoPago no está configurado. Defina MERCADOPAGO_ACCESS_TOKEN para habilitar el servicio.');
+    }
+  }
+
   /**
    * Crea una preferencia de pago para PSE o Efecty
    */
   async createPaymentPreference(data: CreatePreferenceData): Promise<MercadoPagoPreferenceResponse> {
+    this.ensureEnabled();
     try {
       const { user, plan, paymentMethod, billingType } = data;
       const amount = billingType === 'monthly' ? plan.monthlyPrice : (plan.annualPrice || plan.monthlyPrice * 12);
@@ -113,9 +125,9 @@ class MercadoPagoService {
           payment_method: paymentMethod,
           billing_type: billingType
         }
-      };
+      } as any;
 
-      const response = await this.preference.create({ body: preferenceData });
+      const response = await this.preference!.create({ body: preferenceData });
       
       return {
         id: response.id!,
@@ -132,8 +144,9 @@ class MercadoPagoService {
    * Obtiene la información de un pago
    */
   async getPaymentInfo(paymentId: string) {
+    this.ensureEnabled();
     try {
-      const payment = await this.payment.get({ id: paymentId });
+      const payment = await this.payment!.get({ id: paymentId });
       return payment;
     } catch (error) {
       console.error('Error getting payment info:', error);
@@ -145,6 +158,7 @@ class MercadoPagoService {
    * Procesa el webhook de MercadoPago
    */
   async processWebhook(data: any): Promise<WebhookProcessingResult> {
+    this.ensureEnabled();
     try {
       const { type, data: webhookData } = data;
       
@@ -165,10 +179,10 @@ class MercadoPagoService {
    */
   private async processPaymentNotification(paymentInfo: any): Promise<ProcessedPaymentWebhookResult> {
     try {
-      const { status, external_reference, transaction_amount, metadata } = paymentInfo;
+      const { status, external_reference, transaction_amount, metadata } = paymentInfo as any;
       
       return {
-        paymentId: paymentInfo.id,
+        paymentId: (paymentInfo as any).id,
         status,
         amount: transaction_amount,
         externalReference: external_reference,

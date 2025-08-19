@@ -11,16 +11,9 @@
       "static/chunks/main-app.js",
       "static/chunks/auth.js",
       "static/chunks/commons.js",
-      "static/chunks/831.js",
+      "static/chunks/305.js",
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
-    ],
-    "/auth/signin/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/auth.js",
-      "static/chunks/commons.js",
-      "static/chunks/app/auth/signin/page.js"
     ]
   }
 }
