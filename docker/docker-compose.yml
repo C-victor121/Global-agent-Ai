@@ -17,7 +17,6 @@ services:
       - /etc/letsencrypt:/etc/letsencrypt:ro
       - ./certbot/www:/var/www/certbot
       - ./certbot/logs:/var/log/letsencrypt
-
     restart: unless-stopped
 
   client:
@@ -27,12 +26,14 @@ services:
     expose:
       - "3000"
     environment:
-      - NEXT_PUBLIC_API_URL=https://globalsolarco.shop/api
-      - NEXTAUTH_URL=https://globalsolarco.shop
-      - NEXTAUTH_SECRET=844efe23b9b81ad485b25d11b1f5548b2e8862010576da1c53c41df2b01cc546
-      - NEXTAUTH_COOKIE_DOMAIN=.globalsolarco.shop
-      - NEXT_PUBLIC_N8N_WEBHOOK_URL=${NEXT_PUBLIC_N8N_WEBHOOK_URL:-http://localhost:5678/webhook/content-generation}
-      - NEXT_PUBLIC_N8N_LEGAL_ASSISTANT_WEBHOOK_URL=${NEXT_PUBLIC_N8N_LEGAL_ASSISTANT_WEBHOOK_URL:-http://localhost:5678/webhook/legal-assistant}
+      - NODE_ENV=${NODE_ENV}
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+      - NEXTAUTH_URL=${NEXTAUTH_URL}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - NEXTAUTH_COOKIE_DOMAIN=${NEXTAUTH_COOKIE_DOMAIN}
+      - NEXT_SERVER_ACTIONS_ENCRYPTION_KEY=${NEXT_SERVER_ACTIONS_ENCRYPTION_KEY}
+      - NEXT_PUBLIC_N8N_WEBHOOK_URL=${NEXT_PUBLIC_N8N_WEBHOOK_URL}
+      - NEXT_PUBLIC_N8N_LEGAL_ASSISTANT_WEBHOOK_URL=${NEXT_PUBLIC_N8N_LEGAL_ASSISTANT_WEBHOOK_URL}
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
       - FACEBOOK_CLIENT_ID=${FACEBOOK_CLIENT_ID}
@@ -41,6 +42,8 @@ services:
       - global_network
     depends_on:
       - server
+    env_file:
+      - ../.env
 
   server:
     build:
@@ -49,37 +52,38 @@ services:
     expose:
       - "3001"
     environment:
-      - PORT=3001
-      - MONGODB_URI=mongodb://mongo:27017/global-agent-ai
+      - NODE_ENV=${NODE_ENV}
+      - PORT=${PORT}
+      - MONGODB_URI=${MONGODB_URI}
       - CLIENT_URL=${CLIENT_URL}
-      - FRONTEND_URL=${CLIENT_URL}
-      - BACKEND_URL=${NEXT_PUBLIC_API_URL}
+      - FRONTEND_URL=${FRONTEND_URL}
+      - BACKEND_URL=${BACKEND_URL}
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
-      - N8N_CONTENT_GENERATION_WEBHOOK_URL=http://n8n:5678/webhook-test/content-generation
-      - N8N_LEGAL_ASSISTANT_WEBHOOK_URL=http://n8n:5678/webhook-test/legal-assistant
-      # OAuth Credentials
+      - JWT_SECRET=${JWT_SECRET}
+      - N8N_CONTENT_GENERATION_WEBHOOK_URL=${N8N_CONTENT_GENERATION_WEBHOOK_URL}
+      - N8N_LEGAL_ASSISTANT_WEBHOOK_URL=${N8N_LEGAL_ASSISTANT_WEBHOOK_URL}
+      - N8N_CONTACT_RESPONSE_WEBHOOK_URL=${N8N_CONTACT_RESPONSE_WEBHOOK_URL}
+      - N8N_WHATSAPP_FLOW_WEBHOOK_URL=${N8N_WHATSAPP_FLOW_WEBHOOK_URL}
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
       - FACEBOOK_CLIENT_ID=${FACEBOOK_CLIENT_ID}
       - FACEBOOK_CLIENT_SECRET=${FACEBOOK_CLIENT_SECRET}
-      # Variables de Twilio
       - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
       - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
       - TWILIO_PHONE_NUMBER=${TWILIO_PHONE_NUMBER}
-      # Variable de Meta App Secret
       - META_APP_SECRET=${META_APP_SECRET}
       - META_APP_ID=${META_APP_ID}
-      # Variables de Mercado Pago
+      - WHATSAPP_TOKEN=${WHATSAPP_TOKEN}
+      - WHATSAPP_WEBHOOK_VERIFY_TOKEN=${WHATSAPP_WEBHOOK_VERIFY_TOKEN}
       - MERCADOPAGO_ACCESS_TOKEN=${MERCADOPAGO_ACCESS_TOKEN}
       - MERCADOPAGO_PUBLIC_KEY=${MERCADOPAGO_PUBLIC_KEY}
       - MERCADOPAGO_WEBHOOK_SECRET=${MERCADOPAGO_WEBHOOK_SECRET}
-      # JWT Secret
-      - JWT_SECRET=${JWT_SECRET}
-      
     depends_on:
       - mongo
     networks:
       - global_network
+    env_file:
+      - ../.env
 
   mongo:
     image: mongo
@@ -100,18 +104,22 @@ services:
       - N8N_BASIC_AUTH_ACTIVE=true
       - N8N_BASIC_AUTH_USER=${N8N_BASIC_AUTH_USER}
       - N8N_BASIC_AUTH_PASSWORD=${N8N_BASIC_AUTH_PASSWORD}
-      - N8N_HOST=n8n
-      - N8N_PORT=5678
-      - N8N_SECURE_COOKIE=false
-      - N8N_CORS_ORIGIN=*
+      - N8N_HOST=${N8N_HOST}
+      - N8N_PORT=${N8N_PORT}
+      - N8N_SECURE_COOKIE=${N8N_SECURE_COOKIE}
+      - N8N_CORS_ORIGIN=${N8N_CORS_ORIGIN}
+      - N8N_LISTEN_ADDRESS=${N8N_LISTEN_ADDRESS}
+      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=${N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS}
+      - N8N_EDITOR_BASE_URL=${N8N_EDITOR_BASE_URL}
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
-      - WEBHOOK_URL=http://n8n:5678 
-      - N8N_EDITOR_BASE_URL=http://localhost:5678
-      - GENERIC_WEBHOOK_URL=http://n8n:5678 
+      - WEBHOOK_URL=${WEBHOOK_URL}
+      - GENERIC_WEBHOOK_URL=${GENERIC_WEBHOOK_URL}
     volumes:
       - ./n8n_data:/home/node/.n8n
     networks:
       - global_network
+    env_file:
+      - ../.env
 
 networks:
   global_network:
